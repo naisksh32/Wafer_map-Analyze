@@ -1,0 +1,65 @@
+preprocessing:
+  resize:
+  - 64
+  - 64
+  normalize_divisor: 2.0
+  interpolation: INTER_NEAREST
+  input_channels: 1
+  pixel_values:
+    '0.0': empty_area
+    '0.5': normal_die
+    '1.0': defective_die
+train_augmentation:
+  Rotate:
+    limit: 20
+    border_mode: 0
+    p: 0.5
+  HorizontalFlip:
+    p: 0.5
+  VerticalFlip:
+    p: 0.5
+  GaussNoise:
+    var_limit:
+    - 0.001
+    - 0.005
+    p: 0.3
+  Blur:
+    blur_limit: 3
+    p: 0.2
+  RandomBrightnessContrast:
+    brightness_limit: 0.05
+    contrast_limit: 0.05
+    p: 0.2
+  CoarseDropout:
+    max_holes: 4
+    max_height: 8
+    max_width: 8
+    fill_value: 0.0
+    p: 0.3
+val_test_augmentation: none
+dataloader:
+  batch_size: 64
+  num_workers: 2
+  pin_memory: true
+  train_sampler: WeightedRandomSampler
+class_order:
+- none
+- Center
+- Donut
+- Edge-Loc
+- Edge-Ring
+- Loc
+- Near-full
+- Random
+- Scratch
+label_map:
+  none: 0
+  Center: 1
+  Donut: 2
+  Edge-Loc: 3
+  Edge-Ring: 4
+  Loc: 5
+  Near-full: 6
+  Random: 7
+  Scratch: 8
+albumentations_version: 1.4.21

@@ -1,0 +1,26 @@
+{
+  "study_name": "wafer-cnn-hpo",
+  "n_trials": 20,
+  "completed": 7,
+  "pruned": 13,
+  "best_trial": 3,
+  "best_val_f1": 0.5581,
+  "best_params": {
+    "lr": 7.3e-05,
+    "batch_size": 32,
+    "dropout": 0.216858,
+    "weight_decay": 0.000126
+  },
+  "retrain_result": {
+    "test_accuracy": 0.4321,
+    "test_f1_macro": 0.5987,
+    "best_val_f1": 0.6099
+  },
+  "mlflow": {
+    "tracking_uri": "sqlite:///mlruns/mlflow.db",
+    "experiment_name": "wafer-defect-detection",
+    "best_run_id": "ec896dbbf4d046b2851cd90fa3158fe9",
+    "registry_name": "WaferDefectCNN",
+    "registry_version": "1"
+  }
+}

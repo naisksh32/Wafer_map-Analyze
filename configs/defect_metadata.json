@@ -1,0 +1,492 @@
+{
+  "none": {
+    "korean_name": "정상",
+    "physical_mechanism": "불량 없음 — 정상 다이",
+    "primary_process_stage": "N/A",
+    "equipment_involved": [],
+    "critical_parameters": [],
+    "severity_level": "None",
+    "severity_score": 0,
+    "yield_impact": 0.0,
+    "estimated_roi_pct": null,
+    "remediation": "N/A",
+    "defect_area_pct": 0.0,
+    "spatial_evidence": {
+      "center_ratio": 0.19761825049625809,
+      "edge_ratio": 0.0,
+      "ring_ratio": 0.5442176039073661,
+      "defect_density": 0.10536034004581632,
+      "spatial_entropy": 8.02837024673935,
+      "n_samples": 2000
+    }
+  },
+  "Center": {
+    "korean_name": "중심 불량",
+    "physical_mechanism": "웨이퍼 중심부 결정 결함 또는 열처리 불균일. 산소 석출물(SiO2)이 중심에 집중 생성되어 게이트 산화막 품질 저하를 유발",
+    "primary_process_stage": "Wafer Preparation / Thermal Annealing",
+    "equipment_involved": [
+      "Czochralski Puller",
+      "Annealing Furnace",
+      "RTP Chamber"
+    ],
+    "critical_parameters": [
+      {
+        "name": "Annealing_Temperature",
+        "unit": "°C",
+        "normal_range": "1050-1150",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Annealing_Time",
+        "unit": "h",
+        "normal_range": "2-8",
+        "criticality": "High"
+      },
+      {
+        "name": "Cooling_Rate",
+        "unit": "°C/min",
+        "normal_range": "5-20",
+        "criticality": "High"
+      },
+      {
+        "name": "Oxygen_Concentration",
+        "unit": "ppma",
+        "normal_range": "10-18",
+        "criticality": "Medium"
+      }
+    ],
+    "severity_level": "Critical",
+    "severity_score": 5,
+    "yield_impact": 0.15,
+    "estimated_roi_pct": 800,
+    "remediation": "냉각 속도 제어 최적화, 산소 농도 타겟 재설정, RTP 온도 균일도 개선",
+    "defect_area_pct": null,
+    "spatial_evidence": {
+      "center_ratio": 0.3719057159972659,
+      "edge_ratio": 0.0,
+      "ring_ratio": 0.4082458691486658,
+      "defect_density": 0.2330164713371685,
+      "spatial_entropy": 7.940789492922812,
+      "n_samples": 2000
+    },
+    "correlation_evidence": {
+      "top_critical_param": "annealing_temp",
+      "top_pearson_r": 0.5265,
+      "n_critical_params": 1,
+      "critical_params": [
+        "annealing_temp"
+      ]
+    }
+  },
+  "Donut": {
+    "korean_name": "도넛형 불량",
+    "physical_mechanism": "링 형태 식각 불균일 또는 포토레지스트 도포 두께 변동. 스핀 코팅 시 중심/에지 경계에서 두께 전이구간 발생",
+    "primary_process_stage": "Lithography / Etch",
+    "equipment_involved": [
+      "Spin Coater",
+      "Stepper/Scanner",
+      "Dry Etcher (ICP/CCP)"
+    ],
+    "critical_parameters": [
+      {
+        "name": "PR_Thickness_Uniformity",
+        "unit": "%",
+        "normal_range": "<2",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Etch_Depth_Uniformity",
+        "unit": "%",
+        "normal_range": "<3",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Chemical_Concentration",
+        "unit": "wt%",
+        "normal_range": "±0.5",
+        "criticality": "High"
+      },
+      {
+        "name": "Spin_Speed",
+        "unit": "rpm",
+        "normal_range": "2000-4000",
+        "criticality": "Medium"
+      }
+    ],
+    "severity_level": "High",
+    "severity_score": 4,
+    "yield_impact": 0.1,
+    "estimated_roi_pct": 650,
+    "remediation": "스핀 코팅 속도 프로파일 최적화, 식각 가스 유량 균일도 개선, Edge Bead Removal 적용",
+    "defect_area_pct": null,
+    "spatial_evidence": {
+      "center_ratio": 0.44548314280016477,
+      "edge_ratio": 0.0,
+      "ring_ratio": 0.25130306140567593,
+      "defect_density": 0.27595820337093957,
+      "spatial_entropy": 7.912946371218737,
+      "n_samples": 555
+    },
+    "correlation_evidence": {
+      "top_critical_param": "pr_thickness_cv",
+      "top_pearson_r": 0.6083,
+      "n_critical_params": 2,
+      "critical_params": [
+        "pr_thickness_cv",
+        "etch_depth"
+      ]
+    }
+  },
+  "Edge-Loc": {
+    "korean_name": "국소 에지 불량",
+    "physical_mechanism": "CMP 공정 중 웨이퍼 에지 국소 영역 과도 연마 또는 PVD 증착 시 에지 두께 불균일. 리테이닝 링 압력 불균일로 에지 특정 방위각 구간에만 불량 집중",
+    "primary_process_stage": "CMP (Chemical Mechanical Planarization) / PVD Deposition",
+    "equipment_involved": [
+      "CMP Polisher",
+      "PVD Sputter",
+      "Wafer Chuck"
+    ],
+    "critical_parameters": [
+      {
+        "name": "CMP_Pressure",
+        "unit": "psi",
+        "normal_range": "80-120",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Polish_Time",
+        "unit": "s",
+        "normal_range": "20-60",
+        "criticality": "High"
+      },
+      {
+        "name": "Slurry_pH",
+        "unit": "-",
+        "normal_range": "4-8",
+        "criticality": "High"
+      },
+      {
+        "name": "Retaining_Ring_Pressure",
+        "unit": "psi",
+        "normal_range": "±5",
+        "criticality": "Critical"
+      }
+    ],
+    "severity_level": "High",
+    "severity_score": 4,
+    "yield_impact": 0.08,
+    "estimated_roi_pct": 1200,
+    "remediation": "리테이닝 링 압력 맵 보정, 슬러리 pH 실시간 모니터링, 에지 프로파일 측정 강화",
+    "defect_area_pct": null,
+    "spatial_evidence": {
+      "center_ratio": 0.15102979236393294,
+      "edge_ratio": 0.0,
+      "ring_ratio": 0.6212136076941076,
+      "defect_density": 0.17913990731677068,
+      "spatial_entropy": 8.017836886501286,
+      "n_samples": 2000
+    },
+    "correlation_evidence": {
+      "top_critical_param": "polish_time",
+      "top_pearson_r": -0.554,
+      "n_critical_params": 3,
+      "critical_params": [
+        "polish_time",
+        "slurry_ph",
+        "cmp_pressure"
+      ]
+    }
+  },
+  "Edge-Ring": {
+    "korean_name": "에지 링 불량",
+    "physical_mechanism": "웨이퍼 전체 에지 링 형태의 열처리 불균일. 퍼니스 내 가스 흐름의 에지-센터 온도 구배가 에지 산화막 성장 속도 차이를 유발",
+    "primary_process_stage": "Thermal Oxidation / CVD / Cleaning",
+    "equipment_involved": [
+      "Diffusion Furnace",
+      "LPCVD Tube",
+      "Cleaning Track"
+    ],
+    "critical_parameters": [
+      {
+        "name": "Furnace_Temperature_Gradient",
+        "unit": "°C",
+        "normal_range": "<2",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Gas_Flow_Uniformity",
+        "unit": "%",
+        "normal_range": "<1",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Process_Time",
+        "unit": "min",
+        "normal_range": "±1",
+        "criticality": "High"
+      },
+      {
+        "name": "Boat_Position",
+        "unit": "mm",
+        "normal_range": "±0.5",
+        "criticality": "Medium"
+      }
+    ],
+    "severity_level": "High",
+    "severity_score": 4,
+    "yield_impact": 0.09,
+    "estimated_roi_pct": 950,
+    "remediation": "온도 구배 프로파일 보정, 가스 인젝터 유량 균일화, 웨이퍼 보트 위치 최적화",
+    "defect_area_pct": null,
+    "spatial_evidence": {
+      "center_ratio": 0.09498138378393288,
+      "edge_ratio": 0.0,
+      "ring_ratio": 0.7804548484868863,
+      "defect_density": 0.1532584287666464,
+      "spatial_entropy": 7.573081774070392,
+      "n_samples": 2000
+    },
+    "correlation_evidence": {
+      "top_critical_param": "temp_gradient",
+      "top_pearson_r": 0.664,
+      "n_critical_params": 1,
+      "critical_params": [
+        "temp_gradient"
+      ]
+    }
+  },
+  "Loc": {
+    "korean_name": "국소 클러스터 불량",
+    "physical_mechanism": "파티클 오염 또는 마스크 결함에 의한 국소 영역 불량 클러스터. 특정 레티클 좌표 결함이 반복 스텝 패턴으로 나타나거나, 장비 내 파티클 낙하",
+    "primary_process_stage": "Deposition / Ion Implantation / Lithography",
+    "equipment_involved": [
+      "Ion Implanter",
+      "CVD Chamber",
+      "Reticle/Mask"
+    ],
+    "critical_parameters": [
+      {
+        "name": "Chamber_Pressure",
+        "unit": "Torr",
+        "normal_range": "<1e-6",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Particle_Count",
+        "unit": "ea/wafer",
+        "normal_range": "<10",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Deposition_Rate",
+        "unit": "nm/s",
+        "normal_range": "±3%",
+        "criticality": "High"
+      },
+      {
+        "name": "Implant_Dose_Uniformity",
+        "unit": "%",
+        "normal_range": "<1",
+        "criticality": "High"
+      }
+    ],
+    "severity_level": "Medium",
+    "severity_score": 3,
+    "yield_impact": 0.05,
+    "estimated_roi_pct": 500,
+    "remediation": "진공 챔버 파티클 모니터링 강화, 레티클 주기적 검사, 챔버 세정 주기 최적화",
+    "defect_area_pct": null,
+    "spatial_evidence": {
+      "center_ratio": 0.23881159523480544,
+      "edge_ratio": 4.1943316324730415e-05,
+      "ring_ratio": 0.4575530273568677,
+      "defect_density": 0.1511663264443951,
+      "spatial_entropy": 8.082306360013224,
+      "n_samples": 2000
+    },
+    "correlation_evidence": {
+      "top_critical_param": "vacuum_pressure",
+      "top_pearson_r": 0.5337,
+      "n_critical_params": 2,
+      "critical_params": [
+        "vacuum_pressure",
+        "particle_count"
+      ]
+    }
+  },
+  "Near-full": {
+    "korean_name": "웨이퍼 전면 불량",
+    "physical_mechanism": "웨이퍼 전체에 걸친 심각한 공정 이상. 슬립 전위(slip dislocation), 적층 결함(stacking fault) 또는 화학물질 오염에 의한 전면적 격자 결함",
+    "primary_process_stage": "Multiple (Contamination / Crystal Defect)",
+    "equipment_involved": [
+      "All Process Equipment",
+      "Chemical Supply System"
+    ],
+    "critical_parameters": [
+      {
+        "name": "Chemical_Purity",
+        "unit": "ppb",
+        "normal_range": "<1",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Thermal_Shock",
+        "unit": "°C/s",
+        "normal_range": "<50",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Crystal_Defect_Density",
+        "unit": "ea/cm²",
+        "normal_range": "<10",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Metal_Contamination",
+        "unit": "atoms/cm²",
+        "normal_range": "<1e10",
+        "criticality": "Critical"
+      }
+    ],
+    "severity_level": "Critical",
+    "severity_score": 5,
+    "yield_impact": 0.95,
+    "estimated_roi_pct": 3000,
+    "remediation": "즉각 로트 격리 및 근본 원인 분석(RCA), 화학물질 공급 라인 점검, 결정 성장 조건 재검토",
+    "defect_area_pct": null,
+    "spatial_evidence": {
+      "center_ratio": 0.25977550456544746,
+      "edge_ratio": 0.0,
+      "ring_ratio": 0.3755515214413299,
+      "defect_density": 0.8765331038809526,
+      "spatial_entropy": 8.091653034664382,
+      "n_samples": 149
+    },
+    "correlation_evidence": {
+      "top_critical_param": "particle_count",
+      "top_pearson_r": 0.5311,
+      "n_critical_params": 3,
+      "critical_params": [
+        "particle_count",
+        "annealing_temp",
+        "temp_gradient"
+      ]
+    }
+  },
+  "Random": {
+    "korean_name": "랜덤 분산 불량",
+    "physical_mechanism": "무작위 파티클 오염 또는 ESD(정전기 방전)에 의한 산발적 불량. 청정실 클래스 저하 또는 작업자 오염으로 발생",
+    "primary_process_stage": "Cleanroom Environment / Wafer Handling",
+    "equipment_involved": [
+      "Cleanroom HVAC",
+      "Wafer Handler Robot",
+      "FOUP"
+    ],
+    "critical_parameters": [
+      {
+        "name": "Cleanroom_Class",
+        "unit": "ISO",
+        "normal_range": "≤ISO3",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Particle_Concentration",
+        "unit": "ea/m³",
+        "normal_range": "<1000",
+        "criticality": "Critical"
+      },
+      {
+        "name": "ESD_Voltage",
+        "unit": "V",
+        "normal_range": "<100",
+        "criticality": "High"
+      },
+      {
+        "name": "Air_Flow_Velocity",
+        "unit": "m/s",
+        "normal_range": "0.3-0.5",
+        "criticality": "Medium"
+      }
+    ],
+    "severity_level": "Medium",
+    "severity_score": 3,
+    "yield_impact": 0.04,
+    "estimated_roi_pct": 400,
+    "remediation": "청정실 파티클 카운터 증설, ESD 스트랩 착용 강화, FOUP 세정 주기 단축",
+    "defect_area_pct": null,
+    "spatial_evidence": {
+      "center_ratio": 0.25886330468811913,
+      "edge_ratio": 5.660462799369114e-06,
+      "ring_ratio": 0.4084181004799715,
+      "defect_density": 0.4798689446181537,
+      "spatial_entropy": 8.101091395298354,
+      "n_samples": 866
+    },
+    "correlation_evidence": {
+      "top_critical_param": "particle_count",
+      "top_pearson_r": 0.3989,
+      "n_critical_params": 1,
+      "critical_params": [
+        "particle_count"
+      ]
+    }
+  },
+  "Scratch": {
+    "korean_name": "스크래치 불량",
+    "physical_mechanism": "웨이퍼 핸들링 또는 CMP 공정 중 물리적 접촉에 의한 선형 기계적 손상. 핸들러 암의 압력 불균일 또는 슬러리 내 대형 파티클",
+    "primary_process_stage": "Wafer Handling / CMP",
+    "equipment_involved": [
+      "Wafer Handler Robot",
+      "CMP Polisher",
+      "Load/Unload Station"
+    ],
+    "critical_parameters": [
+      {
+        "name": "Handler_Pressure",
+        "unit": "N",
+        "normal_range": "0.5-2.0",
+        "criticality": "Critical"
+      },
+      {
+        "name": "Handler_Speed",
+        "unit": "mm/s",
+        "normal_range": "<300",
+        "criticality": "High"
+      },
+      {
+        "name": "Slurry_Particle_Size",
+        "unit": "nm",
+        "normal_range": "<200",
+        "criticality": "High"
+      },
+      {
+        "name": "Pad_Condition",
+        "unit": "count",
+        "normal_range": "<5000 wafers",
+        "criticality": "Medium"
+      }
+    ],
+    "severity_level": "Medium",
+    "severity_score": 3,
+    "yield_impact": 0.03,
+    "estimated_roi_pct": 300,
+    "remediation": "핸들러 암 압력 캘리브레이션, 슬러리 필터 교환 주기 단축, 패드 드레싱 최적화",
+    "defect_area_pct": null,
+    "spatial_evidence": {
+      "center_ratio": 0.19989966532984882,
+      "edge_ratio": 0.0,
+      "ring_ratio": 0.5318817638261464,
+      "defect_density": 0.10033791080340095,
+      "spatial_entropy": 8.05690812152965,
+      "n_samples": 1193
+    },
+    "correlation_evidence": {
+      "top_critical_param": "polish_time",
+      "top_pearson_r": 0.4439,
+      "n_critical_params": 1,
+      "critical_params": [
+        "polish_time"
+      ]
+    }
+  }
+}

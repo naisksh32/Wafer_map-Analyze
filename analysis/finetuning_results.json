@@ -1,0 +1,38 @@
+{
+  "best_model": "EfficientNet-B0",
+  "models": {
+    "MobileNetV3": {
+      "best_val_f1": 0.5736,
+      "test_accuracy": 0.3719,
+      "test_f1_macro": 0.5618,
+      "target_met_acc": false,
+      "target_met_f1": false,
+      "checkpoint": "checkpoints\\MobileNetV3_15_0.5736.pth"
+    },
+    "EfficientNet-B0": {
+      "best_val_f1": 0.6775,
+      "test_accuracy": 0.7937,
+      "test_f1_macro": 0.6673,
+      "target_met_acc": false,
+      "target_met_f1": false,
+      "checkpoint": "checkpoints\\EfficientNet-B0_25_0.6775.pth"
+    },
+    "ViT-Tiny": {
+      "best_val_f1": 0.6578,
+      "test_accuracy": 0.7557,
+      "test_f1_macro": 0.6473,
+      "target_met_acc": false,
+      "target_met_f1": false,
+      "checkpoint": "checkpoints\\ViT-Tiny_23_0.6578.pth"
+    }
+  },
+  "hyperparams": {
+    "phase1_epochs": 5,
+    "phase1_lr": 0.001,
+    "phase2_epochs": 25,
+    "phase2_lr": 0.0001,
+    "batch_size": 64,
+    "weight_decay": 0.0001,
+    "patience": 7
+  }
+}

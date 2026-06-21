@@ -1,0 +1,18 @@
+{
+  "model": "WaferCNN",
+  "best_epoch": 1,
+  "best_val_f1": 0.5024,
+  "test_accuracy": 0.1065,
+  "test_f1_macro": 0.5014,
+  "target_met": false,
+  "hyperparams": {
+    "epochs": 30,
+    "batch_size": 64,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "dropout": 0.3,
+    "optimizer": "Adam",
+    "scheduler": "CosineAnnealingLR"
+  },
+  "best_checkpoint": "checkpoints\\WaferCNN_01_0.5024.pth"
+}

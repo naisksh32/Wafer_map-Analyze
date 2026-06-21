@@ -1,0 +1,26 @@
+# 가상환경
+.venv/
+__pycache__/
+*.pyc
+
+# 시크릿
+.env
+07_airflow_pipeline/.env
+CLAUDE.md
+
+# 대용량 데이터 (GitHub 100MB 초과)
+data/raw/
+data/processed/all_maps_resized.npy
+
+# MLFlow 실험 기록 (대용량)
+mlruns/
+
+# Jupyter 임시 파일
+.ipynb_checkpoints/
+
+# IDE / OS
+.vscode/
+.idea/
+.claude/
+.DS_Store
+Thumbs.db

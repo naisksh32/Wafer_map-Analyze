@@ -1,0 +1,4 @@
+﻿모델,파라미터 수,Best Val F1,Test Accuracy,Test F1 macro,목표 달성 (F1≥0.88)
+MobileNetV3,1.53M,0.5736,37.19%,0.5618,NO
+EfficientNet-B0,4.02M,0.6775,79.37%,0.6673,NO
+ViT-Tiny,5.39M,0.6578,75.57%,0.6473,NO

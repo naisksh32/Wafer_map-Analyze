@@ -1,0 +1,57 @@
+{
+  "dataset": "WM-811K (Wafer Map 811K)",
+  "source": "Kaggle - qingyi/wm811k-wafer-map",
+  "pkl_filename": "LSWMD.pkl",
+  "pkl_path": "data/raw/LSWMD.pkl",
+  "pkl_size_mb": 1998.4,
+  "columns_original": ["waferMap", "dieSize", "lotName", "waferIndex", "trianTestLabel", "failureType"],
+  "total_samples": 811457,
+  "labeled_samples": 172950,
+  "unlabeled_samples": 638507,
+  "label_ratio_pct": 21.31,
+  "note_on_labels": "'unknown' failureType == 미레이블 데이터 638,507개. 실제 분석 대상: 172,950개",
+  "num_defect_classes": 9,
+  "class_distribution_labeled": {
+    "none": 147431,
+    "Edge-Ring": 9680,
+    "Edge-Loc": 5189,
+    "Center": 4294,
+    "Loc": 3593,
+    "Scratch": 1193,
+    "Random": 866,
+    "Donut": 555,
+    "Near-full": 149
+  },
+  "class_ratios_pct_labeled": {
+    "none": 85.24,
+    "Edge-Ring": 5.60,
+    "Edge-Loc": 3.00,
+    "Center": 2.48,
+    "Loc": 2.08,
+    "Scratch": 0.69,
+    "Random": 0.50,
+    "Donut": 0.32,
+    "Near-full": 0.09
+  },
+  "imbalance_ratio_among_labeled": 989.5,
+  "train_test_split_original": {
+    "Training": 54355,
+    "Test": 118595
+  },
+  "wafer_map_sizes": {
+    "variable": true,
+    "top5_shapes": ["(32, 29)", "(25, 27)", "(49, 39)", "(26, 26)", "(30, 34)"],
+    "note": "웨이퍼 맵 크기가 다양함 - 전처리 시 64x64 고정 크기로 리사이징 필요"
+  },
+  "pixel_values": {
+    "0": "empty_area (빈 영역)",
+    "1": "normal_die (정상 다이)",
+    "2": "defective_die (불량 다이)"
+  },
+  "preprocessing_decisions": {
+    "filter": "failureType == 'unknown' 제거 후 172,950개만 사용",
+    "resize_target": "64x64 고정 크기",
+    "normalization": "픽셀값 0~2 를 0.0~1.0 으로 정규화",
+    "class_imbalance_strategy": "Weighted Random Sampler + Class Weight (CrossEntropyLoss)"
+  }
+}

@@ -1,0 +1,6 @@
+defect_class,current_monthly_loss_usd,improved_monthly_loss_usd,monthly_gain_usd,annual_gain_usd,adj_cost_usd,payback_months,roi_pct,npv_5yr_usd,yield_impact,class_ratio_pct
+Edge-Loc,60006.0,338.0,59668.0,716011.0,34665.0,0.6,1965.5,3545388.0,0.08,3.0
+Center,93105.0,46853.0,46252.0,555024.0,175526.0,3.8,216.2,2599591.0,0.15,2.483
+Edge-Ring,125932.0,67445.0,58487.0,701845.0,6336.0,0.1,10975.5,3502890.0,0.09,5.597
+Near-full,20461.0,5058.0,15403.0,184833.0,227637.0,14.8,-18.8,696528.0,0.95,0.086
+Donut,8023.0,2335.0,5687.0,68248.0,28619.0,5.0,138.5,312623.0,0.1,0.321

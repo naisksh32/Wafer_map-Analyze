@@ -1,0 +1,59 @@
+{
+  "model_type": "MobileNetV3",
+  "checkpoint": "checkpoints\\MobileNetV3_15_0.5736.pth",
+  "onnx_model": "checkpoints\\MobileNetV3_opset14.onnx",
+  "onnx_quant": "checkpoints\\MobileNetV3_quantized.onnx",
+  "performance": {
+    "pytorch_test_accuracy": 0.3719,
+    "pytorch_f1_macro": 0.5618,
+    "quantized_f1_macro": 0.023,
+    "f1_loss": 0.5388
+  },
+  "model_size": {
+    "pytorch_mb": 5.95,
+    "onnx_mb": 5.83,
+    "quantized_mb": 1.62,
+    "size_reduction_pct": 72.2
+  },
+  "inference_benchmark": {
+    "batch_size": 32,
+    "PyTorch_CPU": {
+      "avg_ms": 16.34,
+      "p95_ms": 19.88
+    },
+    "PyTorch_GPU": {
+      "avg_ms": 7.16,
+      "p95_ms": 8.53
+    },
+    "ONNX_CPU": {
+      "avg_ms": 6.53,
+      "p95_ms": 7.36
+    },
+    "ONNX_Quantized": {
+      "avg_ms": 87.11,
+      "p95_ms": 103.86
+    }
+  },
+  "raspberry_pi_simulation": {
+    "batch_size": 1,
+    "n_iterations": 1000,
+    "onnx_orig": {
+      "avg_ms": 0.77,
+      "p95_ms": 0.96,
+      "throughput_ips": 1305.4,
+      "target_50ms_met": true
+    },
+    "onnx_quantized": {
+      "avg_ms": 3.59,
+      "p95_ms": 4.19,
+      "throughput_ips": 278.9,
+      "target_50ms_met": true
+    },
+    "note": "실제 RPi 4는 데스크탑 CPU 대비 약 5-10배 느림"
+  },
+  "gradcam": {
+    "target_layer": "model.features[-1][0]",
+    "n_misclassified": 16294,
+    "n_visualized": 6
+  }
+}

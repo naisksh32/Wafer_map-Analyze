@@ -1,0 +1,117 @@
+# Airflow 2.9.0 — WM-811K 웨이퍼 불량 검출 파이프라인
+# LocalExecutor + PostgreSQL 백엔드
+#
+# 실행:
+#   cd 07_airflow_pipeline
+#   docker compose up airflow-init  (최초 1회)
+#   docker compose up -d
+#   http://localhost:8080  (admin / admin)
+
+version: '3.8'
+
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.9.0
+  environment: &airflow-common-env
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__API__AUTH_BACKENDS: airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session
+    AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
+    # 프로젝트 루트 (Airflow Variable 대신 환경 변수로 주입)
+    AIRFLOW_VAR_WAFER_PROJECT_ROOT: /opt/airflow/project
+    # 추가 pip 패키지 (경량 버전 — GPU 없이 동작하는 CPU용)
+    _PIP_ADDITIONAL_REQUIREMENTS: >-
+      numpy scikit-learn mlflow optuna onnx onnxruntime
+      albumentations torch torchvision --extra-index-url https://download.pytorch.org/whl/cpu
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - airflow-logs:/opt/airflow/logs
+    - airflow-plugins:/opt/airflow/plugins
+    # 프로젝트 디렉터리 마운트 (상대경로: docker-compose.yaml 기준 한 단계 위)
+    - ../data:/opt/airflow/project/data
+    - ../checkpoints:/opt/airflow/project/checkpoints
+    - ../analysis:/opt/airflow/project/analysis
+    - ../mlruns:/opt/airflow/project/mlruns
+    - ../configs:/opt/airflow/project/configs
+  user: "${AIRFLOW_UID:-50000}:0"
+  depends_on: &airflow-common-depends-on
+    postgres:
+      condition: service_healthy
+
+services:
+
+  # ── PostgreSQL 메타데이터 DB ──────────────────────────────
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  # ── Airflow 초기화 (최초 실행 시만) ──────────────────────
+  airflow-init:
+    <<: *airflow-common
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        airflow db migrate
+        airflow users create \
+          --username ${_AIRFLOW_WWW_USER_USERNAME:-admin} \
+          --password ${_AIRFLOW_WWW_USER_PASSWORD:-admin} \
+          --firstname Admin \
+          --lastname User \
+          --role Admin \
+          --email admin@example.com
+        echo "초기화 완료"
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_MIGRATE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+
+  # ── Airflow Webserver (UI) ───────────────────────────────
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+
+  # ── Airflow Scheduler ─────────────────────────────────────
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: always
+    depends_on:
+      <<: *airflow-common-depends-on
+      airflow-init:
+        condition: service_completed_successfully
+
+volumes:
+  postgres-db-volume:
+  airflow-logs:
+  airflow-plugins:
