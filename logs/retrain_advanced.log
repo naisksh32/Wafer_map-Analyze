@@ -1,0 +1,80 @@
+C:\Users\naisk\Desktop\하이닉스 대비\웨이퍼 불량 분석\.venv\Lib\site-packages\albumentations\__init__.py:24: UserWarning: A new version of Albumentations is available: 2.0.8 (you have 1.4.21). Upgrade using: pip install -U albumentations. To disable automatic update checks, set the environment variable NO_ALBUMENTATIONS_UPDATE to 1.
+  check_for_updates()
+Device: cuda
+GPU: NVIDIA GeForce RTX 2060 SUPER
+  재학습 MobileNetV3 백본 가중치 전이 완료: C:\Users\naisk\Desktop\하이닉스 대비\웨이퍼 불량 분석\checkpoints\MobileNetV3_34_0.7417.pth
+
+ Ep |    Loss |   VlF1 | Best
+-----------------------------------
+  1 |  0.2818 | 0.7451 | ★
+  2 |  0.2084 | 0.7857 | ★
+  3 |  0.1862 | 0.7529 | 
+  4 |  0.1682 | 0.7657 | 
+  5 |  0.1608 | 0.7628 | 
+  6 |  0.1523 | 0.7887 | ★
+  7 |  0.1444 | 0.7748 | 
+  8 |  0.1378 | 0.7784 | 
+  9 |  0.1341 | 0.7808 | 
+ 10 |  0.1315 | 0.7780 | 
+ 11 |  0.1540 | 0.7732 | 
+ 12 |  0.1504 | 0.7487 | 
+ 13 |  0.1458 | 0.7864 | 
+ 14 |  0.1419 | 0.6974 | 
+ 15 |  0.1378 | 0.7936 | ★
+ 16 |  0.1338 | 0.7982 | ★
+ 17 |  0.1288 | 0.7410 | 
+ 18 |  0.1272 | 0.7574 | 
+ 19 |  0.1216 | 0.7610 | 
+ 20 |  0.1206 | 0.7893 | 
+ 21 |  0.1159 | 0.7827 | 
+ 22 |  0.1123 | 0.7937 | 
+ 23 |  0.1099 | 0.8072 | ★
+ 24 |  0.1080 | 0.8022 | 
+ 25 |  0.1064 | 0.7876 | 
+ 26 |  0.1046 | 0.8065 | 
+ 27 |  0.1023 | 0.7987 | 
+ 28 |  0.1022 | 0.8040 | 
+ 29 |  0.1006 | 0.8077 | ★
+ 30 |  0.1025 | 0.8107 | ★
+ 31 |  0.1220 | 0.7439 | 
+ 32 |  0.1211 | 0.7919 | 
+ 33 |  0.1195 | 0.7274 | 
+ 34 |  0.1183 | 0.7187 | 
+ 35 |  0.1166 | 0.8095 | 
+ 36 |  0.1160 | 0.7496 | 
+ 37 |  0.1135 | 0.8057 | 
+ 38 |  0.1101 | 0.7901 | 
+ 39 |  0.1100 | 0.8121 | ★
+ 40 |  0.1111 | 0.7675 | 
+ 41 |  0.1091 | 0.7818 | 
+ 42 |  0.1062 | 0.8006 | 
+ 43 |  0.1074 | 0.7832 | 
+ 44 |  0.1028 | 0.8125 | ★
+ 45 |  0.1020 | 0.7789 | 
+ 46 |  0.1004 | 0.8071 | 
+ 47 |  0.0986 | 0.8279 | ★
+ 48 |  0.0970 | 0.8189 | 
+ 49 |  0.0974 | 0.8186 | 
+ 50 |  0.0958 | 0.8244 | 
+
+=== AdvancedDefectPredictor (수정) Test ===
+Accuracy : 95.08%
+F1-macro : 0.8173  (목표 ≥ 0.90)  [MISS]
+              precision    recall  f1-score   support
+
+        none       0.99      0.96      0.98     22115
+      Center       0.76      0.95      0.84       644
+       Donut       0.86      0.84      0.85        83
+    Edge-Loc       0.71      0.86      0.78       779
+   Edge-Ring       0.93      0.98      0.96      1452
+         Loc       0.58      0.81      0.67       539
+   Near-full       0.91      0.95      0.93        22
+      Random       0.86      0.81      0.83       130
+     Scratch       0.37      0.79      0.51       179
+
+    accuracy                           0.95     25943
+   macro avg       0.78      0.88      0.82     25943
+weighted avg       0.96      0.95      0.95     25943
+
+결과 저장: analysis/advanced_model_results.json
+체크포인트: C:\Users\naisk\Desktop\하이닉스 대비\웨이퍼 불량 분석\checkpoints\AdvancedDefectPredictor_best_0.8279.pth

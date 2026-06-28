@@ -1,18 +1,17 @@
 {
   "model": "WaferCNN",
-  "best_epoch": 1,
-  "best_val_f1": 0.5024,
-  "test_accuracy": 0.1065,
-  "test_f1_macro": 0.5014,
-  "target_met": false,
+  "best_epoch": 23,
+  "best_val_f1": 0.8485,
+  "test_accuracy": 0.9578,
+  "test_f1_macro": 0.8458,
+  "target_met": true,
+  "fix_note": "WeightedRandomSampler only (no class_weight in CE), lr=3e-4, patience=10",
   "hyperparams": {
-    "epochs": 30,
+    "epochs": 40,
     "batch_size": 64,
-    "lr": 0.001,
+    "lr": 0.0003,
     "weight_decay": 0.0001,
-    "dropout": 0.3,
-    "optimizer": "Adam",
-    "scheduler": "CosineAnnealingLR"
+    "dropout": 0.3
   },
-  "best_checkpoint": "checkpoints\\WaferCNN_01_0.5024.pth"
+  "best_checkpoint": "checkpoints/WaferCNN_23_0.8485.pth"
 }

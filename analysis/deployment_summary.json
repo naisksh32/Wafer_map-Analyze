@@ -1,13 +1,19 @@
 {
   "model_type": "MobileNetV3",
-  "checkpoint": "checkpoints\\MobileNetV3_15_0.5736.pth",
-  "onnx_model": "checkpoints\\MobileNetV3_opset14.onnx",
-  "onnx_quant": "checkpoints\\MobileNetV3_quantized.onnx",
+  "checkpoint": "checkpoints/MobileNetV3_15_0.5736.pth",
+  "onnx_model": "checkpoints/MobileNetV3_opset14.onnx",
+  "onnx_quant": "checkpoints/MobileNetV3_quantized.onnx",
   "performance": {
     "pytorch_test_accuracy": 0.3719,
     "pytorch_f1_macro": 0.5618,
     "quantized_f1_macro": 0.023,
-    "f1_loss": 0.5388
+    "f1_loss": 0.5388,
+    "quantization_warning": "INT8 quantization fails on single-channel model: F1 drops 0.56->0.023. Use ONNX original."
+  },
+  "deployment_recommendation": {
+    "recommended": "ONNX original (MobileNetV3_opset14.onnx)",
+    "reason": "INT8 quantization destroys accuracy on grayscale model. ONNX original retains 2.5x CPU speedup.",
+    "not_recommended": "ONNX quantized (INT8) - catastrophic accuracy degradation"
   },
   "model_size": {
     "pytorch_mb": 5.95,
@@ -31,12 +37,14 @@
     },
     "ONNX_Quantized": {
       "avg_ms": 87.11,
-      "p95_ms": 103.86
+      "p95_ms": 103.86,
+      "note": "Slow AND inaccurate - do not use"
     }
   },
   "raspberry_pi_simulation": {
     "batch_size": 1,
     "n_iterations": 1000,
+    "note": "Measured on desktop CPU. Actual RPi 4 is ~5-10x slower (estimated avg 4-8ms)",
     "onnx_orig": {
       "avg_ms": 0.77,
       "p95_ms": 0.96,
@@ -47,9 +55,9 @@
       "avg_ms": 3.59,
       "p95_ms": 4.19,
       "throughput_ips": 278.9,
-      "target_50ms_met": true
-    },
-    "note": "실제 RPi 4는 데스크탑 CPU 대비 약 5-10배 느림"
+      "target_50ms_met": true,
+      "warning": "F1=0.023 - unusable"
+    }
   },
   "gradcam": {
     "target_layer": "model.features[-1][0]",

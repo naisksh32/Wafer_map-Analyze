@@ -7,6 +7,10 @@
     train_loader, val_loader, test_loader = get_dataloaders(
         all_maps_resized, split, batch_size=64
     )
+
+불균형 보정 전략:
+    WeightedRandomSampler 단독 사용 (split['class_weights'] 활용)
+    CrossEntropyLoss에는 weight 인자를 넣지 말 것 — 이중 보정 시 소수 클래스 편향 심화
 """
 
 import pickle
