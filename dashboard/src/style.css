@@ -1,0 +1,75 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:     #08111F;
+  --panel:  #0F1A2E;
+  --panel2: #151F35;
+  --panel3: #111B30;
+  --border: #1C2D47;
+  --accent: #00D4FF;
+  --green:  #00E5A0;
+  --yellow: #FFB300;
+  --red:    #FF3D5A;
+  --text:   #DDE6F0;
+  --sub:    #4A6080;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app { height: 100vh; display: flex; flex-direction: column; }
+
+/* ── 버튼 공통 ── */
+.btn {
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn--green  { border-color: var(--green);  color: var(--green); }
+.btn--green:hover  { background: rgba(0,229,160,.12); }
+.btn--yellow { border-color: var(--yellow); color: var(--yellow); }
+.btn--yellow:hover { background: rgba(255,179,0,.12); }
+.btn--red    { border-color: var(--red);    color: var(--red); }
+.btn--red:hover    { background: rgba(255,61,90,.12); }
+.btn--accent { border-color: var(--accent); color: var(--accent); }
+.btn--accent:hover { background: rgba(0,212,255,.12); }
+.btn--accent.is-active {
+  background: rgba(0,212,255,.18);
+  box-shadow: 0 0 8px rgba(0,212,255,.3);
+}
+
+/* ── 패널 공통 타이틀 ── */
+.panel-title {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+/* ── 색상 유틸 ── */
+.c-green  { color: var(--green)  !important; }
+.c-yellow { color: var(--yellow) !important; }
+.c-red    { color: var(--red)    !important; }
+.c-accent { color: var(--accent) !important; }
+.c-sub    { color: var(--sub)    !important; }
