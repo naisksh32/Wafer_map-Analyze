@@ -11,6 +11,16 @@ CLAUDE.md
 # 대용량 데이터 (GitHub 100MB 초과)
 data/raw/
 data/processed/all_maps_resized.npy
+data/processed/split_indices.pkl
+
+# Spark 파이프라인 출력 (생성 파일 — 재실행으로 복원 가능)
+data/lake/
+
+# 모델 체크포인트 (이진 대용량 파일)
+checkpoints/
+
+# Node.js 의존성
+dashboard/node_modules/
 
 # MLFlow 실험 기록 (대용량)
 mlruns/
