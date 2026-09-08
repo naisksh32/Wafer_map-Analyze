@@ -1,67 +1,63 @@
 {
-  "model_type": "MobileNetV3",
-  "checkpoint": "checkpoints/MobileNetV3_15_0.5736.pth",
-  "onnx_model": "checkpoints/MobileNetV3_opset14.onnx",
-  "onnx_quant": "checkpoints/MobileNetV3_quantized.onnx",
-  "performance": {
-    "pytorch_test_accuracy": 0.3719,
-    "pytorch_f1_macro": 0.5618,
-    "quantized_f1_macro": 0.023,
-    "f1_loss": 0.5388,
-    "quantization_warning": "INT8 quantization fails on single-channel model: F1 drops 0.56->0.023. Use ONNX original."
-  },
-  "deployment_recommendation": {
-    "recommended": "ONNX original (MobileNetV3_opset14.onnx)",
-    "reason": "INT8 quantization destroys accuracy on grayscale model. ONNX original retains 2.5x CPU speedup.",
-    "not_recommended": "ONNX quantized (INT8) - catastrophic accuracy degradation"
-  },
-  "model_size": {
-    "pytorch_mb": 5.95,
-    "onnx_mb": 5.83,
-    "quantized_mb": 1.62,
-    "size_reduction_pct": 72.2
-  },
-  "inference_benchmark": {
-    "batch_size": 32,
-    "PyTorch_CPU": {
-      "avg_ms": 16.34,
-      "p95_ms": 19.88
+  "description": "ONNX 배포 검증 — 재학습 완료 체크포인트 기준, 정확도 검증 후 채택 여부 결정",
+  "source_checkpoint": "checkpoints/MobileNetV3_34_0.7417.pth",
+  "model": "MobileNetV3-Small (1채널 입력, 9클래스)",
+  "why_not_best_model": "최고 성능은 WaferCNN(macro F1 0.8458)이나, 엣지 디바이스 배포 대상으로는 ImageNet 사전학습 기반 경량 백본이면서 depthwise separable conv 로 ARM CPU 최적화가 검증된 MobileNetV3-Small 을 선택. macro F1 0.1089 손실을 감수하고 추론 지연과 배포 호환성을 택한 의도적 트레이드오프.",
+  "accuracy": {
+    "pytorch": {
+      "accuracy": 0.9045,
+      "f1_macro": 0.7369
     },
-    "PyTorch_GPU": {
-      "avg_ms": 7.16,
-      "p95_ms": 8.53
+    "onnx_fp32": {
+      "accuracy": 0.9045,
+      "f1_macro": 0.7369
     },
-    "ONNX_CPU": {
-      "avg_ms": 6.53,
-      "p95_ms": 7.36
+    "onnx_int8": {
+      "accuracy": 0.0257,
+      "f1_macro": 0.0279
     },
-    "ONNX_Quantized": {
-      "avg_ms": 87.11,
-      "p95_ms": 103.86,
-      "note": "Slow AND inaccurate - do not use"
+    "fp32_conversion_f1_delta": 0.0,
+    "int8_quantization_f1_delta": -0.709
+  },
+  "model_size_mb": {
+    "pytorch": 5.95,
+    "onnx_fp32": 5.83,
+    "onnx_int8": 1.62,
+    "int8_size_reduction_pct": 72.2
+  },
+  "latency_batch32": {
+    "pytorch_cpu": {
+      "avg_ms": 17.07,
+      "p95_ms": 19.17
+    },
+    "pytorch_gpu": {
+      "avg_ms": 6.41,
+      "p95_ms": 7.23
+    },
+    "onnx_cpu": {
+      "avg_ms": 7.02,
+      "p95_ms": 8.13
+    },
+    "onnx_int8_cpu": {
+      "avg_ms": 88.06,
+      "p95_ms": 92.77
     }
   },
-  "raspberry_pi_simulation": {
-    "batch_size": 1,
-    "n_iterations": 1000,
-    "note": "Measured on desktop CPU. Actual RPi 4 is ~5-10x slower (estimated avg 4-8ms)",
-    "onnx_orig": {
-      "avg_ms": 0.77,
-      "p95_ms": 0.96,
-      "throughput_ips": 1305.4,
-      "target_50ms_met": true
+  "latency_batch1_single_wafer": {
+    "onnx_fp32": {
+      "avg_ms": 0.6,
+      "p95_ms": 0.74
     },
-    "onnx_quantized": {
-      "avg_ms": 3.59,
-      "p95_ms": 4.19,
-      "throughput_ips": 278.9,
-      "target_50ms_met": true,
-      "warning": "F1=0.023 - unusable"
+    "onnx_int8": {
+      "avg_ms": 3.42,
+      "p95_ms": 3.65
     }
   },
-  "gradcam": {
-    "target_layer": "model.features[-1][0]",
-    "n_misclassified": 16294,
-    "n_visualized": 6
-  }
+  "decision": {
+    "adopted": "ONNX FP32 (checkpoints/MobileNetV3_deploy.onnx)",
+    "rejected": "ONNX INT8 동적 양자화",
+    "rejection_reason": "INT8 양자화 시 macro F1 0.7369 → 0.0279 (-0.7090), 추론 속도도 7.02ms → 88.06ms 로 오히려 느려짐. 단일 채널 grayscale 입력은 활성값 분포의 동적 범위가 좁아 per-tensor 양자화 스케일이 소수 클래스 특징을 뭉갠 것으로 판단. 크기 감소만으로 채택할 수 없어 기각.",
+    "int8_auto_check_passed": false
+  },
+  "note_on_edge_benchmark": "측정은 데스크톱 CPU 기준. 실제 Raspberry Pi 4 는 5~10배 느리므로 단일 웨이퍼 추론 0.60ms → 실기 추정 3.0~6.0ms 수준. 실기 측정값이 아닌 추정치임."
 }

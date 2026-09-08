@@ -1,0 +1,67 @@
+{
+  "description": "전 모델 통합 재평가 — 동일 테스트셋(증강/샘플러 미적용) · 동일 지표 계산",
+  "test_set_size": 25943,
+  "test_class_distribution": {
+    "none": 22115,
+    "Center": 644,
+    "Donut": 83,
+    "Edge-Loc": 779,
+    "Edge-Ring": 1452,
+    "Loc": 539,
+    "Near-full": 22,
+    "Random": 130,
+    "Scratch": 179
+  },
+  "device": "cuda",
+  "seed": 42,
+  "models": {
+    "WaferCNN": {
+      "checkpoint": "checkpoints/WaferCNN_23_0.8485.pth",
+      "note": "커스텀 4-Conv CNN 베이스라인",
+      "params_M": 1.21,
+      "test_accuracy": 0.9578,
+      "test_f1_macro": 0.8458,
+      "test_f1_weighted": 0.9609
+    },
+    "WaferCNN + Optuna HPO": {
+      "checkpoint": "checkpoints/WaferCNN_best_hpo.pth",
+      "note": "Optuna 20 trials 최적 파라미터 재학습",
+      "params_M": 1.21,
+      "test_accuracy": 0.4321,
+      "test_f1_macro": 0.5987,
+      "test_f1_weighted": 0.5329
+    },
+    "MobileNetV3-Small": {
+      "checkpoint": "checkpoints/MobileNetV3_34_0.7417.pth",
+      "note": "2-Phase 파인튜닝 · 엣지 배포 채택",
+      "params_M": 1.53,
+      "test_accuracy": 0.9045,
+      "test_f1_macro": 0.7369,
+      "test_f1_weighted": 0.9197
+    },
+    "EfficientNet-B0": {
+      "checkpoint": "checkpoints/EfficientNet-B0_19_0.7999.pth",
+      "note": "2-Phase 파인튜닝",
+      "params_M": 4.02,
+      "test_accuracy": 0.9396,
+      "test_f1_macro": 0.7944,
+      "test_f1_weighted": 0.9464
+    },
+    "ViT-Tiny": {
+      "checkpoint": "checkpoints/ViT-Tiny_29_0.8351.pth",
+      "note": "2-Phase 파인튜닝",
+      "params_M": 5.39,
+      "test_accuracy": 0.9554,
+      "test_f1_macro": 0.8352,
+      "test_f1_weighted": 0.9587
+    },
+    "AdvancedDefectPredictor": {
+      "checkpoint": "checkpoints/AdvancedDefectPredictor_best_0.8279.pth",
+      "note": "Multi-output(분류+심각도+신뢰도)",
+      "params_M": 1.13,
+      "test_accuracy": 0.9508,
+      "test_f1_macro": 0.8173,
+      "test_f1_weighted": 0.9549
+    }
+  }
+}

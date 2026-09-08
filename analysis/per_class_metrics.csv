@@ -1,0 +1,55 @@
+﻿model,class,support,precision,recall,f1
+WaferCNN,none,22115,0.9977,0.9604,0.9787
+WaferCNN,Center,644,0.8142,0.9596,0.881
+WaferCNN,Donut,83,0.9059,0.9277,0.9167
+WaferCNN,Edge-Loc,779,0.6654,0.9294,0.7756
+WaferCNN,Edge-Ring,1452,0.9337,0.9897,0.9609
+WaferCNN,Loc,539,0.689,0.8219,0.7496
+WaferCNN,Near-full,22,0.8462,1.0,0.9167
+WaferCNN,Random,130,0.6879,0.9154,0.7855
+WaferCNN,Scratch,179,0.4927,0.9441,0.6475
+WaferCNN + Optuna HPO,none,22115,0.9997,0.3462,0.5143
+WaferCNN + Optuna HPO,Center,644,0.3484,0.9689,0.5125
+WaferCNN + Optuna HPO,Donut,83,0.8261,0.9157,0.8686
+WaferCNN + Optuna HPO,Edge-Loc,779,0.2942,0.8742,0.4402
+WaferCNN + Optuna HPO,Edge-Ring,1452,0.9214,0.9773,0.9485
+WaferCNN + Optuna HPO,Loc,539,0.2461,0.8145,0.378
+WaferCNN + Optuna HPO,Near-full,22,0.88,1.0,0.9362
+WaferCNN + Optuna HPO,Random,130,0.6467,0.9154,0.758
+WaferCNN + Optuna HPO,Scratch,179,0.0165,0.9721,0.0324
+MobileNetV3-Small,none,22115,0.9962,0.904,0.9479
+MobileNetV3-Small,Center,644,0.6594,0.941,0.7754
+MobileNetV3-Small,Donut,83,0.73,0.8795,0.7978
+MobileNetV3-Small,Edge-Loc,779,0.4876,0.8832,0.6283
+MobileNetV3-Small,Edge-Ring,1452,0.8846,0.9766,0.9283
+MobileNetV3-Small,Loc,539,0.5049,0.7588,0.6064
+MobileNetV3-Small,Near-full,22,0.8462,1.0,0.9167
+MobileNetV3-Small,Random,130,0.6552,0.8769,0.75
+MobileNetV3-Small,Scratch,179,0.1709,0.7933,0.2812
+EfficientNet-B0,none,22115,0.9972,0.943,0.9693
+EfficientNet-B0,Center,644,0.6799,0.9596,0.7959
+EfficientNet-B0,Donut,83,0.8172,0.9157,0.8636
+EfficientNet-B0,Edge-Loc,779,0.6208,0.8742,0.726
+EfficientNet-B0,Edge-Ring,1452,0.9499,0.9787,0.964
+EfficientNet-B0,Loc,539,0.5776,0.7941,0.6687
+EfficientNet-B0,Near-full,22,0.875,0.9545,0.913
+EfficientNet-B0,Random,130,0.6842,0.9,0.7774
+EfficientNet-B0,Scratch,179,0.32,0.8939,0.4713
+ViT-Tiny,none,22115,0.9956,0.9611,0.978
+ViT-Tiny,Center,644,0.7656,0.9534,0.8492
+ViT-Tiny,Donut,83,0.9136,0.8916,0.9024
+ViT-Tiny,Edge-Loc,779,0.7024,0.8909,0.7855
+ViT-Tiny,Edge-Ring,1452,0.9393,0.9904,0.9641
+ViT-Tiny,Loc,539,0.6166,0.8145,0.7018
+ViT-Tiny,Near-full,22,0.913,0.9545,0.9333
+ViT-Tiny,Random,130,0.8056,0.8923,0.8467
+ViT-Tiny,Scratch,179,0.4363,0.7654,0.5558
+AdvancedDefectPredictor,none,22115,0.9945,0.9579,0.9759
+AdvancedDefectPredictor,Center,644,0.7574,0.955,0.8448
+AdvancedDefectPredictor,Donut,83,0.8642,0.8434,0.8537
+AdvancedDefectPredictor,Edge-Loc,779,0.714,0.8588,0.7797
+AdvancedDefectPredictor,Edge-Ring,1452,0.9313,0.98,0.955
+AdvancedDefectPredictor,Loc,539,0.5782,0.8089,0.6744
+AdvancedDefectPredictor,Near-full,22,0.913,0.9545,0.9333
+AdvancedDefectPredictor,Random,130,0.8607,0.8077,0.8333
+AdvancedDefectPredictor,Scratch,179,0.3708,0.7933,0.5053
