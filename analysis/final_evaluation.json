@@ -13,55 +13,79 @@
     "Scratch": 179
   },
   "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 4070 Laptop GPU",
   "seed": 42,
+  "ci_note": "test_f1_macro_ci95 = 테스트셋 bootstrap 1000회 재표집 95% 구간",
   "models": {
     "WaferCNN": {
-      "checkpoint": "checkpoints/WaferCNN_23_0.8485.pth",
+      "checkpoint": "checkpoints/WaferCNN_37_0.8453.pth",
       "note": "커스텀 4-Conv CNN 베이스라인",
       "params_M": 1.21,
-      "test_accuracy": 0.9578,
-      "test_f1_macro": 0.8458,
-      "test_f1_weighted": 0.9609
-    },
-    "WaferCNN + Optuna HPO": {
-      "checkpoint": "checkpoints/WaferCNN_best_hpo.pth",
-      "note": "Optuna 20 trials 최적 파라미터 재학습",
-      "params_M": 1.21,
-      "test_accuracy": 0.4321,
-      "test_f1_macro": 0.5987,
-      "test_f1_weighted": 0.5329
+      "test_accuracy": 0.9585,
+      "test_f1_macro": 0.8508,
+      "test_f1_weighted": 0.9616,
+      "test_precision_macro": 0.7929,
+      "test_recall_macro": 0.9343,
+      "test_f1_macro_ci95": [
+        0.8353,
+        0.8635
+      ]
     },
     "MobileNetV3-Small": {
-      "checkpoint": "checkpoints/MobileNetV3_34_0.7417.pth",
+      "checkpoint": "checkpoints/MobileNetV3_34_0.7431.pth",
       "note": "2-Phase 파인튜닝 · 엣지 배포 채택",
       "params_M": 1.53,
-      "test_accuracy": 0.9045,
-      "test_f1_macro": 0.7369,
-      "test_f1_weighted": 0.9197
+      "test_accuracy": 0.9041,
+      "test_f1_macro": 0.7372,
+      "test_f1_weighted": 0.9196,
+      "test_precision_macro": 0.6606,
+      "test_recall_macro": 0.891,
+      "test_f1_macro_ci95": [
+        0.7204,
+        0.7507
+      ]
     },
     "EfficientNet-B0": {
-      "checkpoint": "checkpoints/EfficientNet-B0_19_0.7999.pth",
+      "checkpoint": "checkpoints/EfficientNet-B0_30_0.8025.pth",
       "note": "2-Phase 파인튜닝",
       "params_M": 4.02,
-      "test_accuracy": 0.9396,
-      "test_f1_macro": 0.7944,
-      "test_f1_weighted": 0.9464
+      "test_accuracy": 0.9416,
+      "test_f1_macro": 0.802,
+      "test_f1_weighted": 0.9478,
+      "test_precision_macro": 0.7313,
+      "test_recall_macro": 0.916,
+      "test_f1_macro_ci95": [
+        0.7836,
+        0.8165
+      ]
     },
     "ViT-Tiny": {
-      "checkpoint": "checkpoints/ViT-Tiny_29_0.8351.pth",
+      "checkpoint": "checkpoints/ViT-Tiny_07_0.8144.pth",
       "note": "2-Phase 파인튜닝",
       "params_M": 5.39,
-      "test_accuracy": 0.9554,
-      "test_f1_macro": 0.8352,
-      "test_f1_weighted": 0.9587
+      "test_accuracy": 0.9434,
+      "test_f1_macro": 0.8106,
+      "test_f1_weighted": 0.9495,
+      "test_precision_macro": 0.7588,
+      "test_recall_macro": 0.8963,
+      "test_f1_macro_ci95": [
+        0.7956,
+        0.8232
+      ]
     },
     "AdvancedDefectPredictor": {
-      "checkpoint": "checkpoints/AdvancedDefectPredictor_best_0.8279.pth",
+      "checkpoint": "checkpoints/AdvancedDefectPredictor_best_0.8340.pth",
       "note": "Multi-output(분류+심각도+신뢰도)",
       "params_M": 1.13,
-      "test_accuracy": 0.9508,
-      "test_f1_macro": 0.8173,
-      "test_f1_weighted": 0.9549
+      "test_accuracy": 0.9512,
+      "test_f1_macro": 0.8229,
+      "test_f1_weighted": 0.9549,
+      "test_precision_macro": 0.7778,
+      "test_recall_macro": 0.8848,
+      "test_f1_macro_ci95": [
+        0.8049,
+        0.8372
+      ]
     }
   }
 }

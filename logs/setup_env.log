@@ -1,0 +1,309 @@
++ cd C:/Users/SSAFY/Desktop/Private/self
++ python -m venv .venv
++ PY=.venv/Scripts/python.exe
++ .venv/Scripts/python.exe -m pip install --upgrade pip
+Requirement already satisfied: pip in c:\users\ssafy\desktop\private\self\.venv\lib\site-packages (25.0.1)
+Collecting pip
+  Downloading pip-26.2.1-py3-none-any.whl.metadata (4.6 kB)
+Downloading pip-26.2.1-py3-none-any.whl (1.8 MB)
+   ---------------------------------------- 1.8/1.8 MB 5.0 MB/s eta 0:00:00
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 25.0.1
+    Uninstalling pip-25.0.1:
+      Successfully uninstalled pip-25.0.1
+Successfully installed pip-26.2.1
++ .venv/Scripts/python.exe -m pip install kagglehub
+Collecting kagglehub
+  Using cached kagglehub-1.0.2-py3-none-any.whl.metadata (40 kB)
+Collecting kagglesdk<1.0,>=0.1.22 (from kagglehub)
+  Downloading kagglesdk-0.1.37-py3-none-any.whl.metadata (13 kB)
+Collecting packaging (from kagglehub)
+  Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pyyaml (from kagglehub)
+  Using cached pyyaml-6.0.3-cp312-cp312-win_amd64.whl.metadata (2.4 kB)
+Collecting requests (from kagglehub)
+  Using cached requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+Collecting tqdm (from kagglehub)
+  Downloading tqdm-4.70.1-py3-none-any.whl.metadata (57 kB)
+Collecting protobuf (from kagglesdk<1.0,>=0.1.22->kagglehub)
+  Downloading protobuf-7.36.1-cp310-abi3-win_amd64.whl.metadata (595 bytes)
+Collecting charset_normalizer<4,>=2 (from requests->kagglehub)
+  Downloading charset_normalizer-3.5.1-cp312-cp312-win_amd64.whl.metadata (46 kB)
+Collecting idna<4,>=2.5 (from requests->kagglehub)
+  Downloading idna-3.19-py3-none-any.whl.metadata (9.2 kB)
+Collecting urllib3<3,>=1.26 (from requests->kagglehub)
+  Using cached urllib3-2.7.0-py3-none-any.whl.metadata (6.9 kB)
+Collecting certifi>=2023.5.7 (from requests->kagglehub)
+  Using cached certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting colorama (from tqdm->kagglehub)
+  Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+Using cached kagglehub-1.0.2-py3-none-any.whl (70 kB)
+Downloading kagglesdk-0.1.37-py3-none-any.whl (262 kB)
+Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Downloading protobuf-7.36.1-cp310-abi3-win_amd64.whl (456 kB)
+Using cached pyyaml-6.0.3-cp312-cp312-win_amd64.whl (154 kB)
+Using cached requests-2.34.2-py3-none-any.whl (73 kB)
+Downloading charset_normalizer-3.5.1-cp312-cp312-win_amd64.whl (200 kB)
+Downloading idna-3.19-py3-none-any.whl (68 kB)
+Using cached urllib3-2.7.0-py3-none-any.whl (131 kB)
+Using cached certifi-2026.7.22-py3-none-any.whl (136 kB)
+Downloading tqdm-4.70.1-py3-none-any.whl (80 kB)
+Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+Installing collected packages: urllib3, pyyaml, protobuf, packaging, idna, colorama, charset_normalizer, certifi, tqdm, requests, kagglesdk, kagglehub
+
+Successfully installed certifi-2026.7.22 charset_normalizer-3.5.1 colorama-0.4.6 idna-3.19 kagglehub-1.0.2 kagglesdk-0.1.37 packaging-26.3 protobuf-7.36.1 pyyaml-6.0.3 requests-2.34.2 tqdm-4.70.1 urllib3-2.7.0
++ DL=259
++ .venv/Scripts/python.exe -m pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cu124
++ PYTHONUTF8=1
++ .venv/Scripts/python.exe -c 'import kagglehub; p=kagglehub.dataset_download('\''qingyi/wm811k-wafer-map'\''); print('\''DOWNLOAD_PATH='\'', p)'
+Looking in indexes: https://download.pytorch.org/whl/cu124
+Collecting torch==2.6.0
+  Downloading torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl.metadata (28 kB)
+Collecting torchvision==0.21.0
+  Downloading torchvision-0.21.0%2Bcu124-cp312-cp312-win_amd64.whl.metadata (6.3 kB)
+Collecting filelock (from torch==2.6.0)
+  Downloading filelock-3.32.3-py3-none-any.whl.metadata (2.0 kB)
+Collecting typing-extensions>=4.10.0 (from torch==2.6.0)
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting networkx (from torch==2.6.0)
+  Using cached networkx-3.6.1-py3-none-any.whl.metadata (6.8 kB)
+Collecting jinja2 (from torch==2.6.0)
+  Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting fsspec (from torch==2.6.0)
+  Downloading fsspec-2026.7.0-py3-none-any.whl.metadata (10 kB)
+Collecting setuptools (from torch==2.6.0)
+  Downloading setuptools-78.1.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting sympy==1.13.1 (from torch==2.6.0)
+  Downloading sympy-1.13.1-py3-none-any.whl.metadata (12 kB)
+Collecting numpy (from torchvision==0.21.0)
+  Downloading numpy-2.5.2-cp312-cp312-win_amd64.whl.metadata (6.6 kB)
+Collecting pillow!=8.3.*,>=5.3.0 (from torchvision==0.21.0)
+  Using cached pillow-12.3.0-cp312-cp312-win_amd64.whl.metadata (9.3 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy==1.13.1->torch==2.6.0)
+  Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->torch==2.6.0)
+  Using cached markupsafe-3.0.3-cp312-cp312-win_amd64.whl.metadata (2.8 kB)
+Downloading torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl (2532.3 MB)
+   ----                                     0.3/2.5 GB 1.2 MB/s eta 0:31:49
+WARNING: Connection interrupted while downloading.
+WARNING: Attempting to resume incomplete download (261.1 MB/2532.3 MB, attempt 1)
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+Resuming download torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl (261.1 MB/2532.3 MB)
+   ----                                     0.3/2.5 GB 1.7 MB/s eta 0:22:21
+WARNING: Connection interrupted while downloading.
+WARNING: Attempting to resume incomplete download (299.4 MB/2532.3 MB, attempt 2)
+Resuming download torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl (299.4 MB/2532.3 MB)
+   -------                                  0.5/2.5 GB 4.1 MB/s eta 0:08:28
+WARNING: Connection interrupted while downloading.
+WARNING: Attempting to resume incomplete download (461.4 MB/2532.3 MB, attempt 3)
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Attempting to resume incomplete download (461.4 MB/2532.3 MB, attempt 4)
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='download-r2.pytorch.org', port=443): Failed to resolve 'download-r2.pytorch.org' ([Errno 11001] getaddrinfo failed)")': /whl/cu124/torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl
+Resuming download torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl (461.4 MB/2532.3 MB)
+   -----------                              0.8/2.5 GB 1.1 MB/s eta 0:27:18
+WARNING: Connection interrupted while downloading.
+WARNING: Attempting to resume incomplete download (757.6 MB/2532.3 MB, attempt 5)
+Resuming download torch-2.6.0%2Bcu124-cp312-cp312-win_amd64.whl (757.6 MB/2532.3 MB)
+   --------------------------               1.7/2.5 GB 4.8 MB/s eta 0:02:55
+WARNING: Connection interrupted while downloading.
+ERROR: Could not install packages due to an OSError: [WinError 32] �ٸ� ���μ����� ������ ��� ���̱� ������ ���μ����� �׼��� �� �� �����ϴ�: 'C:\\Users\\SSAFY\\AppData\\Local\\Temp\\pip-unpack-3gyucn69\\torch-2.6.0+cu124-cp312-cp312-win_amd64.whl'
+Check the permissions.
+
++ .venv/Scripts/python.exe -m pip install timm==1.0.27 albumentations==1.4.21 scikit-learn pandas opencv-python pyyaml tqdm matplotlib seaborn
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NameResolutionError("HTTPSConnection(host='pypi.org', port=443): Failed to resolve 'pypi.org' ([Errno 11001] getaddrinfo failed)")': /simple/timm/
+Collecting timm==1.0.27
+  Downloading timm-1.0.27-py3-none-any.whl.metadata (40 kB)
+Collecting albumentations==1.4.21
+  Downloading albumentations-1.4.21-py3-none-any.whl.metadata (31 kB)
+Collecting scikit-learn
+  Downloading scikit_learn-1.9.1-cp312-cp312-win_amd64.whl.metadata (9.3 kB)
+Collecting pandas
+  Downloading pandas-3.0.5-cp312-cp312-win_amd64.whl.metadata (19 kB)
+Collecting opencv-python
+  Using cached opencv_python-5.0.0.93-cp37-abi3-win_amd64.whl.metadata (20 kB)
+Requirement already satisfied: pyyaml in .\.venv\Lib\site-packages (6.0.3)
+Requirement already satisfied: tqdm in .\.venv\Lib\site-packages (4.70.1)
+Collecting matplotlib
+  Downloading matplotlib-3.11.2-cp312-cp312-win_amd64.whl.metadata (80 kB)
+Collecting seaborn
+  Using cached seaborn-0.13.2-py3-none-any.whl.metadata (5.4 kB)
+Collecting torch (from timm==1.0.27)
+  Downloading torch-2.14.0-cp312-cp312-win_amd64.whl.metadata (38 kB)
+Collecting torchvision (from timm==1.0.27)
+  Downloading torchvision-0.29.0-cp312-cp312-win_amd64.whl.metadata (5.7 kB)
+Collecting huggingface_hub (from timm==1.0.27)
+  Downloading huggingface_hub-1.31.0-py3-none-any.whl.metadata (16 kB)
+Collecting safetensors (from timm==1.0.27)
+  Using cached safetensors-0.8.0-cp310-abi3-win_amd64.whl.metadata (4.2 kB)
+Collecting numpy>=1.24.4 (from albumentations==1.4.21)
+  Downloading numpy-2.5.3-cp312-cp312-win_amd64.whl.metadata (6.6 kB)
+Collecting scipy>=1.10.0 (from albumentations==1.4.21)
+  Downloading scipy-1.18.1-cp312-cp312-win_amd64.whl.metadata (61 kB)
+Collecting pydantic>=2.7.0 (from albumentations==1.4.21)
+  Downloading pydantic-2.13.5-py3-none-any.whl.metadata (110 kB)
+Collecting albucore==0.0.20 (from albumentations==1.4.21)
+  Downloading albucore-0.0.20-py3-none-any.whl.metadata (5.3 kB)
+Collecting eval-type-backport (from albumentations==1.4.21)
+  Downloading eval_type_backport-0.4.0-py3-none-any.whl.metadata (3.1 kB)
+Collecting opencv-python-headless>=4.9.0.80 (from albumentations==1.4.21)
+  Using cached opencv_python_headless-5.0.0.93-cp37-abi3-win_amd64.whl.metadata (20 kB)
+Collecting stringzilla>=3.10.4 (from albucore==0.0.20->albumentations==1.4.21)
+  Downloading stringzilla-5.1.2-cp312-cp312-win_amd64.whl.metadata (57 kB)
+Collecting simsimd>=5.9.2 (from albucore==0.0.20->albumentations==1.4.21)
+  Downloading simsimd-6.5.16-cp312-cp312-win_amd64.whl.metadata (71 kB)
+Collecting joblib>=1.4.0 (from scikit-learn)
+  Downloading joblib-1.6.0-py3-none-any.whl.metadata (6.5 kB)
+Collecting narwhals>=2.0.1 (from scikit-learn)
+  Downloading narwhals-2.26.0-py3-none-any.whl.metadata (15 kB)
+Collecting threadpoolctl>=3.5.0 (from scikit-learn)
+  Downloading threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+Collecting python-dateutil>=2.8.2 (from pandas)
+  Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting tzdata (from pandas)
+  Downloading tzdata-2026.4-py2.py3-none-any.whl.metadata (1.4 kB)
+Requirement already satisfied: colorama in .\.venv\Lib\site-packages (from tqdm) (0.4.6)
+Collecting contourpy>=1.0.1 (from matplotlib)
+  Downloading contourpy-1.4.0-cp312-cp312-win_amd64.whl.metadata (3.8 kB)
+Collecting cycler>=0.10 (from matplotlib)
+  Using cached cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib)
+  Downloading fonttools-4.65.0-cp312-cp312-win_amd64.whl.metadata (127 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib)
+  Downloading kiwisolver-1.5.1-cp312-cp312-win_amd64.whl.metadata (5.2 kB)
+Requirement already satisfied: packaging>=20.0 in .\.venv\Lib\site-packages (from matplotlib) (26.3)
+Collecting pillow>=9 (from matplotlib)
+  Using cached pillow-12.3.0-cp312-cp312-win_amd64.whl.metadata (9.3 kB)
+Collecting pyparsing>=3 (from matplotlib)
+  Using cached pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+Collecting cloudpickle>=3.0 (from joblib>=1.4.0->scikit-learn)
+  Downloading cloudpickle-3.1.2-py3-none-any.whl.metadata (7.1 kB)
+Collecting annotated-types>=0.6.0 (from pydantic>=2.7.0->albumentations==1.4.21)
+  Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.46.5 (from pydantic>=2.7.0->albumentations==1.4.21)
+  Downloading pydantic_core-2.46.5-cp312-cp312-win_amd64.whl.metadata (6.7 kB)
+Collecting typing-extensions>=4.14.1 (from pydantic>=2.7.0->albumentations==1.4.21)
+  Using cached typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting typing-inspection>=0.4.2 (from pydantic>=2.7.0->albumentations==1.4.21)
+  Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas)
+  Using cached six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Collecting click<9.0.0,>=8.4.2 (from huggingface_hub->timm==1.0.27)
+  Downloading click-8.5.0-py3-none-any.whl.metadata (2.6 kB)
+Collecting filelock>=3.10.0 (from huggingface_hub->timm==1.0.27)
+  Downloading filelock-3.32.6-py3-none-any.whl.metadata (2.0 kB)
+Collecting fsspec>=2023.5.0 (from huggingface_hub->timm==1.0.27)
+  Using cached fsspec-2026.7.0-py3-none-any.whl.metadata (10 kB)
+Collecting hf-xet<2.0.0,>=1.5.2 (from huggingface_hub->timm==1.0.27)
+  Downloading hf_xet-1.6.0-cp38-abi3-win_amd64.whl.metadata (4.9 kB)
+Collecting httpx<1,>=0.23.0 (from huggingface_hub->timm==1.0.27)
+  Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+Collecting anyio (from httpx<1,>=0.23.0->huggingface_hub->timm==1.0.27)
+  Downloading anyio-4.15.1-py3-none-any.whl.metadata (4.7 kB)
+Requirement already satisfied: certifi in .\.venv\Lib\site-packages (from httpx<1,>=0.23.0->huggingface_hub->timm==1.0.27) (2026.7.22)
+Collecting httpcore==1.* (from httpx<1,>=0.23.0->huggingface_hub->timm==1.0.27)
+  Using cached httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Requirement already satisfied: idna in .\.venv\Lib\site-packages (from httpx<1,>=0.23.0->huggingface_hub->timm==1.0.27) (3.19)
+Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.23.0->huggingface_hub->timm==1.0.27)
+  Using cached h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting setuptools>=77.0.3 (from torch->timm==1.0.27)
+  Downloading setuptools-84.0.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting sympy>=1.13.3 (from torch->timm==1.0.27)
+  Using cached sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+Collecting networkx>=2.5.1 (from torch->timm==1.0.27)
+  Using cached networkx-3.6.1-py3-none-any.whl.metadata (6.8 kB)
+Collecting jinja2 (from torch->timm==1.0.27)
+  Using cached jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch->timm==1.0.27)
+  Using cached mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+Collecting MarkupSafe>=2.0 (from jinja2->torch->timm==1.0.27)
+  Using cached markupsafe-3.0.3-cp312-cp312-win_amd64.whl.metadata (2.8 kB)
+Downloading timm-1.0.27-py3-none-any.whl (2.6 MB)
+   ---------------------------------------- 2.6/2.6 MB 4.1 MB/s  0:00:00
+Downloading albumentations-1.4.21-py3-none-any.whl (227 kB)
+Downloading albucore-0.0.20-py3-none-any.whl (12 kB)
+Downloading scikit_learn-1.9.1-cp312-cp312-win_amd64.whl (8.3 MB)
+   ---------------------------------------- 8.3/8.3 MB 5.2 MB/s  0:00:01
+Downloading pandas-3.0.5-cp312-cp312-win_amd64.whl (9.8 MB)
+   ---------------------------------------- 9.8/9.8 MB 5.5 MB/s  0:00:01
+Using cached opencv_python-5.0.0.93-cp37-abi3-win_amd64.whl (44.0 MB)
+Downloading matplotlib-3.11.2-cp312-cp312-win_amd64.whl (9.3 MB)
+   ---------------------------------------- 9.3/9.3 MB 5.6 MB/s  0:00:01
+Using cached seaborn-0.13.2-py3-none-any.whl (294 kB)
+Downloading contourpy-1.4.0-cp312-cp312-win_amd64.whl (234 kB)
+Using cached cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.65.0-cp312-cp312-win_amd64.whl (2.5 MB)
+   ---------------------------------------- 2.5/2.5 MB 4.1 MB/s  0:00:00
+Downloading joblib-1.6.0-py3-none-any.whl (306 kB)
+Downloading cloudpickle-3.1.2-py3-none-any.whl (22 kB)
+Downloading kiwisolver-1.5.1-cp312-cp312-win_amd64.whl (70 kB)
+Downloading narwhals-2.26.0-py3-none-any.whl (474 kB)
+Downloading numpy-2.5.3-cp312-cp312-win_amd64.whl (12.6 MB)
+   ---------------------------------------- 12.6/12.6 MB 5.0 MB/s  0:00:02
+Using cached opencv_python_headless-5.0.0.93-cp37-abi3-win_amd64.whl (43.8 MB)
+Using cached pillow-12.3.0-cp312-cp312-win_amd64.whl (7.2 MB)
+Downloading pydantic-2.13.5-py3-none-any.whl (472 kB)
+Downloading pydantic_core-2.46.5-cp312-cp312-win_amd64.whl (2.0 MB)
+   ---------------------------------------- 2.0/2.0 MB 4.4 MB/s  0:00:00
+Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+Using cached pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Using cached python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading scipy-1.18.1-cp312-cp312-win_amd64.whl (36.7 MB)
+   ---------------------------------------- 36.7/36.7 MB 5.0 MB/s  0:00:07
+Downloading simsimd-6.5.16-cp312-cp312-win_amd64.whl (87 kB)
+Using cached six-1.17.0-py2.py3-none-any.whl (11 kB)
+Downloading stringzilla-5.1.2-cp312-cp312-win_amd64.whl (868 kB)
+   ---------------------------------------- 868.4/868.4 kB 3.5 MB/s  0:00:00
+Downloading threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+Using cached typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+Downloading eval_type_backport-0.4.0-py3-none-any.whl (6.4 kB)
+Downloading huggingface_hub-1.31.0-py3-none-any.whl (798 kB)
+   ---------------------------------------- 798.3/798.3 kB 3.4 MB/s  0:00:00
+Downloading click-8.5.0-py3-none-any.whl (125 kB)
+Downloading hf_xet-1.6.0-cp38-abi3-win_amd64.whl (4.0 MB)
+   ---------------------------------------- 4.0/4.0 MB 4.8 MB/s  0:00:00
+Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
+Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
+Downloading filelock-3.32.6-py3-none-any.whl (100 kB)
+Downloading fsspec-2026.7.0-py3-none-any.whl (206 kB)
+Using cached h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading anyio-4.15.1-py3-none-any.whl (132 kB)
+Using cached safetensors-0.8.0-cp310-abi3-win_amd64.whl (355 kB)
+Downloading torch-2.14.0-cp312-cp312-win_amd64.whl (124.1 MB)
+   ---------------------------------------- 124.1/124.1 MB 4.8 MB/s  0:00:25
+Using cached networkx-3.6.1-py3-none-any.whl (2.1 MB)
+Downloading setuptools-84.0.0-py3-none-any.whl (818 kB)
+   ---------------------------------------- 818.2/818.2 kB 2.6 MB/s  0:00:00
+Using cached sympy-1.14.0-py3-none-any.whl (6.3 MB)
+Using cached mpmath-1.3.0-py3-none-any.whl (536 kB)
+Using cached jinja2-3.1.6-py3-none-any.whl (134 kB)
+Using cached markupsafe-3.0.3-cp312-cp312-win_amd64.whl (15 kB)
+Downloading torchvision-0.29.0-cp312-cp312-win_amd64.whl (1.4 MB)
+   ---------------------------------------- 1.4/1.4 MB 5.5 MB/s  0:00:00
+Downloading tzdata-2026.4-py2.py3-none-any.whl (347 kB)
+Installing collected packages: simsimd, mpmath, tzdata, typing-extensions, threadpoolctl, sympy, stringzilla, six, setuptools, safetensors, pyparsing, pillow, numpy, networkx, narwhals, MarkupSafe, kiwisolver, hf-xet, h11, fsspec, fonttools, filelock, eval-type-backport, cycler, cloudpickle, click, annotated-types, typing-inspection, scipy, python-dateutil, pydantic-core, opencv-python-headless, opencv-python, joblib, jinja2, httpcore, contourpy, anyio, torch, scikit-learn, pydantic, pandas, matplotlib, httpx, albucore, torchvision, seaborn, huggingface_hub, albumentations, timm
+
+Successfully installed MarkupSafe-3.0.3 albucore-0.0.20 albumentations-1.4.21 annotated-types-0.8.0 anyio-4.15.1 click-8.5.0 cloudpickle-3.1.2 contourpy-1.4.0 cycler-0.12.1 eval-type-backport-0.4.0 filelock-3.32.6 fonttools-4.65.0 fsspec-2026.7.0 h11-0.16.0 hf-xet-1.6.0 httpcore-1.0.9 httpx-0.28.1 huggingface_hub-1.31.0 jinja2-3.1.6 joblib-1.6.0 kiwisolver-1.5.1 matplotlib-3.11.2 mpmath-1.3.0 narwhals-2.26.0 networkx-3.6.1 numpy-2.5.3 opencv-python-5.0.0.93 opencv-python-headless-5.0.0.93 pandas-3.0.5 pillow-12.3.0 pydantic-2.13.5 pydantic-core-2.46.5 pyparsing-3.3.2 python-dateutil-2.9.0.post0 safetensors-0.8.0 scikit-learn-1.9.1 scipy-1.18.1 seaborn-0.13.2 setuptools-84.0.0 simsimd-6.5.16 six-1.17.0 stringzilla-5.1.2 sympy-1.14.0 threadpoolctl-3.6.0 timm-1.0.27 torch-2.14.0 torchvision-0.29.0 typing-extensions-4.16.0 typing-inspection-0.4.4 tzdata-2026.4
++ wait 259
++ echo '=== DONE ==='
+=== DONE ===
++ .venv/Scripts/python.exe -c 'import torch;print('\''torch'\'',torch.__version__,'\''cuda'\'',torch.cuda.is_available(), torch.cuda.get_device_name(0) if torch.cuda.is_available() else '\'''\'')'
+torch 2.14.0+cpu cuda False 
++ cat logs/setup_download.log
+Downloading to C:\Users\SSAFY\.cache\kagglehub\datasets\qingyi\wm811k-wafer-map\1.archive...
+  0%|          | 0.00/149M [00:00<?, ?B/s]  1%|          | 1.00M/149M [00:00<00:57, 2.70MB/s]  1%|▏         | 2.00M/149M [00:00<00:38, 4.05MB/s]  2%|▏         | 3.00M/149M [00:00<00:37, 4.15MB/s]  3%|▎         | 4.00M/149M [00:01<00:41, 3.65MB/s]  3%|▎         | 5.00M/149M [00:01<00:37, 4.05MB/s]  4%|▍         | 6.00M/149M [00:01<00:33, 4.43MB/s]  5%|▍         | 7.00M/149M [00:01<00:31, 4.71MB/s]  5%|▌         | 8.00M/149M [00:01<00:27, 5.37MB/s]  6%|▌         | 9.00M/149M [00:02<00:27, 5.38MB/s]  7%|▋         | 10.0M/149M [00:02<00:28, 5.22MB/s]  7%|▋         | 11.0M/149M [00:02<00:27, 5.32MB/s]  8%|▊         | 12.0M/149M [00:02<00:28, 4.99MB/s]  9%|▊         | 13.0M/149M [00:02<00:29, 4.90MB/s]  9%|▉         | 14.0M/149M [00:03<00:31, 4.58MB/s] 10%|█         | 15.0M/149M [00:03<00:36, 3.85MB/s] 11%|█         | 16.0M/149M [00:04<00:47, 2.97MB/s] 11%|█▏        | 17.0M/149M [00:05<01:16, 1.82MB/s] 12%|█▏        | 18.0M/149M [00:06<01:30, 1.53MB/s] 13%|█▎        | 19.0M/149M [00:08<02:16, 1.00MB/s] 13%|█▎        | 20.0M/149M [00:10<02:51, 792kB/s]  14%|█▍        | 21.0M/149M [00:11<02:59, 752kB/s] 15%|█▍        | 22.0M/149M [00:12<02:54, 765kB/s] 15%|█▌        | 23.0M/149M [00:14<03:02, 727kB/s] 16%|█▌        | 24.0M/149M [00:16<03:13, 681kB/s] 17%|█▋        | 25.0M/149M [00:18<03:45, 579kB/s] 17%|█▋        | 26.0M/149M [00:19<03:10, 679kB/s] 18%|█▊        | 27.0M/149M [00:20<02:40, 798kB/s] 19%|█▊        | 28.0M/149M [00:21<02:22, 891kB/s] 19%|█▉        | 29.0M/149M [00:22<02:10, 971kB/s] 20%|██        | 30.0M/149M [00:22<01:58, 1.06MB/s] 21%|██        | 31.0M/149M [00:24<02:24, 861kB/s]  21%|██▏       | 32.0M/149M [00:25<02:12, 929kB/s] 22%|██▏       | 33.0M/149M [00:27<02:29, 818kB/s] 23%|██▎       | 34.0M/149M [00:28<02:33, 790kB/s] 23%|██▎       | 35.0M/149M [00:29<02:27, 816kB/s] 24%|██▍       | 36.0M/149M [00:31<02:32, 779kB/s] 25%|██▍       | 37.0M/149M [00:32<02:24, 816kB/s] 25%|██▌       | 38.0M/149M [00:33<02:30, 775kB/s] 26%|██▌       | 39.0M/149M [00:37<03:39, 527kB/s] 27%|██▋       | 40.0M/149M [00:38<02:58, 643kB/s] 27%|██▋       | 41.0M/149M [00:39<02:35, 732kB/s] 28%|██▊       | 42.0M/149M [00:41<03:01, 621kB/s] 29%|██▉       | 43.0M/149M [00:44<03:39, 509kB/s] 29%|██▉       | 44.0M/149M [00:46<03:46, 489kB/s] 30%|███       | 45.0M/149M [00:48<03:18, 552kB/s] 31%|███       | 46.0M/149M [00:48<02:43, 662kB/s] 31%|███       | 46.0M/149M [01:00<02:43, 662kB/s] 31%|███▏      | 47.0M/149M [01:06<11:03, 162kB/s] 32%|███▏      | 48.0M/149M [01:08<08:20, 213kB/s] 33%|███▎      | 49.0M/149M [01:09<06:12, 283kB/s] 33%|███▎      | 50.0M/149M [01:10<05:10, 336kB/s] 34%|███▍      | 51.0M/149M [01:12<04:22, 394kB/s] 35%|███▍      | 52.0M/149M [01:13<03:33, 478kB/s] 35%|███▌      | 53.0M/149M [01:13<02:41, 627kB/s] 36%|███▌      | 54.0M/149M [01:14<02:09, 776kB/s] 37%|███▋      | 55.0M/149M [01:15<01:43, 955kB/s] 37%|███▋      | 56.0M/149M [01:15<01:30, 1.08MB/s] 38%|███▊      | 57.0M/149M [01:16<01:18, 1.23MB/s] 39%|███▉      | 58.0M/149M [01:17<01:20, 1.19MB/s] 39%|███▉      | 59.0M/149M [01:18<01:25, 1.11MB/s] 40%|████      | 60.0M/149M [01:19<01:19, 1.17MB/s] 41%|████      | 61.0M/149M [01:19<01:15, 1.23MB/s] 41%|████▏     | 62.0M/149M [01:20<01:05, 1.39MB/s] 42%|████▏     | 63.0M/149M [01:21<01:09, 1.31MB/s] 43%|████▎     | 64.0M/149M [01:21<01:04, 1.40MB/s] 43%|████▎     | 65.0M/149M [01:22<01:07, 1.30MB/s] 44%|████▍     | 66.0M/149M [01:23<01:14, 1.18MB/s] 45%|████▍     | 67.0M/149M [01:25<01:24, 1.02MB/s] 46%|████▌     | 68.0M/149M [01:25<01:14, 1.15MB/s] 46%|████▌     | 69.0M/149M [01:26<01:08, 1.23MB/s] 47%|████▋     | 70.0M/149M [01:27<01:10, 1.18MB/s] 48%|████▊     | 71.0M/149M [01:28<01:04, 1.28MB/s] 48%|████▊     | 72.0M/149M [01:28<00:58, 1.39MB/s] 49%|████▉     | 73.0M/149M [01:29<01:02, 1.27MB/s] 50%|████▉     | 74.0M/149M [01:30<01:06, 1.19MB/s] 50%|█████     | 75.0M/149M [01:31<01:08, 1.14MB/s] 51%|█████     | 76.0M/149M [01:32<01:04, 1.19MB/s] 52%|█████▏    | 77.0M/149M [01:33<01:02, 1.21MB/s] 52%|█████▏    | 78.0M/149M [01:34<01:06, 1.12MB/s] 53%|█████▎    | 79.0M/149M [01:35<01:08, 1.08MB/s] 54%|█████▎    | 80.0M/149M [01:36<01:13, 995kB/s]  54%|█████▍    | 81.0M/149M [01:37<01:12, 991kB/s] 55%|█████▍    | 82.0M/149M [01:38<01:08, 1.03MB/s] 56%|█████▌    | 83.0M/149M [01:40<01:15, 917kB/s]  56%|█████▌    | 84.0M/149M [01:41<01:09, 989kB/s] 57%|█████▋    | 85.0M/149M [01:41<00:54, 1.24MB/s] 58%|█████▊    | 86.0M/149M [01:41<00:43, 1.53MB/s] 58%|█████▊    | 87.0M/149M [01:42<00:36, 1.77MB/s] 59%|█████▉    | 88.0M/149M [01:43<00:40, 1.60MB/s] 60%|█████▉    | 89.0M/149M [01:44<00:56, 1.11MB/s] 60%|██████    | 90.0M/149M [01:46<01:08, 916kB/s]  61%|██████    | 91.0M/149M [01:47<01:11, 853kB/s] 62%|██████▏   | 92.0M/149M [01:48<01:08, 882kB/s] 62%|██████▏   | 93.0M/149M [01:50<01:12, 811kB/s] 63%|██████▎   | 94.0M/149M [01:52<01:26, 668kB/s] 64%|██████▎   | 95.0M/149M [01:53<01:17, 733kB/s] 64%|██████▍   | 96.0M/149M [01:54<01:12, 774kB/s] 65%|██████▍   | 97.0M/149M [01:55<01:06, 829kB/s] 66%|██████▌   | 98.0M/149M [01:56<00:56, 957kB/s] 66%|██████▋   | 99.0M/149M [01:57<00:50, 1.04MB/s] 67%|██████▋   | 100M/149M [01:58<00:50, 1.02MB/s]  68%|██████▊   | 101M/149M [01:59<00:50, 1.01MB/s] 68%|██████▊   | 102M/149M [02:00<00:43, 1.14MB/s] 69%|██████▉   | 103M/149M [02:00<00:40, 1.21MB/s] 70%|██████▉   | 104M/149M [02:01<00:34, 1.39MB/s] 70%|███████   | 105M/149M [02:02<00:33, 1.38MB/s] 71%|███████   | 106M/149M [02:03<00:41, 1.09MB/s] 72%|███████▏  | 107M/149M [02:04<00:42, 1.04MB/s] 72%|███████▏  | 108M/149M [02:05<00:38, 1.14MB/s] 73%|███████▎  | 109M/149M [02:05<00:32, 1.30MB/s] 74%|███████▎  | 110M/149M [02:06<00:30, 1.37MB/s] 74%|███████▍  | 111M/149M [02:07<00:35, 1.12MB/s] 75%|███████▍  | 112M/149M [02:08<00:35, 1.10MB/s] 76%|███████▌  | 113M/149M [02:09<00:30, 1.25MB/s] 76%|███████▋  | 114M/149M [02:10<00:26, 1.38MB/s] 77%|███████▋  | 115M/149M [02:11<00:27, 1.30MB/s] 78%|███████▊  | 116M/149M [02:12<00:31, 1.12MB/s] 78%|███████▊  | 117M/149M [02:12<00:27, 1.22MB/s] 79%|███████▉  | 118M/149M [02:13<00:21, 1.52MB/s] 80%|███████▉  | 119M/149M [02:13<00:18, 1.68MB/s] 80%|████████  | 120M/149M [02:14<00:20, 1.53MB/s] 81%|████████  | 121M/149M [02:15<00:20, 1.49MB/s] 82%|████████▏ | 122M/149M [02:16<00:21, 1.36MB/s] 82%|████████▏ | 123M/149M [02:17<00:22, 1.24MB/s] 83%|████████▎ | 124M/149M [02:18<00:21, 1.27MB/s] 84%|████████▎ | 125M/149M [02:18<00:20, 1.26MB/s] 84%|████████▍ | 126M/149M [02:19<00:17, 1.37MB/s] 85%|████████▍ | 127M/149M [02:19<00:15, 1.56MB/s] 86%|████████▌ | 128M/149M [02:20<00:14, 1.57MB/s] 86%|████████▋ | 129M/149M [02:21<00:14, 1.51MB/s] 87%|████████▋ | 130M/149M [02:22<00:16, 1.23MB/s] 88%|████████▊ | 131M/149M [02:23<00:14, 1.32MB/s] 88%|████████▊ | 132M/149M [02:23<00:13, 1.33MB/s] 89%|████████▉ | 133M/149M [02:25<00:14, 1.17MB/s] 90%|████████▉ | 134M/149M [02:26<00:17, 932kB/s]  90%|█████████ | 135M/149M [02:28<00:19, 793kB/s] 91%|█████████ | 136M/149M [02:30<00:19, 726kB/s] 92%|█████████▏| 137M/149M [02:31<00:17, 728kB/s] 92%|█████████▏| 138M/149M [02:33<00:15, 756kB/s] 93%|█████████▎| 139M/149M [02:34<00:14, 758kB/s] 94%|█████████▎| 140M/149M [02:36<00:14, 703kB/s] 94%|█████████▍| 141M/149M [02:37<00:12, 685kB/s] 95%|█████████▌| 142M/149M [02:39<00:11, 698kB/s] 96%|█████████▌| 143M/149M [02:40<00:08, 758kB/s] 96%|█████████▋| 144M/149M [02:41<00:07, 794kB/s] 97%|█████████▋| 145M/149M [02:43<00:06, 676kB/s] 98%|█████████▊| 146M/149M [02:46<00:07, 496kB/s] 98%|█████████▊| 147M/149M [02:49<00:05, 493kB/s] 99%|█████████▉| 148M/149M [02:50<00:02, 514kB/s]100%|█████████▉| 149M/149M [02:53<00:00, 470kB/s]100%|██████████| 149M/149M [02:54<00:00, 515kB/s]100%|██████████| 149M/149M [02:54<00:00, 900kB/s]
+Extracting files...
+DOWNLOAD_PATH= C:\Users\SSAFY\.cache\kagglehub\datasets\qingyi\wm811k-wafer-map\versions\1

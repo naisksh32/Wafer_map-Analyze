@@ -39,6 +39,8 @@ CHECKPOINT_DIR = ROOT / 'checkpoints'
 ANALYSIS_DIR   = ROOT / 'analysis'
 
 BATCH_SIZE = 64; EPOCHS = 40; LR = 3e-4; WEIGHT_DECAY = 1e-4; DROPOUT = 0.3; PATIENCE = 10
+# Windows 에서도 num_workers>0 사용 가능 (persistent_workers 로 spawn 비용 1회만) — 환경변수로 제어
+NUM_WORKERS = int(os.environ.get('NUM_WORKERS', '0'))
 
 
 class WaferMapDataset(Dataset):
@@ -76,6 +78,7 @@ def main():
     print(f'Device: {DEVICE}')
     if DEVICE.type == 'cuda':
         print(f'GPU: {torch.cuda.get_device_name(0)}')
+    CHECKPOINT_DIR.mkdir(exist_ok=True); ANALYSIS_DIR.mkdir(exist_ok=True)
 
     # ── 데이터
     all_maps = np.load(PROCESSED_DIR / 'all_maps_resized.npy')
@@ -101,7 +104,8 @@ def main():
     sampler = WeightedRandomSampler(
         torch.FloatTensor(class_weights[train_labels]), len(train_labels), replacement=True)
     train_loader = DataLoader(WaferMapDataset(all_maps[train_idx], train_labels, train_transform),
-                              BATCH_SIZE, sampler=sampler, num_workers=0)
+                              BATCH_SIZE, sampler=sampler, num_workers=NUM_WORKERS,
+                              persistent_workers=NUM_WORKERS > 0, pin_memory=True)
     val_loader   = DataLoader(WaferMapDataset(all_maps[val_idx],   val_labels),
                               BATCH_SIZE, shuffle=False, num_workers=0)
     test_loader  = DataLoader(WaferMapDataset(all_maps[test_idx],  test_labels),
@@ -152,7 +156,7 @@ def main():
            'fix_note':'단일 불균형 보정: WeightedRandomSampler만 사용, lr=3e-4, patience=10',
            'hyperparams':{'epochs':EPOCHS,'batch_size':BATCH_SIZE,'lr':LR,
                           'weight_decay':WEIGHT_DECAY,'dropout':DROPOUT},
-           'best_checkpoint':str(best_ckpt)}
+           'best_checkpoint':best_ckpt.relative_to(ROOT).as_posix()}  # 저장소 상대경로 (머신 독립)
     with open(ANALYSIS_DIR / 'baseline_results.json','w',encoding='utf-8') as f:
         json.dump(res, f, ensure_ascii=False, indent=2)
     print(f'결과 저장: analysis/baseline_results.json')

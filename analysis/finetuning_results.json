@@ -2,28 +2,28 @@
   "best_model": "ViT-Tiny",
   "models": {
     "MobileNetV3": {
-      "best_val_f1": 0.7417,
-      "test_accuracy": 0.9045,
-      "test_f1_macro": 0.7369,
+      "best_val_f1": 0.7431,
+      "test_accuracy": 0.904,
+      "test_f1_macro": 0.737,
       "target_met_acc": true,
       "target_met_f1": false,
-      "checkpoint": "C:\\Users\\naisk\\Desktop\\하이닉스 대비\\웨이퍼 불량 분석\\checkpoints\\MobileNetV3_34_0.7417.pth"
+      "checkpoint": "checkpoints/MobileNetV3_34_0.7431.pth"
     },
     "EfficientNet-B0": {
-      "best_val_f1": 0.7999,
-      "test_accuracy": 0.9396,
-      "test_f1_macro": 0.7944,
+      "best_val_f1": 0.8025,
+      "test_accuracy": 0.9417,
+      "test_f1_macro": 0.8022,
       "target_met_acc": true,
       "target_met_f1": false,
-      "checkpoint": "C:\\Users\\naisk\\Desktop\\하이닉스 대비\\웨이퍼 불량 분석\\checkpoints\\EfficientNet-B0_19_0.7999.pth"
+      "checkpoint": "checkpoints/EfficientNet-B0_30_0.8025.pth"
     },
     "ViT-Tiny": {
-      "best_val_f1": 0.8351,
-      "test_accuracy": 0.9554,
-      "test_f1_macro": 0.8352,
+      "best_val_f1": 0.8144,
+      "test_accuracy": 0.9434,
+      "test_f1_macro": 0.8106,
       "target_met_acc": true,
       "target_met_f1": false,
-      "checkpoint": "C:\\Users\\naisk\\Desktop\\하이닉스 대비\\웨이퍼 불량 분석\\checkpoints\\ViT-Tiny_29_0.8351.pth"
+      "checkpoint": "checkpoints/ViT-Tiny_07_0.8144.pth"
     }
   },
   "fix_note": "단일 불균형 보정: WeightedRandomSampler만, CrossEntropyLoss weight 제거",

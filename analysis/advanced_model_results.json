@@ -1,9 +1,9 @@
 {
   "model": "AdvancedDefectPredictor (MobileNetV3 Small + 3 heads)",
-  "best_val_defect_f1": 0.8279,
-  "test_defect_f1": 0.8173,
-  "test_accuracy": 0.9508,
-  "epochs_trained": 47,
+  "best_val_defect_f1": 0.834,
+  "test_defect_f1": 0.8227,
+  "test_accuracy": 0.9511,
+  "epochs_trained": 50,
   "fix_note": "Focal Loss(gamma=2) + 강화 증강 + CosineAnnealingWarmRestarts + patience=15",
   "loss_weights": {
     "alpha": 0.5,
@@ -21,5 +21,6 @@
     "Near-full",
     "Random",
     "Scratch"
-  ]
+  ],
+  "checkpoint": "checkpoints/AdvancedDefectPredictor_best_0.8340.pth"
 }

@@ -1,0 +1,36 @@
+pickle 로드: C:\Users\SSAFY\Desktop\Private\self\data\raw\LSWMD.pkl (1998 MB)
+  pd.read_pickle 실패 (No module named 'pandas.indexes') → 레거시 pandas 호환 Unpickler 로 재시도
+  전체 811,457행  (6s)
+레이블 샘플: 172,950개
+  none       147,431
+  Center       4,294
+  Donut          555
+  Edge-Loc     5,189
+  Edge-Ring    9,680
+  Loc          3,593
+  Near-full      149
+  Random         866
+  Scratch      1,193
+
+172,950개 맵 → 64×64 uint8 리사이즈 (INTER_NEAREST)
+   40,000/172,950  0s
+   80,000/172,950  0s
+  120,000/172,950  1s
+  160,000/172,950  1s
+  완료 1s  고유 픽셀값: [0 1 2]
+
+Train 121,065 / Val 25,942 / Test 25,943
+class        train     val    test
+none        103202   22114   22115
+Center        3006     644     644
+Donut          389      83      83
+Edge-Loc      3632     778     779
+Edge-Ring     6776    1452    1452
+Loc           2515     539     539
+Near-full      104      23      22
+Random         606     130     130
+Scratch        835     179     179
+
+저장 완료 → C:\Users\SSAFY\Desktop\Private\self\data\processed
+  all_maps_resized.npy  676 MB
+  split_indices.pkl / class_weights.npy

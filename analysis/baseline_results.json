@@ -1,11 +1,11 @@
 {
   "model": "WaferCNN",
-  "best_epoch": 23,
-  "best_val_f1": 0.8485,
-  "test_accuracy": 0.9578,
-  "test_f1_macro": 0.8458,
+  "best_epoch": 37,
+  "best_val_f1": 0.8453,
+  "test_accuracy": 0.9585,
+  "test_f1_macro": 0.8508,
   "target_met": true,
-  "fix_note": "WeightedRandomSampler only (no class_weight in CE), lr=3e-4, patience=10",
+  "fix_note": "단일 불균형 보정: WeightedRandomSampler만 사용, lr=3e-4, patience=10",
   "hyperparams": {
     "epochs": 40,
     "batch_size": 64,
@@ -13,5 +13,5 @@
     "weight_decay": 0.0001,
     "dropout": 0.3
   },
-  "best_checkpoint": "checkpoints/WaferCNN_23_0.8485.pth"
+  "best_checkpoint": "checkpoints/WaferCNN_37_0.8453.pth"
 }

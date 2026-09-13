@@ -10,15 +10,17 @@
 | 항목 | 수치 | 근거 파일 |
 |------|------|----------|
 | 분석 데이터 | WM-811K 중 레이블 **172,950개** (클래스 불균형 989.5×) | `analysis/data_summary.json` |
-| 최고 분류 성능 | WaferCNN **macro F1 0.8458** / Accuracy 95.78% | `analysis/final_evaluation.json` |
-| 사전학습 모델 최고 | ViT-Tiny **macro F1 0.8352** / Accuracy 95.54% | 〃 |
-| Multi-output 모델 | **macro F1 0.8173** / Accuracy 95.08% (분류+심각도+신뢰도) | 〃 |
+| 최고 분류 성능 (동일 레시피 비교) | EfficientNet-B0 128px **macro F1 0.8894** / Acc 97.54% · MobileNetV3-S 128px **0.8756 ± 0.0026** (3 seeds) | `analysis/fair_compare/summary.json` |
+| 기존 레시피 최고 (재학습) | WaferCNN **macro F1 0.8508** / Accuracy 95.85% | `analysis/final_evaluation.json` |
+| Multi-output 모델 (재학습) | **macro F1 0.8229** / Accuracy 95.12% (분류+심각도+신뢰도) | 〃 |
 | ONNX 변환 | macro F1 **손실 0.0000** (0.7369 → 0.7369) | `analysis/deployment_summary.json` |
 | 추론 속도 | CPU 17.07ms → ONNX **7.02ms** (2.4× · batch=32) | 〃 |
 | 단일 웨이퍼 추론 | **0.60ms** (데스크톱 CPU 기준, RPi 추정 3~6ms) | 〃 |
 | 공정 최적화 | 개선 우선순위 **Edge-Ring > Edge-Loc > Center** 도출 | `reports/roi_summary.csv` |
 
-> 위 성능 수치는 전부 `scripts/evaluate_all.py` 한 번의 실행으로 재현됩니다.
+> 분류 성능은 2026-09-13~14 에 RTX 4070 Laptop 에서 **전부 다시 학습·측정**한 값입니다.
+> 기존 레시피 수치는 `scripts/evaluate_all.py`, 동일 레시피 비교는 `scripts/fair_compare.py --summarize` 로 재현되며,
+> 상세 표와 클래스별 지표는 [`docs/MODEL_PERFORMANCE.md`](docs/MODEL_PERFORMANCE.md) 에 있습니다.
 
 ---
 
@@ -29,9 +31,10 @@
 | 항목 | 기준 |
 |------|------|
 | 평가 데이터 | **Test 분할 25,943개** — 증강 없음, WeightedRandomSampler 없음, 원본 불균형 분포 그대로 |
-| 지표 산출 | 하나의 체크포인트에서 **Accuracy · macro F1 · weighted F1 를 동시 계산** |
+| 지표 산출 | 하나의 체크포인트에서 **Accuracy · macro F1 · weighted F1 · macro P/R 을 동시 계산** |
+| 불확실성 | macro F1 에 **테스트셋 bootstrap 1,000회 95% 신뢰구간** 병기 (폭 약 ±0.014). 동일 레시피 비교는 **3 seeds 평균 ± 표준편차** |
 | 표에 기재된 값 | 전부 **Test** 기준 (Validation 값 혼용 없음) |
-| 재현 | `python scripts/evaluate_all.py` |
+| 재현 | `python scripts/evaluate_all.py` · `python scripts/fair_compare.py --summarize` |
 
 **테스트셋 클래스 분포**
 `none 22,115 · Edge-Ring 1,452 · Edge-Loc 779 · Center 644 · Loc 539 · Scratch 179 · Random 130 · Donut 83 · Near-full 22`
@@ -44,28 +47,49 @@
 
 ## 모델 성능 비교
 
-Test 25,943개 · 동일 조건 측정 (`analysis/final_evaluation.json`)
+### C-1. 기존 학습 레시피 그대로 재학습 (Test 25,943개 · `analysis/final_evaluation.json`)
 
-| 모델 | 파라미터 | Accuracy | **macro F1** | weighted F1 | 비고 |
-|------|---------|----------|-------------|-------------|------|
-| **WaferCNN** | 1.21M | **95.78%** | **0.8458** | 0.9609 | 커스텀 4-Conv CNN 베이스라인 |
-| ViT-Tiny | 5.39M | 95.54% | 0.8352 | 0.9587 | 2-Phase 파인튜닝 |
-| AdvancedDefectPredictor | 1.13M | 95.08% | 0.8173 | 0.9549 | Multi-output (분류+심각도+신뢰도) |
-| EfficientNet-B0 | 4.02M | 93.96% | 0.7944 | 0.9464 | 2-Phase 파인튜닝 |
-| MobileNetV3-Small | 1.53M | 90.45% | 0.7369 | 0.9197 | **엣지 배포 채택 모델** |
-| WaferCNN + Optuna HPO | 1.21M | 43.21% | 0.5987 | 0.5329 | HPO 실패 사례 (아래 참조) |
+| 모델 | 파라미터 | Accuracy | **macro F1** | 95% CI | weighted F1 | macro P | macro R | 비고 |
+|------|---------:|---------:|-------------:|:------:|------------:|--------:|--------:|------|
+| **WaferCNN** | 1.21M | **95.85%** | **0.8508** | 0.835–0.864 | 0.9616 | 0.793 | 0.934 | 커스텀 4-Conv CNN · Adam 3e-4 · 40 ep |
+| AdvancedDefectPredictor | 1.13M | 95.12% | 0.8229 | 0.805–0.837 | 0.9549 | 0.778 | 0.885 | Multi-output (분류+심각도+신뢰도) |
+| ViT-Tiny | 5.39M | 94.34% | 0.8106 | 0.796–0.823 | 0.9495 | 0.759 | 0.896 | 2-Phase 파인튜닝 (백본 lr 1e-5) |
+| EfficientNet-B0 | 4.02M | 94.16% | 0.8020 | 0.784–0.817 | 0.9478 | 0.731 | 0.916 | 2-Phase 파인튜닝 |
+| MobileNetV3-Small | 1.53M | 90.41% | 0.7372 | 0.720–0.751 | 0.9196 | 0.661 | 0.891 | 2-Phase 파인튜닝 · **엣지 배포 채택 모델** |
 
-**목표(macro F1 ≥ 0.80) 달성: WaferCNN · ViT-Tiny · AdvancedDefectPredictor**
+이전 README 값(WaferCNN 0.8458 · ViT 0.8352 · EffNet 0.7944 · MobileNet 0.7369)과 ±0.025 안에서 일치합니다. 즉 **기존 수치 자체는 재현되지만**, 아래 C-2 가 보여주듯 그 순위는 아키텍처가 아니라 학습 레시피가 만든 것입니다.
 
-### 관찰 1 — 1.2M 파라미터 커스텀 CNN이 5.4M ViT를 이겼다
+### C-2. 동일 레시피 공정 비교 (`scripts/fair_compare.py` · `analysis/fair_compare/summary.md`)
 
-ImageNet 사전학습 백본(ViT-Tiny 5.39M, EfficientNet-B0 4.02M)이 도메인 특화 커스텀 CNN(1.21M)을 넘지 못했습니다. 웨이퍼 맵은 자연 이미지와 통계적 특성이 근본적으로 다르기 때문입니다.
+모든 모델을 **같은** 옵티마이저(AdamW 3e-4) · 증강 · WeightedRandomSampler · CrossEntropy · 25 epoch cosine · 조기종료 없음 · val macro F1 선택 기준으로 학습했습니다.
 
-- 입력이 **3-값 이산 데이터**(0=빈 영역 / 1=정상 다이 / 2=불량 다이) — 자연 이미지의 텍스처·색상 사전지식이 전이되지 않음
-- 판별 정보가 **국소 텍스처가 아니라 전역 공간 배치**(중심/링/선형)에 있음
-- 64×64 해상도에서 ViT의 patch 16 → 4×4=16 토큰으로 공간 해상도가 과도하게 손실
+| 모델 | 입력 | 파라미터 | seeds | Accuracy | **macro F1 (mean ± std)** | weighted F1 | macro P | macro R |
+|------|:----:|---------:|:-----:|---------:|--------------------------:|------------:|--------:|--------:|
+| **EfficientNet-B0** (ImageNet) | 128px↑ | 4.02M | 1 | **97.54%** | **0.8894** | 0.9759 | 0.876 | 0.906 |
+| **MobileNetV3-Small** (ImageNet) | 128px↑ | 1.53M | 3 | 96.91% | **0.8756 ± 0.0026** | 0.9702 | 0.853 | 0.903 |
+| ViT-Tiny (ImageNet) | 64px | 5.39M | 1 | 96.53% | 0.8633 | 0.9668 | 0.841 | 0.891 |
+| MobileNetV3-Small (ImageNet) | 64px | 1.53M | 3 | 95.52% | 0.8341 ± 0.0044 | 0.9584 | 0.789 | 0.896 |
+| WaferCNN (scratch) | 64px | 1.21M | 3 | 95.11% | 0.8311 ± 0.0088 | 0.9556 | 0.767 | 0.934 |
+| MobileNetV3-Small (scratch) | 64px | 1.53M | 1 | 92.37% | 0.7752 | 0.9337 | 0.710 | 0.896 |
 
-→ **전이학습이 항상 우월하지 않으며, 도메인 특성에 맞춘 아키텍처 설계가 유효하다**는 것을 실측으로 보인 결과입니다.
+40 epoch 예산 확인 (seed 42): WaferCNN **0.8367** vs MobileNetV3-S 128px **0.8847** — 예산을 늘려도 순위는 바뀌지 않습니다. 128px↑ 는 64×64 맵을 nearest 로 2배 확대한 것으로 정보 추가는 없습니다.
+
+**목표(macro F1 ≥ 0.80) 달성:** 기존 레시피 — WaferCNN · AdvancedDefectPredictor · ViT-Tiny · EfficientNet-B0 / 동일 레시피 — 사전학습 모델 전부. **목표 0.88 달성: EfficientNet-B0 128px · MobileNetV3-S 128px (40 ep)**
+
+### 관찰 1 — "커스텀 CNN이 사전학습 모델을 이겼다"는 레시피 차이였다
+
+이전 README 는 WaferCNN(1.21M) 이 ViT-Tiny · MobileNetV3 를 이긴 것을 "웨이퍼 맵에는 ImageNet 전이가 통하지 않는다"로 해석했습니다. 동일 레시피 재실험 결과 이 해석은 **틀렸습니다.**
+
+| 원인 | 기존 파인튜닝 레시피 | 영향 (동일 레시피 실험으로 분리) |
+|------|---------------------|----------------------------------|
+| **백본 학습률** | 2-Phase: 백본 **1e-5**, head 1e-4 (WaferCNN 은 전체 3e-4) | MobileNetV3 64px 를 3e-4 로 전체 학습 → **0.7372 → 0.8341** (+0.097) |
+| **입력 해상도** | 64×64 를 stride-32 백본에 그대로 → 마지막 feature map **2×2** | 128px 업샘플로 4×4 확보 → **0.8341 → 0.8756** (+0.042) |
+| **ImageNet 전이** | — | 같은 조건에서 scratch 0.7752 vs ImageNet 0.8341 → 전이는 **+0.059 도움** |
+| **단일 seed · 조기종료** | val macro F1 이 epoch 간 ±0.03 요동, patience 10 | WaferCNN 3 seeds 표준편차 0.0088, best-val 선택 vs 마지막 epoch 차이 최대 0.017 |
+
+- 특히 **Scratch(선형 결함)** 은 해상도에 민감합니다. 64px 모델은 precision 0.40~0.50 에 머물지만 128px 모델은 **0.68~0.78** 로 오르고 F1 0.55 → 0.74~0.79 가 됩니다.
+- WaferCNN 이 자기 레시피(Adam · 40 ep)에서 0.8508 을 내는 것은 사실이나, 같은 예산의 MobileNetV3-S 128px 는 0.8847, 신뢰구간이 겹치지 않습니다.
+- 교훈: 모델 비교는 **레시피·해상도·seed 를 통제**한 뒤에만 의미가 있습니다. 이 프로젝트에서 유일하게 성립하는 아키텍처 결론은 "ImageNet 백본을 쓸 때는 입력을 128px 이상으로 올려야 한다"입니다.
 
 ### 관찰 2 — Accuracy와 macro F1이 함께 움직이지 않는 이유
 
@@ -73,24 +97,26 @@ ImageNet 사전학습 백본(ViT-Tiny 5.39M, EfficientNet-B0 4.02M)이 도메인
 
 | 클래스 | Support | Precision | Recall | F1 |
 |--------|--------:|----------:|-------:|---:|
-| none | 22,115 | 0.9977 | 0.9604 | 0.9787 |
-| Edge-Ring | 1,452 | 0.9337 | 0.9897 | 0.9609 |
-| Center | 644 | 0.8142 | 0.9596 | 0.8810 |
-| Donut | 83 | 0.9059 | 0.9277 | 0.9167 |
-| Near-full | 22 | 0.8462 | 1.0000 | 0.9167 |
-| Random | 130 | 0.6879 | 0.9154 | 0.7855 |
-| Edge-Loc | 779 | 0.6654 | 0.9294 | 0.7756 |
-| Loc | 539 | 0.6890 | 0.8219 | 0.7496 |
-| **Scratch** | 179 | **0.4927** | 0.9441 | **0.6475** |
-| **macro avg** | | **0.7814** | **0.9387** | **0.8458** |
+| none | 22,115 | 0.9977 | 0.9608 | 0.9789 |
+| Edge-Ring | 1,452 | 0.9499 | 0.9917 | 0.9704 |
+| Center | 644 | 0.7941 | 0.9581 | 0.8684 |
+| Donut | 83 | 0.9359 | 0.8795 | 0.9068 |
+| Near-full | 22 | 0.8800 | 1.0000 | 0.9362 |
+| Random | 130 | 0.7391 | 0.9154 | 0.8179 |
+| Edge-Loc | 779 | 0.6852 | 0.9166 | 0.7842 |
+| Loc | 539 | 0.6546 | 0.8757 | 0.7492 |
+| **Scratch** | 179 | **0.5000** | 0.9106 | **0.6455** |
+| **macro avg** | | **0.7929** | **0.9343** | **0.8508** |
 
-WeightedRandomSampler로 소수 클래스를 과표집한 결과, **macro Recall 0.9387 / macro Precision 0.7814** 로 재현율에 크게 치우쳐 있습니다.
+WeightedRandomSampler로 소수 클래스를 과표집한 결과, **macro Recall 0.9343 / macro Precision 0.7929** 로 재현율에 크게 치우쳐 있습니다.
 
 **이것은 반도체 검사 도메인에서 의도한 방향입니다.** 불량 웨이퍼를 놓치는 비용(미검출 → 후공정 낭비 → 필드 불량)이 정상 웨이퍼를 재검사하는 비용보다 훨씬 크기 때문에, Precision을 희생하고 Recall을 확보하는 것이 옳은 트레이드오프입니다.
 
-다만 **Scratch의 Precision 0.4927** 은 실무 도입 시 병목입니다 — Scratch로 분류된 웨이퍼의 절반이 오탐이라 재검사 부하가 2배가 됩니다. 개선 방향은 [알려진 한계](#알려진-한계와-다음-단계)에 정리했습니다.
+다만 **Scratch의 Precision 0.50** 은 실무 도입 시 병목입니다 — Scratch로 분류된 웨이퍼의 절반이 오탐이라 재검사 부하가 2배가 됩니다. 동일 레시피 실험에서 **128px 입력 모델은 Scratch precision 0.68~0.78** 을 기록했으므로(관찰 1), 해상도 상향이 가장 확실한 개선 수단입니다.
 
 ### 관찰 3 — Optuna HPO는 개선에 실패했다 (기록 목적)
+
+> HPO 체크포인트(`WaferCNN_best_hpo.pth`)는 2026-09 재측정 환경에 없어 재검증하지 못했습니다. 아래 수치는 이전 측정값입니다.
 
 | | Accuracy | macro F1 |
 |---|---:|---:|
@@ -114,13 +140,13 @@ WeightedRandomSampler로 소수 클래스를 과표집한 결과, **macro Recall
 
 ### 왜 최고 성능 모델이 아닌 MobileNetV3를 배포했는가
 
-최고 성능은 WaferCNN(macro F1 0.8458)이지만, **엣지 배포 대상은 MobileNetV3-Small(0.7369)** 을 선택했습니다.
+기존 레시피 기준 최고 성능은 WaferCNN(macro F1 0.8508)이지만, **엣지 배포 대상은 MobileNetV3-Small** 을 선택했습니다.
 
-**macro F1 0.109 손실을 감수한 의도적 트레이드오프입니다.** 근거는 depthwise separable convolution 기반 구조가 ARM CPU에서 연산 최적화가 검증되어 있고, onnxruntime·TFLite 등 엣지 런타임의 연산자 지원이 가장 성숙하다는 점입니다. 인라인 검사 장비의 실시간 요구를 만족하면서 유지보수 부담이 가장 낮은 선택입니다.
+기존 2-Phase 레시피의 MobileNetV3(0.7372)로는 macro F1 0.11 을 잃는 트레이드오프였으나, 동일 레시피 실험(관찰 1)에서 **같은 MobileNetV3-S 가 128px 입력으로 0.8756 ± 0.0026, 40 epoch 시 0.8847** 을 내는 것을 확인했습니다. 즉 **엣지 모델과 정확도를 맞바꿀 필요가 없습니다.** 아래 ONNX 검증 수치는 이전 체크포인트(0.7369) 기준이며, 128px 모델의 ONNX 변환·속도 측정은 다음 단계입니다. 배포 모델 선택의 근거는 depthwise separable convolution 기반 구조가 ARM CPU에서 연산 최적화가 검증되어 있고, onnxruntime·TFLite 등 엣지 런타임의 연산자 지원이 가장 성숙하다는 점입니다. 인라인 검사 장비의 실시간 요구를 만족하면서 유지보수 부담이 가장 낮은 선택입니다.
 
 > 정확도가 최우선인 오프라인 배치 분석에는 WaferCNN을, 인라인 실시간 검사에는 MobileNetV3를 쓰는 **이원 배포 전략**이 적절합니다.
 
-### 검증 결과
+### 검증 결과 *(이전 체크포인트 MobileNetV3_34_0.7417 기준 · 2026-09 재측정 미실시)*
 
 | 모델 | 크기 | Accuracy | macro F1 | 추론 (batch=32) | 판정 |
 |------|-----:|---------:|---------:|----------------:|:----:|
@@ -270,13 +296,16 @@ baseline: none 클래스 20개 평균 | steps: 30
 |:-:|------|------|----------|
 | 1 | **Lot 단위 데이터 누수 가능성** — 현재 분할은 `StratifiedShuffleSplit`(웨이퍼 단위). WM-811K는 한 lot의 웨이퍼들이 유사한 불량 패턴을 공유하므로, 동일 lot이 train/test에 동시 포함될 수 있음 | 보고된 성능이 실제 일반화 성능보다 **낙관적일 수 있음** | `GroupShuffleSplit(groups=lotName)` 재분할 후 성능 재측정 · 낙폭을 실제 일반화 성능으로 보고 |
 | 2 | **데이터셋 공식 분할 미사용** — 원본의 `trianTestLabel`(Train 54,355 / Test 118,595) 대신 자체 분할 사용 | 선행 논문과 **직접 비교 불가** | 공식 분할 기준 성능을 병기 |
-| 3 | **Scratch Precision 0.4927** | 오탐 재검사 부하 2배 | 클래스별 임계값 조정 · Scratch 전용 증강 분리 (현재 `CoarseDropout` 8×8이 선형 패턴을 훼손할 수 있음) |
+| 3 | **Scratch Precision 0.50 (64px 모델)** | 오탐 재검사 부하 2배 | **128px 입력으로 0.68~0.78 까지 개선됨을 확인** (`analysis/fair_compare/`) · 남은 개선: 클래스별 임계값 조정 · Scratch 전용 증강 |
 | 4 | **픽셀값을 연속값으로 처리** — `0/1/2 → 0/0.5/1` 정규화 | 빈 영역·정상 다이·불량 다이는 **순서형이 아닌 범주형** | 3채널 one-hot 인코딩으로 전환 시 Edge 계열 성능 개선 여지 |
 | 5 | **Optuna HPO 개선 실패** | 위 [관찰 3](#관찰-3--optuna-hpo는-개선에-실패했다-기록-목적) | Pruner 완화 · 탐색 범위 재설정 후 재실행 |
 | 6 | **공정 파라미터가 시뮬레이션 데이터** | Phase 2 상관계수·ROI는 실측 주장 아님 | 실 SPC 데이터 연결 시 코드 수정 없이 재실행 가능 |
 | 7 | **서빙 API 부재** | 배포는 ONNX 파일 수준까지 | FastAPI `/predict` + Docker 이미지 |
 | 8 | **테스트 코드·CI 부재** | 회귀 검증 수단 없음 | `src/` 모듈 단위 pytest + GitHub Actions |
 | 9 | **드리프트 모니터링 부재** | Airflow가 `@weekly` 전체 재학습만 수행 | PSI/KS 기반 드리프트 감지 → 조건부 재학습 트리거 |
+| 10 | **ONNX/INT8 배포 수치가 이전 체크포인트 기준** | 배포 표(0.7369)와 최신 모델(0.8756) 불일치 | 128px MobileNetV3-S 로 `scripts/export_onnx.py` 재실행 · 업샘플 포함 그래프의 속도 재측정 |
+| 11 | **동일 레시피 비교의 seed 수** | EfficientNet-B0 128px · ViT-Tiny · scratch 변인은 1 seed | 핵심 비교(WaferCNN vs MobileNetV3)는 3 seeds 완료. 나머지도 3 seeds 로 확장 |
+| 12 | **입력 해상도 128px 이 상한이 아님** | 224px · 첫 conv stride 1 등 미탐색 | 해상도/stride 스윕 후 속도-정확도 곡선 작성 |
 
 ---
 
@@ -345,8 +374,11 @@ wafer-defect-analysis/
 ├── 16_spark_pipeline.ipynb         # PySpark 대용량 처리 파이프라인
 │
 ├── scripts/
-│   ├── evaluate_all.py             # ★ 전 모델 통합 재평가 (README 성능표 근거)
-│   ├── export_onnx.py              # ★ ONNX 변환·정확도 검증·벤치마크
+│   ├── preprocess.py               # 원본 pkl → 64×64 npy + split (노트북 03 스크립트판)
+│   ├── evaluate_all.py             # ★ 전 모델 통합 재평가 + bootstrap CI (README C-1 근거)
+│   ├── fair_compare.py             # ★ 동일 레시피 공정 비교 · 다중 seed (README C-2 근거)
+│   ├── make_performance_report.py  # 결과 JSON → docs/MODEL_PERFORMANCE.md
+│   ├── export_onnx.py              # ONNX 변환·정확도 검증·벤치마크
 │   ├── retrain_baseline.py         # 베이스라인 재학습
 │   ├── retrain_finetune.py         # 파인튜닝 3종 재학습
 │   └── retrain_advanced.py         # Multi-output 재학습
@@ -364,7 +396,8 @@ wafer-defect-analysis/
 ├── dashboard/                      # Vue 3 공정 파라미터 What-If 대시보드
 │
 ├── analysis/                       # 성능·EDA 산출물
-│   ├── final_evaluation.json       # ★ 전 모델 통합 성능 (README 근거)
+│   ├── fair_compare/               # ★ 동일 레시피 비교 (runs/*.json · summary.md/json/csv)
+│   ├── final_evaluation.json       # ★ 기존 레시피 통합 성능 (README 근거)
 │   ├── per_class_metrics.csv       # ★ 모델 × 클래스별 P/R/F1
 │   ├── final_confusion_matrices.png# ★ 모델별 혼동행렬
 │   ├── baseline_classification_report.txt
@@ -372,7 +405,11 @@ wafer-defect-analysis/
 │
 ├── configs/                        # augmentation_config.yaml · defect_metadata.json
 ├── reports/                        # 최적화 리포트 · ROI 분석
-├── docs/                           # 불량 메커니즘 상세 문서
+├── docs/
+│   ├── PROJECT_STRUCTURE.md        # ★ 파일 구성 · 재현 순서 · 정리 내역
+│   ├── MODEL_PERFORMANCE.md        # ★ 성능 재측정 보고서 (전체 표)
+│   ├── defect_mechanism_analysis.md
+│   └── plans/                      # 고도화 계획서 모음 (구 upgrade*.md · DataEngineer.md)
 ├── data/
 │   ├── raw/LSWMD.pkl               # WM-811K 원본 (~2GB)
 │   ├── processed/                  # 전처리 완료 (NPY, PKL)
@@ -402,12 +439,25 @@ pip install -r requirements.txt
 # 또는 data/raw/LSWMD.pkl 직접 배치
 ```
 
-### 성능 재현 (학습 없이 체크포인트로 검증)
+### 전처리 · 재학습 · 재평가
 
 ```bash
-python scripts/evaluate_all.py    # → analysis/final_evaluation.json
-python scripts/export_onnx.py     # → analysis/deployment_summary.json
+python scripts/preprocess.py                 # data/raw/LSWMD.pkl → data/processed/*
+set NUM_WORKERS=4                            # (PowerShell: $env:NUM_WORKERS=4)
+python scripts/retrain_baseline.py           # WaferCNN
+python scripts/retrain_finetune.py           # MobileNetV3 / EfficientNet-B0 / ViT-Tiny (기존 2-Phase 레시피)
+python scripts/retrain_advanced.py           # Multi-output
+python scripts/evaluate_all.py               # → analysis/final_evaluation.json (README C-1)
+
+# 동일 레시피 공정 비교 (README C-2) — GPU 기준 run 당 25~90분
+python scripts/fair_compare.py --models wafercnn mv3_pre64 mv3_pre128 --seeds 42 43 44
+python scripts/fair_compare.py --models mv3_scratch64 effb0_pre128 vit_pre64 --seeds 42
+python scripts/fair_compare.py --summarize   # → analysis/fair_compare/summary.md
+python scripts/make_performance_report.py    # → docs/MODEL_PERFORMANCE.md
+python scripts/export_onnx.py                # → analysis/deployment_summary.json
 ```
+
+> 체크포인트·전처리 산출물은 gitignore 되어 있으므로 새 환경에서는 위 순서대로 생성해야 합니다. 상세: [`docs/PROJECT_STRUCTURE.md`](docs/PROJECT_STRUCTURE.md)
 
 ### 노트북 실행 순서
 

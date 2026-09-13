@@ -40,6 +40,7 @@ CHECKPOINT_DIR = ROOT / 'checkpoints'
 ANALYSIS_DIR   = ROOT / 'analysis'
 
 BATCH_SIZE = 64; EPOCHS = 50; LR = 3e-4; WEIGHT_DECAY = 1e-4; PATIENCE = 15
+NUM_WORKERS = int(os.environ.get('NUM_WORKERS', '0'))
 
 
 class FocalLoss(nn.Module):
@@ -122,6 +123,7 @@ def main():
     print(f'Device: {DEVICE}')
     if DEVICE.type == 'cuda':
         print(f'GPU: {torch.cuda.get_device_name(0)}')
+    CHECKPOINT_DIR.mkdir(exist_ok=True); ANALYSIS_DIR.mkdir(exist_ok=True)
 
     all_maps = np.load(PROCESSED_DIR / 'all_maps_resized.npy')
     with open(PROCESSED_DIR / 'split_indices.pkl', 'rb') as f:
@@ -136,7 +138,8 @@ def main():
     sampler = WeightedRandomSampler(
         torch.FloatTensor(class_weights[train_labels]), len(train_labels), replacement=True)
     train_loader = DataLoader(WaferMapDataset(all_maps[train_idx], train_labels, build_train_transform()),
-                              BATCH_SIZE, sampler=sampler, num_workers=0)
+                              BATCH_SIZE, sampler=sampler, num_workers=NUM_WORKERS,
+                              persistent_workers=NUM_WORKERS > 0, pin_memory=True)
     val_loader   = DataLoader(WaferMapDataset(all_maps[val_idx],   val_labels),
                               BATCH_SIZE, shuffle=False, num_workers=0)
     test_loader  = DataLoader(WaferMapDataset(all_maps[test_idx],  test_labels),
@@ -151,7 +154,9 @@ def main():
         try:
             with open(ft_results_path, encoding='utf-8') as f:
                 ft_results = json.load(f)
-            mv3_ckpt_path = ft_results['models']['MobileNetV3']['checkpoint']
+            mv3_ckpt_path = Path(ft_results['models']['MobileNetV3']['checkpoint'])
+            if not mv3_ckpt_path.is_absolute():
+                mv3_ckpt_path = ROOT / mv3_ckpt_path   # 상대경로 → 저장소 기준
             mv3_ckpt = torch.load(mv3_ckpt_path, map_location=DEVICE, weights_only=False)
             # backbone(features) 가중치만 전이
             state = mv3_ckpt['model_state']
@@ -206,7 +211,8 @@ def main():
            'epochs_trained': int(ckpt['epoch']),
            'fix_note': 'Focal Loss(gamma=2) + 강화 증강 + CosineAnnealingWarmRestarts + patience=15',
            'loss_weights': {'alpha':0.5,'beta':0.3,'gamma':0.2,'focal_gamma':2.0},
-           'class_names': CLASS_ORDER}
+           'class_names': CLASS_ORDER,
+           'checkpoint': best_ckpt.relative_to(ROOT).as_posix()}
     with open(ANALYSIS_DIR / 'advanced_model_results.json','w',encoding='utf-8') as f:
         json.dump(res, f, ensure_ascii=False, indent=2)
     print(f'결과 저장: analysis/advanced_model_results.json')

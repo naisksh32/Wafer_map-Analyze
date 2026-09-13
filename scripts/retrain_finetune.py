@@ -38,6 +38,7 @@ CHECKPOINT_DIR = ROOT / 'checkpoints'
 ANALYSIS_DIR   = ROOT / 'analysis'
 
 BATCH_SIZE = 64; WEIGHT_DECAY = 1e-4; PATIENCE = 10
+NUM_WORKERS = int(os.environ.get('NUM_WORKERS', '0'))
 PHASE1_EPOCHS = 5;  PHASE1_LR = 1e-3
 PHASE2_EPOCHS = 35; PHASE2_LR = 1e-4
 
@@ -172,6 +173,7 @@ def main():
     print(f'Device: {DEVICE}')
     if DEVICE.type == 'cuda':
         print(f'GPU: {torch.cuda.get_device_name(0)}')
+    CHECKPOINT_DIR.mkdir(exist_ok=True); ANALYSIS_DIR.mkdir(exist_ok=True)
 
     all_maps = np.load(PROCESSED_DIR / 'all_maps_resized.npy')
     with open(PROCESSED_DIR / 'split_indices.pkl', 'rb') as f:
@@ -196,7 +198,8 @@ def main():
     sampler = WeightedRandomSampler(
         torch.FloatTensor(class_weights[train_labels]), len(train_labels), replacement=True)
     train_loader = DataLoader(WaferMapDataset(all_maps[train_idx], train_labels, train_transform),
-                              BATCH_SIZE, sampler=sampler, num_workers=0)
+                              BATCH_SIZE, sampler=sampler, num_workers=NUM_WORKERS,
+                              persistent_workers=NUM_WORKERS > 0, pin_memory=True)
     val_loader   = DataLoader(WaferMapDataset(all_maps[val_idx],   val_labels),
                               BATCH_SIZE, shuffle=False, num_workers=0)
     test_loader  = DataLoader(WaferMapDataset(all_maps[test_idx],  test_labels),
@@ -229,7 +232,7 @@ def main():
             'test_f1_macro': round(float(test_f1),4),
             'target_met_acc': bool(test_acc >= 0.90),
             'target_met_f1':  bool(test_f1 >= 0.88),
-            'checkpoint': str(best_ckpt),
+            'checkpoint': best_ckpt.relative_to(ROOT).as_posix(),  # 저장소 상대경로
         }
 
     best_model = max(all_results, key=lambda k: all_results[k]['test_f1_macro'])

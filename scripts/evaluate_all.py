@@ -81,20 +81,67 @@ def build_wafer_cnn(num_classes=NUM_CLASSES, dropout=0.3):
 
 
 # 평가 대상: (표시명, 빌더, 체크포인트, 비고)
+# 체크포인트 경로는 재학습 스크립트가 남긴 analysis/*_results.json 에서 동적으로 읽는다.
+# (과거 버전은 특정 파일명이 하드코딩되어 있어 재학습 시마다 수정이 필요했음)
+def _read_json(rel):
+    path = ROOT / rel
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding='utf-8'))
+    except Exception:
+        return {}
+
+
+def _latest(pattern):
+    cands = sorted((ROOT / 'checkpoints').glob(pattern), key=lambda p: p.stat().st_mtime)
+    return cands[-1].relative_to(ROOT).as_posix() if cands else None
+
+
+def resolve_checkpoints():
+    base = _read_json('analysis/baseline_results.json')
+    ft   = _read_json('analysis/finetuning_results.json').get('models', {})
+    adv  = _read_json('analysis/advanced_model_results.json')
+
+    def _rel(p):
+        if not p:
+            return None
+        p = Path(p)
+        if p.is_absolute():
+            # 다른 머신의 절대경로가 남아 있을 수 있음 → 파일명만 취해 checkpoints/ 에서 찾는다
+            cand = ROOT / 'checkpoints' / p.name
+            return cand.relative_to(ROOT).as_posix() if cand.exists() else None
+        return p.as_posix() if (ROOT / p).exists() else None
+
+    return {
+        'WaferCNN':               _rel(base.get('best_checkpoint')) or _latest('WaferCNN_[0-9]*_*.pth'),
+        'WaferCNN + Optuna HPO':  _rel('checkpoints/WaferCNN_best_hpo.pth'),
+        'MobileNetV3-Small':      _rel(ft.get('MobileNetV3', {}).get('checkpoint')) or _latest('MobileNetV3_[0-9]*_*.pth'),
+        'EfficientNet-B0':        _rel(ft.get('EfficientNet-B0', {}).get('checkpoint')) or _latest('EfficientNet-B0_[0-9]*_*.pth'),
+        'ViT-Tiny':               _rel(ft.get('ViT-Tiny', {}).get('checkpoint')) or _latest('ViT-Tiny_[0-9]*_*.pth'),
+        'AdvancedDefectPredictor': _rel(adv.get('checkpoint')) or _latest('AdvancedDefectPredictor_best_*.pth'),
+    }
+
+
+_CK = resolve_checkpoints()
 MODELS = [
-    ('WaferCNN', build_wafer_cnn,
-     'checkpoints/WaferCNN_23_0.8485.pth', '커스텀 4-Conv CNN 베이스라인'),
-    ('WaferCNN + Optuna HPO', build_wafer_cnn,
-     'checkpoints/WaferCNN_best_hpo.pth', 'Optuna 20 trials 최적 파라미터 재학습'),
-    ('MobileNetV3-Small', build_mobilenet_v3_small,
-     'checkpoints/MobileNetV3_34_0.7417.pth', '2-Phase 파인튜닝 · 엣지 배포 채택'),
-    ('EfficientNet-B0', build_efficientnet_b0,
-     'checkpoints/EfficientNet-B0_19_0.7999.pth', '2-Phase 파인튜닝'),
-    ('ViT-Tiny', build_vit_tiny,
-     'checkpoints/ViT-Tiny_29_0.8351.pth', '2-Phase 파인튜닝'),
-    ('AdvancedDefectPredictor', None,
-     'checkpoints/AdvancedDefectPredictor_best_0.8279.pth', 'Multi-output(분류+심각도+신뢰도)'),
+    ('WaferCNN', build_wafer_cnn, _CK['WaferCNN'], '커스텀 4-Conv CNN 베이스라인'),
+    ('WaferCNN + Optuna HPO', build_wafer_cnn, _CK['WaferCNN + Optuna HPO'], 'Optuna 20 trials 최적 파라미터 재학습'),
+    ('MobileNetV3-Small', build_mobilenet_v3_small, _CK['MobileNetV3-Small'], '2-Phase 파인튜닝 · 엣지 배포 채택'),
+    ('EfficientNet-B0', build_efficientnet_b0, _CK['EfficientNet-B0'], '2-Phase 파인튜닝'),
+    ('ViT-Tiny', build_vit_tiny, _CK['ViT-Tiny'], '2-Phase 파인튜닝'),
+    ('AdvancedDefectPredictor', None, _CK['AdvancedDefectPredictor'], 'Multi-output(분류+심각도+신뢰도)'),
 ]
+
+
+def bootstrap_ci(trues, preds, n_boot=1000, seed=SEED):
+    """테스트셋 재표집으로 macro F1 의 95% 신뢰구간 산출 (모델 간 차이가 유의한지 판단용)."""
+    rng = np.random.default_rng(seed)
+    n = len(trues); vals = np.empty(n_boot)
+    for b in range(n_boot):
+        idx = rng.integers(0, n, n)
+        vals[b] = f1_score(trues[idx], preds[idx], average='macro', zero_division=0)
+    return float(np.percentile(vals, 2.5)), float(np.percentile(vals, 97.5))
 
 
 def load_state(ckpt):
@@ -142,10 +189,10 @@ def main():
     results, per_class_rows, cms = {}, [], {}
 
     for name, builder, ckpt_rel, note in MODELS:
-        path = ROOT / ckpt_rel
-        if not path.exists():
+        if not ckpt_rel or not (ROOT / ckpt_rel).exists():
             print(f'[SKIP] {name}: 체크포인트 없음 ({ckpt_rel})')
             continue
+        path = ROOT / ckpt_rel
         try:
             raw = torch.load(path, map_location=DEVICE, weights_only=False)
             state, meta = load_state(raw)
@@ -169,6 +216,9 @@ def main():
         acc = accuracy_score(trues, preds)
         f1_mac = f1_score(trues, preds, average='macro', zero_division=0)
         f1_wtd = f1_score(trues, preds, average='weighted', zero_division=0)
+        p_mac, r_mac, _, _ = precision_recall_fscore_support(
+            trues, preds, average='macro', zero_division=0)
+        ci_lo, ci_hi = bootstrap_ci(trues, preds)
         n_params = sum(p.numel() for p in model.parameters())
 
         results[name] = {
@@ -178,9 +228,13 @@ def main():
             'test_accuracy': round(float(acc), 4),
             'test_f1_macro': round(float(f1_mac), 4),
             'test_f1_weighted': round(float(f1_wtd), 4),
+            'test_precision_macro': round(float(p_mac), 4),
+            'test_recall_macro': round(float(r_mac), 4),
+            'test_f1_macro_ci95': [round(ci_lo, 4), round(ci_hi, 4)],
         }
-        print(f'{name:<26} Acc {acc * 100:6.2f}%  macroF1 {f1_mac:.4f}  '
-              f'wtdF1 {f1_wtd:.4f}  ({n_params / 1e6:.2f}M params)')
+        print(f'{name:<26} Acc {acc * 100:6.2f}%  macroF1 {f1_mac:.4f} '
+              f'[{ci_lo:.4f}, {ci_hi:.4f}]  wtdF1 {f1_wtd:.4f}  '
+              f'macroP {p_mac:.4f} macroR {r_mac:.4f}  ({n_params / 1e6:.2f}M params)')
 
         p, r, f, s = precision_recall_fscore_support(
             trues, preds, labels=range(NUM_CLASSES), zero_division=0)
@@ -205,7 +259,9 @@ def main():
         'test_set_size': int(len(test_labels)),
         'test_class_distribution': {CLASS_ORDER[i]: int(n) for i, n in dist.items()},
         'device': str(DEVICE),
+        'gpu': torch.cuda.get_device_name(0) if DEVICE.type == 'cuda' else None,
         'seed': SEED,
+        'ci_note': 'test_f1_macro_ci95 = 테스트셋 bootstrap 1000회 재표집 95% 구간',
         'models': results,
     }
     (ROOT / 'analysis/final_evaluation.json').write_text(

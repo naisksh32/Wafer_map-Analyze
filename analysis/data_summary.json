@@ -52,6 +52,6 @@
     "filter": "failureType == 'unknown' 제거 후 172,950개만 사용",
     "resize_target": "64x64 고정 크기",
     "normalization": "픽셀값 0~2 를 0.0~1.0 으로 정규화",
-    "class_imbalance_strategy": "Weighted Random Sampler + Class Weight (CrossEntropyLoss)"
+    "class_imbalance_strategy": "WeightedRandomSampler 단독 (CrossEntropyLoss weight 미사용 — 이중 보정 방지)"
   }
 }

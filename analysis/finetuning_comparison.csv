@@ -1,4 +1,6 @@
-﻿모델,파라미터 수,Best Val F1,Test Accuracy,Test F1 macro,목표 달성 (F1≥0.88)
-MobileNetV3,1.53M,0.5736,37.19%,0.5618,NO
-EfficientNet-B0,4.02M,0.6775,79.37%,0.6673,NO
-ViT-Tiny,5.39M,0.6578,75.57%,0.6473,NO
+﻿모델,파라미터 수,Test Accuracy,Test F1 macro,Test F1 weighted,목표 달성 (F1≥0.80)
+WaferCNN,1.21M,95.85%,0.8508,0.9616,YES
+MobileNetV3-Small,1.53M,90.41%,0.7372,0.9196,NO
+EfficientNet-B0,4.02M,94.16%,0.802,0.9478,YES
+ViT-Tiny,5.39M,94.34%,0.8106,0.9495,YES
+AdvancedDefectPredictor,1.13M,95.12%,0.8229,0.9549,YES

@@ -1,0 +1,16 @@
+Device: cuda
+Test set: 25,943개 (증강·샘플러 미적용, 원본 불균형 유지)
+클래스 분포: {'none': 22115, 'Center': 644, 'Donut': 83, 'Edge-Loc': 779, 'Edge-Ring': 1452, 'Loc': 539, 'Near-full': 22, 'Random': 130, 'Scratch': 179}
+
+WaferCNN                   Acc  95.85%  macroF1 0.8508 [0.8353, 0.8635]  wtdF1 0.9616  macroP 0.7929 macroR 0.9343  (1.21M params)
+[SKIP] WaferCNN + Optuna HPO: 체크포인트 없음 (None)
+MobileNetV3-Small          Acc  90.41%  macroF1 0.7372 [0.7204, 0.7507]  wtdF1 0.9196  macroP 0.6606 macroR 0.8910  (1.53M params)
+EfficientNet-B0            Acc  94.16%  macroF1 0.8020 [0.7836, 0.8165]  wtdF1 0.9478  macroP 0.7313 macroR 0.9160  (4.02M params)
+ViT-Tiny                   Acc  94.34%  macroF1 0.8106 [0.7956, 0.8232]  wtdF1 0.9495  macroP 0.7588 macroR 0.8963  (5.39M params)
+AdvancedDefectPredictor    Acc  95.12%  macroF1 0.8229 [0.8049, 0.8372]  wtdF1 0.9549  macroP 0.7778 macroR 0.8848  (1.13M params)
+
+저장 완료:
+  analysis/final_evaluation.json
+  analysis/per_class_metrics.csv
+  analysis/final_confusion_matrices.png
+  analysis/baseline_classification_report.txt
