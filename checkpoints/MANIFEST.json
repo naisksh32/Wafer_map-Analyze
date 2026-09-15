@@ -1,5 +1,5 @@
 {
-  "description": "체크포인트 ↔ 결과 매핑. 정리 시점 2026-09-15 (1차 공정 비교 + 2차 입력 전처리 실험 포함)",
+  "description": "체크포인트 ↔ 결과 매핑. 2026-09-15 (1·2차 공정 비교 + 3차 seed 확정 + ONNX v2 배포 산출물)",
   "legacy_recipe": {
     "WaferCNN": {
       "path": "checkpoints/WaferCNN_37_0.8453.pth",
@@ -63,6 +63,36 @@
       "test_accuracy": 0.9778360251320202,
       "source": "analysis/fair_compare/runs/effb0_pre224_seed42.json"
     },
+    "effb0_pre224_seed43": {
+      "path": "checkpoints/fair/effb0_pre224_seed43.pth",
+      "model_key": "effb0_pre224",
+      "seed": 43,
+      "best_epoch": 24,
+      "preprocess": {
+        "size": 224,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.9073066483214254,
+      "test_accuracy": 0.979108044559226,
+      "source": "analysis/fair_compare/runs/effb0_pre224_seed43.json"
+    },
+    "effb0_pre224_seed44": {
+      "path": "checkpoints/fair/effb0_pre224_seed44.pth",
+      "model_key": "effb0_pre224",
+      "seed": 44,
+      "best_epoch": 24,
+      "preprocess": {
+        "size": 224,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.9033606021425802,
+      "test_accuracy": 0.976949466137301,
+      "source": "analysis/fair_compare/runs/effb0_pre224_seed44.json"
+    },
     "mv3_pre128_3ch_seed42": {
       "path": "checkpoints/fair/mv3_pre128_3ch_seed42.pth",
       "model_key": "mv3_pre128_3ch",
@@ -118,6 +148,36 @@
       "test_accuracy": 0.9703966387850287,
       "source": "analysis/fair_compare/runs/mv3_pre128_norm_seed42.json"
     },
+    "mv3_pre128_norm_seed43": {
+      "path": "checkpoints/fair/mv3_pre128_norm_seed43.pth",
+      "model_key": "mv3_pre128_norm",
+      "seed": 43,
+      "best_epoch": 25,
+      "preprocess": {
+        "size": 128,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": true
+      },
+      "test_f1_macro": 0.8762644367838909,
+      "test_accuracy": 0.9686235207955903,
+      "source": "analysis/fair_compare/runs/mv3_pre128_norm_seed43.json"
+    },
+    "mv3_pre128_norm_seed44": {
+      "path": "checkpoints/fair/mv3_pre128_norm_seed44.pth",
+      "model_key": "mv3_pre128_norm",
+      "seed": 44,
+      "best_epoch": 20,
+      "preprocess": {
+        "size": 128,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": true
+      },
+      "test_f1_macro": 0.8788038610413398,
+      "test_accuracy": 0.9698569941795475,
+      "source": "analysis/fair_compare/runs/mv3_pre128_norm_seed44.json"
+    },
     "mv3_pre128_seed42": {
       "path": "checkpoints/fair/mv3_pre128_seed42.pth",
       "model_key": "mv3_pre128",
@@ -162,6 +222,36 @@
       "test_f1_macro": 0.8882902851730553,
       "test_accuracy": 0.970473730871526,
       "source": "analysis/fair_compare/runs/mv3_pre160_seed42.json"
+    },
+    "mv3_pre160_seed43": {
+      "path": "checkpoints/fair/mv3_pre160_seed43.pth",
+      "model_key": "mv3_pre160",
+      "seed": 43,
+      "best_epoch": 24,
+      "preprocess": {
+        "size": 160,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.8783792647061405,
+      "test_accuracy": 0.9681995143198551,
+      "source": "analysis/fair_compare/runs/mv3_pre160_seed43.json"
+    },
+    "mv3_pre160_seed44": {
+      "path": "checkpoints/fair/mv3_pre160_seed44.pth",
+      "model_key": "mv3_pre160",
+      "seed": 44,
+      "best_epoch": 21,
+      "preprocess": {
+        "size": 160,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.8767987200103573,
+      "test_accuracy": 0.9682380603631038,
+      "source": "analysis/fair_compare/runs/mv3_pre160_seed44.json"
     },
     "mv3_pre224_seed42": {
       "path": "checkpoints/fair/mv3_pre224_seed42.pth",
@@ -312,6 +402,29 @@
       "test_f1_macro": 0.8400724534692374,
       "test_accuracy": 0.96230196970281,
       "source": "analysis/fair_compare/runs/wafercnn_seed44.json"
+    }
+  },
+  "deploy_onnx": {
+    "legacy_mv3_64": {
+      "onnx_fp32": "checkpoints/deploy/legacy_mv3_64.onnx",
+      "onnx_int8": "checkpoints/deploy/legacy_mv3_64_int8.onnx",
+      "source_checkpoint": "checkpoints/MobileNetV3_34_0.7431.pth",
+      "onnx_f1_macro": 0.7372,
+      "int8_verdict": "REJECT"
+    },
+    "mv3_pre160_seed42": {
+      "onnx_fp32": "checkpoints/deploy/mv3_pre160_seed42.onnx",
+      "onnx_int8": "checkpoints/deploy/mv3_pre160_seed42_int8.onnx",
+      "source_checkpoint": "checkpoints/fair/mv3_pre160_seed42.pth",
+      "onnx_f1_macro": 0.8884,
+      "int8_verdict": "REJECT"
+    },
+    "mv3_pre128_seed42": {
+      "onnx_fp32": "checkpoints/deploy/mv3_pre128_seed42.onnx",
+      "onnx_int8": "checkpoints/deploy/mv3_pre128_seed42_int8.onnx",
+      "source_checkpoint": "checkpoints/fair/mv3_pre128_seed42.pth",
+      "onnx_f1_macro": 0.8751,
+      "int8_verdict": "REJECT"
     }
   }
 }

@@ -46,10 +46,12 @@ def main():
                f'기존 파인튜닝의 백본 학습률 1e-5 가 MobileNet 을 0.10 가까이 깎아 먹고 있었다.',
                f'3. **입력 해상도가 가장 큰 변인이다.** 64×64 를 128×128 로 nearest 업샘플만 해도 MobileNetV3-S 는 {g("mv3_pre128","f1_mean"):.4f} ± {g("mv3_pre128","f1_std"):.4f} (3 seeds), '
                f'40 epoch 에서는 {g("mv3_pre128@ep40","f1_mean") or float("nan"):.4f} 에 도달한다. stride-32 백본이 64px 에서 2×2 feature map 으로 붕괴하는 문제가 해소되기 때문이다. '
-               f'Scratch(선형 결함) precision 이 0.4~0.5 → 0.7~0.8 로 오르는 것이 대표적 효과다.',
+               f'Scratch(선형 결함) precision 이 0.4~0.5 → 0.7~0.8 로 오르는 것이 대표적 효과다. 단 128px 이후의 추가 해상도(160 · 224)는 3 seeds 기준 +0.006 ± 0.006 으로 완만하며, '
+               f'WaferCNN 128px 대조군({g("wafercnn_128","f1_mean") or 0:.4f})이 개선되지 않아 이 효과는 stride-32 사전학습 백본에 특유하다.',
                f'4. **ImageNet 전이는 도움이 된다.** 같은 조건에서 scratch 초기화 MobileNetV3-S 는 {g("mv3_scratch64","f1_mean") or float("nan"):.4f} 로 ImageNet 초기화보다 낮다.',
-               f'5. **최고 성능은 EfficientNet-B0 128px {g("effb0_pre128","f1_mean") or float("nan"):.4f}** (Acc {(g("effb0_pre128","acc_mean") or 0)*100:.2f}%), 그 다음이 MobileNetV3-S 128px 이다. '
-               f'프로젝트 목표(macro F1 ≥ 0.88)는 이 두 구성에서 달성된다.',
+               f'5. **최고 성능은 EfficientNet-B0 224px {g("effb0_pre224","f1_mean") or float("nan"):.4f} ± {g("effb0_pre224","f1_std") or 0:.4f}** (3 seeds, Acc {(g("effb0_pre224","acc_mean") or 0)*100:.2f}%). '
+               f'엣지 후보 MobileNetV3-S 는 160px {g("mv3_pre160","f1_mean") or 0:.4f} ± {g("mv3_pre160","f1_std") or 0:.4f} · 128px+ImageNet norm {g("mv3_pre128_norm","f1_mean") or 0:.4f} ± {g("mv3_pre128_norm","f1_std") or 0:.4f} · 128px {g("mv3_pre128","f1_mean"):.4f} ± {g("mv3_pre128","f1_std"):.4f} 로 세 구성이 통계적으로 구분되지 않는다. '
+               f'프로젝트 목표(macro F1 ≥ 0.88)를 3 seeds 평균으로 넘는 것은 EfficientNet-B0 224px 와 MobileNetV3-S 160px 다.',
                '6. **val macro F1 은 epoch 간 ±0.03 요동**하므로(소수 클래스 22~83개) 조기종료·best-val 선택은 seed 운에 좌우된다. '
                'WaferCNN 은 best-val 체크포인트와 마지막 epoch 의 test F1 차이가 최대 0.017 인 반면, 사전학습 모델은 0.005 이내로 안정적이다.',
                '']
@@ -112,19 +114,20 @@ def main():
                'DataLoader 는 64px 증강 파이프라인을 그대로 쓰고, 모델 직전 GPU 위에서 해상도·보간·채널·정규화만 바꿨다. 학습 레시피는 1차와 동일.', '',
                '| 변인 | 비교 | 결과 | 판정 |', '|---|---|---|---|']
         rows = [
-            ('해상도 (MobileNetV3-S)', '64 → 128 → 160 → 224px', f"{g('mv3_pre64','f1_mean'):.4f} → {g('mv3_pre128','f1_mean'):.4f} → {g('mv3_pre160','f1_mean') or 0:.4f} → {g('mv3_pre224','f1_mean') or 0:.4f}", '**가장 큰 변인.** 160px 에서 포화 (224px 는 연산 2배에 이득 없음)'),
-            ('해상도 (EfficientNet-B0)', '128 → 224px (원본)', f"{g('effb0_pre128','f1_mean'):.4f} → {g('effb0_pre224','f1_mean') or 0:.4f}", '**전체 최고.** 마지막 epoch 모델은 0.9122'),
+            ('해상도 (MobileNetV3-S)', '64 → 128 → 160 → 224px', f"{g('mv3_pre64','f1_mean'):.4f} → {g('mv3_pre128','f1_mean'):.4f} → {g('mv3_pre160','f1_mean') or 0:.4f} (±{g('mv3_pre160','f1_std') or 0:.4f}) → {g('mv3_pre224','f1_mean') or 0:.4f}", '**가장 큰 변인이나 이득은 64→128 에 집중.** 160px 는 3 seeds 에서 128px 대비 +0.006 ± 0.006 (구분 안 됨). 224px 는 1 seed'),
+            ('해상도 (EfficientNet-B0)', '128 → 224px (원본)', f"{g('effb0_pre128','f1_mean'):.4f} → {g('effb0_pre224','f1_mean') or 0:.4f} (±{g('effb0_pre224','f1_std') or 0:.4f}, 3 seeds)", '**전체 최고.** 3 seeds 모두 0.903 이상, std 0.002 로 가장 안정'),
             ('토큰 수 (ViT-Tiny/16)', '16 → 64 → 196 tokens', f"{g('vit_pre64','f1_mean'):.4f} → {g('vit_pre128','f1_mean') or 0:.4f} → {g('vit_pre224','f1_mean') or 0:.4f}", '단조 증가. 단 5.4M 파라미터로 MobileNetV3-S 160px(1.53M) 와 동급'),
             ('해상도 (WaferCNN 대조군)', '64 → 128px', f"{g('wafercnn','f1_mean'):.4f} → {g('wafercnn_128','f1_mean') or 0:.4f}", '**개선 없음.** 해상도 효과는 stride-32 사전학습 백본에 특유한 구조적 현상'),
             ('보간', 'nearest vs bilinear (128px)', f"{g('mv3_pre128','f1_mean'):.4f} vs {g('mv3_pre128_bil','f1_mean') or 0:.4f}", '차이 없음 (3값 픽셀 유지 여부 무관)'),
             ('채널·정규화', '1ch 평균 conv vs 3ch 복제 + ImageNet norm', f"{g('mv3_pre128','f1_mean'):.4f} vs {g('mv3_pre128_3ch','f1_mean') or 0:.4f}", '차이 없음 (사전학습 conv1 원형 유지 이점 없음)'),
-            ('정규화 단독', '1ch vs 1ch + ImageNet norm', f"{g('mv3_pre128','f1_mean'):.4f} vs {g('mv3_pre128_norm','f1_mean') or 0:.4f}", '+0.007, 3-seed std 의 약 3배지만 CI 겹침 → seed 반복 필요'),
+            ('정규화 단독', '1ch vs 1ch + ImageNet norm', f"{g('mv3_pre128','f1_mean'):.4f} vs {g('mv3_pre128_norm','f1_mean') or 0:.4f} (±{g('mv3_pre128_norm','f1_std') or 0:.4f}, 3 seeds)", '+0.004, std 1~2배 → 약한 양의 효과, 확정 아님'),
         ]
         md += [f'| {a} | {b} | {c} | {d} |' for a, b, c, d in rows]
         md += ['', '**해석.** 64×64 입력에서 stride-32 백본(MobileNetV3·EfficientNet)의 마지막 feature map 은 2×2 로 붕괴하고, 이때 위치·형태 정보(Center/Loc/Edge-Loc 구분, Scratch 의 선형성)가 사라진다. '
                '업샘플은 정보를 추가하지 않지만 백본이 공간 구조를 유지하며 처리할 수 있게 해 준다. WaferCNN 은 64px 에서 이미 4×4 를 확보하므로 같은 처치에 반응하지 않는다. '
                '클래스별로는 Scratch F1 이 0.57 → 0.75~0.81, Loc 0.72 → 0.78~0.81, Edge-Loc 0.77 → 0.81~0.86 으로 오르고, none·Edge-Ring 은 모든 모델이 0.96 이상이라 변화가 없다.', '',
-               '**배포 관점 권장 구성.** MobileNetV3-S 160px (1.53M · macro F1 0.888) — EfficientNet-B0 224px(4.02M · 0.907) 대비 0.02 낮지만 연산량은 약 1/8. 정확도 최우선이면 EfficientNet-B0 224px.', '']
+               f"**배포 관점 권장 구성.** MobileNetV3-S 160px (1.53M · macro F1 {g('mv3_pre160','f1_mean') or 0:.3f} ± {g('mv3_pre160','f1_std') or 0:.3f}) — EfficientNet-B0 224px(4.02M · {g('effb0_pre224','f1_mean') or 0:.3f} ± {g('effb0_pre224','f1_std') or 0:.3f}) 대비 0.025 낮지만 연산량은 약 1/8. "
+               f"160px 와 128px+ImageNet norm({g('mv3_pre128_norm','f1_mean') or 0:.3f} ± {g('mv3_pre128_norm','f1_std') or 0:.3f}) 은 통계적으로 구분되지 않으므로 지연 요건이 우선이면 128px 도 타당. 정확도 최우선이면 EfficientNet-B0 224px.", '']
     md += ['## 4. 시각화 (`scripts/plot_results.py` → `analysis/figures/`)', '',
            '| 그림 | 내용 |', '|---|---|',
            '| ![](../analysis/figures/fig1_model_f1_bar.png) | **fig1** 모델별 macro F1 — 기존 레시피(주황) vs 동일 레시피(파랑). 오차막대 = 95% CI 또는 3 seeds ± std |',
@@ -133,6 +136,34 @@ def main():
            '| ![](../analysis/figures/fig4_training_curves.png) | **fig4** 모델별 학습 경과 (epoch 별 val accuracy·val macro F1) |',
            '| ![](../analysis/figures/fig5_val_f1_overlay.png) | **fig5** 핵심 모델 학습 곡선 overlay — 해상도가 높을수록 첫 epoch 부터 위에서 시작해 순서가 바뀌지 않는다 |',
            '| ![](../analysis/figures/fig6_legacy_curves.png) | **fig6** 기존 레시피 재학습 곡선 — 2-Phase 사전학습 모델은 Phase 2 에서도 백본 lr 1e-5 탓에 느리게 오른다 |', '']
+
+    # ── Part 5: 엣지 배포 재검증 + Part 6: 검증 결과
+    dep = load(A / 'deployment_summary_v2.json')
+    if dep:
+        md += ['## 5. 엣지 배포 재검증 (`scripts/export_onnx_v2.py` → `analysis/deployment_summary_v2.json`)', '',
+               f"CPU {dep['machine']['threads']} threads · onnxruntime {dep['machine']['onnxruntime']} · 업샘플은 ONNX 그래프 내부, 입력 (B,1,64,64) 유지", '',
+               '| 모델 | PyTorch F1 | ONNX FP32 F1 | argmax 일치 | INT8 F1 | INT8 판정 | b=1 (ms) | b=32 (ms) | FP32 크기 | INT8 크기 |', '|---|---:|---:|---:|---:|:-:|---:|---:|---:|---:|']
+        for k, m in dep['models'].items():
+            a, l, sz = m['accuracy'], m['latency_ms'], m['size']
+            md.append(f"| {m['description']} | {a['pytorch']['f1_macro']:.4f} | {a['onnx_fp32']['f1_macro']:.4f} | {a['fp32_vs_pytorch_argmax_agreement']*100:.2f}% | "
+                      f"{a['onnx_int8']['f1_macro']:.4f} | {m['int8_verdict']} | {l['onnx_fp32_b1']['avg_ms']:.2f} | {l['onnx_fp32_b32']['avg_ms']:.1f} | {sz['onnx_fp32_mb']}MB | {sz['onnx_int8_mb']}MB |")
+        md.append('')
+    ver = load(A / 'verification_report.json')
+    if ver:
+        md += [f"## 6. 검증 (`scripts/verify_results.py` → `analysis/verification_report.json`) — {ver['summary']}", '',
+               '| 검증 | 결과 | 요약 |', '|---|:-:|---|']
+        for k, c in ver['checks'].items():
+            md.append(f"| {k} | {'PASS' if c['pass'] else 'FAIL'} | {c.get('summary', '')} |")
+        if any(not c['pass'] for c in ver['checks'].values()):
+            md += ['', '실패 항목 상세:', '']
+            for k, c in ver['checks'].items():
+                if not c['pass']:
+                    md += [f"- **{k}**: " + '; '.join(map(str, c.get('failures', [])))[:600]]
+        g1 = ver['checks'].get('G1_fair_checkpoint_rescore', {}).get('rows', [])
+        if g1:
+            md += ['', f"G1·G2 의 허용오차(F1 ≤ 1e-3, 예측 불일치 ≤ 0.1%)는 GPU cuDNN autotune 커널 선택에 따른 near-tie 로짓 뒤집힘을 감안한 것이다. "
+                   f"실제 관측된 최대 차이는 F1 {max(x['d_f1'] for x in g1):.1e}, 예측이 달라진 샘플은 run 당 최대 {max(x['n_pred_diff_upper_bound'] for x in g1)}개(25,943개 중)이며, "
+                   f"{sum(x['cm_identical'] for x in g1)}/{len(g1)} run 은 confusion matrix 가 비트 단위로 동일했다. 문서에 기재된 4자리 수치는 이 범위에서 재현된다.", '']
 
     out = ROOT / 'docs/MODEL_PERFORMANCE.md'
     out.write_text('\n'.join(md) + '\n', encoding='utf-8')

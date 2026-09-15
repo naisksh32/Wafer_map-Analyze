@@ -1,0 +1,241 @@
+{
+  "description": "ONNX 배포 재검증 v2 — 동일 레시피 실험 체크포인트. 업샘플은 그래프 내부, 입력 (B,1,64,64) 유지",
+  "machine": {
+    "cpu": "Intel64 Family 6 Model 170 Stepping 4, GenuineIntel",
+    "threads": 4,
+    "onnxruntime": "1.30.0",
+    "torch": "2.6.0+cu124"
+  },
+  "test_set_size": 25943,
+  "models": {
+    "legacy_mv3_64": {
+      "model_key": "legacy_mv3_64",
+      "seed": 42,
+      "epoch": 34,
+      "description": "MobileNetV3-S (기존 2-Phase 레시피, 64px) — 이전 배포 모델",
+      "preprocess": {
+        "size": 64,
+        "mode": null,
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "checkpoint": "checkpoints/MobileNetV3_34_0.7431.pth",
+      "files": {
+        "onnx_fp32": "checkpoints/deploy/legacy_mv3_64.onnx",
+        "onnx_int8": "checkpoints/deploy/legacy_mv3_64_int8.onnx"
+      },
+      "accuracy": {
+        "pytorch": {
+          "accuracy": 0.9043,
+          "f1_macro": 0.7372
+        },
+        "onnx_fp32": {
+          "accuracy": 0.9043,
+          "f1_macro": 0.7372
+        },
+        "onnx_int8": {
+          "accuracy": 0.0471,
+          "f1_macro": 0.0344
+        },
+        "fp32_vs_pytorch_argmax_agreement": 1.0,
+        "int8_vs_pytorch_argmax_agreement": 0.05289,
+        "fp32_f1_delta": 0.0,
+        "int8_f1_delta": -0.7028
+      },
+      "int8_verdict": "REJECT",
+      "latency_ms": {
+        "pytorch_cpu_b1": {
+          "avg_ms": 5.701,
+          "p50_ms": 5.595,
+          "p95_ms": 6.906
+        },
+        "pytorch_cpu_b32": {
+          "avg_ms": 21.046,
+          "p50_ms": 20.611,
+          "p95_ms": 23.655
+        },
+        "onnx_fp32_b1": {
+          "avg_ms": 0.374,
+          "p50_ms": 0.367,
+          "p95_ms": 0.429
+        },
+        "onnx_fp32_b32": {
+          "avg_ms": 3.451,
+          "p50_ms": 3.328,
+          "p95_ms": 4.033
+        },
+        "onnx_int8_b1": {
+          "avg_ms": 1.984,
+          "p50_ms": 1.902,
+          "p95_ms": 2.29
+        },
+        "onnx_int8_b32": {
+          "avg_ms": 47.363,
+          "p50_ms": 46.61,
+          "p95_ms": 50.921
+        }
+      },
+      "size": {
+        "onnx_fp32_mb": 5.83,
+        "onnx_int8_mb": 1.62,
+        "int8_reduction_pct": 72.2
+      }
+    },
+    "mv3_pre160_seed42": {
+      "model_key": "mv3_pre160",
+      "seed": 42,
+      "epoch": 25,
+      "description": "MobileNetV3-S (ImageNet, 160px → 5×5)",
+      "preprocess": {
+        "size": 160,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "checkpoint": "checkpoints/fair/mv3_pre160_seed42.pth",
+      "files": {
+        "onnx_fp32": "checkpoints/deploy/mv3_pre160_seed42.onnx",
+        "onnx_int8": "checkpoints/deploy/mv3_pre160_seed42_int8.onnx"
+      },
+      "accuracy": {
+        "pytorch": {
+          "accuracy": 0.9705,
+          "f1_macro": 0.8884
+        },
+        "onnx_fp32": {
+          "accuracy": 0.9705,
+          "f1_macro": 0.8884
+        },
+        "onnx_int8": {
+          "accuracy": 0.8622,
+          "f1_macro": 0.2153
+        },
+        "fp32_vs_pytorch_argmax_agreement": 1.0,
+        "int8_vs_pytorch_argmax_agreement": 0.84828,
+        "fp32_f1_delta": 0.0,
+        "int8_f1_delta": -0.6731
+      },
+      "int8_verdict": "REJECT",
+      "latency_ms": {
+        "pytorch_cpu_b1": {
+          "avg_ms": 6.79,
+          "p50_ms": 6.636,
+          "p95_ms": 7.76
+        },
+        "pytorch_cpu_b32": {
+          "avg_ms": 27.492,
+          "p50_ms": 26.933,
+          "p95_ms": 31.612
+        },
+        "onnx_fp32_b1": {
+          "avg_ms": 0.699,
+          "p50_ms": 0.682,
+          "p95_ms": 0.817
+        },
+        "onnx_fp32_b32": {
+          "avg_ms": 10.4,
+          "p50_ms": 10.413,
+          "p95_ms": 11.547
+        },
+        "onnx_int8_b1": {
+          "avg_ms": 5.138,
+          "p50_ms": 4.941,
+          "p95_ms": 6.215
+        },
+        "onnx_int8_b32": {
+          "avg_ms": 139.353,
+          "p50_ms": 137.521,
+          "p95_ms": 148.323
+        }
+      },
+      "size": {
+        "onnx_fp32_mb": 5.84,
+        "onnx_int8_mb": 1.64,
+        "int8_reduction_pct": 71.9
+      },
+      "relative_to_legacy": {
+        "f1_gain": 0.1512,
+        "latency_b1_ratio": 1.87,
+        "latency_b32_ratio": 3.01
+      }
+    },
+    "mv3_pre128_seed42": {
+      "model_key": "mv3_pre128",
+      "seed": 42,
+      "epoch": 24,
+      "description": "MobileNetV3-S (ImageNet, 128px upsample)",
+      "preprocess": {
+        "size": 128,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "checkpoint": "checkpoints/fair/mv3_pre128_seed42.pth",
+      "files": {
+        "onnx_fp32": "checkpoints/deploy/mv3_pre128_seed42.onnx",
+        "onnx_int8": "checkpoints/deploy/mv3_pre128_seed42_int8.onnx"
+      },
+      "accuracy": {
+        "pytorch": {
+          "accuracy": 0.9695,
+          "f1_macro": 0.8751
+        },
+        "onnx_fp32": {
+          "accuracy": 0.9695,
+          "f1_macro": 0.8751
+        },
+        "onnx_int8": {
+          "accuracy": 0.7779,
+          "f1_macro": 0.2376
+        },
+        "fp32_vs_pytorch_argmax_agreement": 1.0,
+        "int8_vs_pytorch_argmax_agreement": 0.76718,
+        "fp32_f1_delta": 0.0,
+        "int8_f1_delta": -0.6375
+      },
+      "int8_verdict": "REJECT",
+      "latency_ms": {
+        "pytorch_cpu_b1": {
+          "avg_ms": 5.729,
+          "p50_ms": 5.444,
+          "p95_ms": 6.937
+        },
+        "pytorch_cpu_b32": {
+          "avg_ms": 20.05,
+          "p50_ms": 19.961,
+          "p95_ms": 20.765
+        },
+        "onnx_fp32_b1": {
+          "avg_ms": 0.562,
+          "p50_ms": 0.554,
+          "p95_ms": 0.643
+        },
+        "onnx_fp32_b32": {
+          "avg_ms": 6.542,
+          "p50_ms": 6.613,
+          "p95_ms": 7.379
+        },
+        "onnx_int8_b1": {
+          "avg_ms": 3.795,
+          "p50_ms": 3.589,
+          "p95_ms": 4.614
+        },
+        "onnx_int8_b32": {
+          "avg_ms": 99.2,
+          "p50_ms": 97.94,
+          "p95_ms": 106.425
+        }
+      },
+      "size": {
+        "onnx_fp32_mb": 5.84,
+        "onnx_int8_mb": 1.64,
+        "int8_reduction_pct": 71.9
+      },
+      "relative_to_legacy": {
+        "f1_gain": 0.1379,
+        "latency_b1_ratio": 1.5,
+        "latency_b32_ratio": 1.9
+      }
+    }
+  }
+}

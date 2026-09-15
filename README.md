@@ -10,12 +10,12 @@
 | 항목 | 수치 | 근거 파일 |
 |------|------|----------|
 | 분석 데이터 | WM-811K 중 레이블 **172,950개** (클래스 불균형 989.5×) | `analysis/data_summary.json` |
-| 최고 분류 성능 (동일 레시피 비교) | EfficientNet-B0 224px **macro F1 0.9072** / Acc 97.78% · 엣지 후보 MobileNetV3-S 160px **0.8883** (1.53M) | `analysis/fair_compare/summary.json` |
+| 최고 분류 성능 (동일 레시피 비교) | EfficientNet-B0 224px **macro F1 0.9060 ± 0.0022** (3 seeds) / Acc 97.80% · 엣지 후보 MobileNetV3-S 160px **0.8812 ± 0.0062** (1.53M) | `analysis/fair_compare/summary.json` |
 | 기존 레시피 최고 (재학습) | WaferCNN **macro F1 0.8508** / Accuracy 95.85% | `analysis/final_evaluation.json` |
 | Multi-output 모델 (재학습) | **macro F1 0.8229** / Accuracy 95.12% (분류+심각도+신뢰도) | 〃 |
-| ONNX 변환 | macro F1 **손실 0.0000** (0.7369 → 0.7369) | `analysis/deployment_summary.json` |
-| 추론 속도 | CPU 17.07ms → ONNX **7.02ms** (2.4× · batch=32) | 〃 |
-| 단일 웨이퍼 추론 | **0.60ms** (데스크톱 CPU 기준, RPi 추정 3~6ms) | 〃 |
+| ONNX 변환 | MobileNetV3-S 160px: macro F1 **손실 0.0000** (0.8884 → 0.8884), 예측 일치 100% | `analysis/deployment_summary_v2.json` |
+| 추론 속도 | 160px 모델 ONNX CPU **10.4ms** (batch=32) · PyTorch CPU 대비 단일 추론 9.7× | 〃 |
+| 단일 웨이퍼 추론 | **0.70ms** (데스크톱 CPU 4 threads, RPi 추정 4~7ms) | 〃 |
 | 공정 최적화 | 개선 우선순위 **Edge-Ring > Edge-Loc > Center** 도출 | `reports/roi_summary.csv` |
 
 > 분류 성능은 2026-09-13~14 에 RTX 4070 Laptop 에서 **전부 다시 학습·측정**한 값입니다.
@@ -65,11 +65,12 @@
 
 | 모델 | 입력 | 파라미터 | seeds | Accuracy | **macro F1 (mean ± std)** | weighted F1 | macro P | macro R |
 |------|:----:|---------:|:-----:|---------:|--------------------------:|------------:|--------:|--------:|
-| **EfficientNet-B0** (ImageNet) | **224px↑** (원본) | 4.02M | 1 | **97.78%** | **0.9072** | 0.9782 | 0.903 | 0.913 |
+| **EfficientNet-B0** (ImageNet) | **224px↑** (원본) | 4.02M | 3 | **97.80%** | **0.9060 ± 0.0022** | 0.9783 | 0.903 | 0.911 |
 | EfficientNet-B0 (ImageNet) | 128px↑ | 4.02M | 1 | 97.54% | 0.8894 | 0.9759 | 0.876 | 0.906 |
-| **MobileNetV3-Small** (ImageNet) | **160px↑** | 1.53M | 1 | 97.05% | **0.8883** | 0.9714 | 0.874 | 0.906 |
 | MobileNetV3-Small (ImageNet) | 224px↑ (원본) | 1.53M | 1 | 97.27% | 0.8888 | 0.9735 | 0.870 | 0.911 |
 | ViT-Tiny (ImageNet) | 224px↑ (196 tokens) | 5.43M | 1 | 96.92% | 0.8873 | 0.9707 | 0.860 | 0.920 |
+| **MobileNetV3-Small** (ImageNet) | **160px↑** | 1.53M | 3 | 96.90% | **0.8812 ± 0.0062** | 0.9701 | 0.861 | 0.905 |
+| MobileNetV3-Small (ImageNet) | 128px↑ + ImageNet norm | 1.53M | 3 | 96.96% | 0.8794 ± 0.0034 | 0.9706 | 0.862 | 0.901 |
 | ViT-Tiny (ImageNet) | 128px↑ (64 tokens) | 5.40M | 1 | 97.00% | 0.8785 | 0.9712 | 0.855 | 0.908 |
 | MobileNetV3-Small (ImageNet) | 128px↑ | 1.53M | 3 | 96.91% | 0.8756 ± 0.0026 | 0.9702 | 0.853 | 0.903 |
 | ViT-Tiny (ImageNet) | 64px (16 tokens) | 5.39M | 1 | 96.53% | 0.8633 | 0.9668 | 0.841 | 0.891 |
@@ -80,12 +81,12 @@
 
 40 epoch 예산 확인 (seed 42): WaferCNN **0.8367** vs MobileNetV3-S 128px **0.8847** — 예산을 늘려도 순위는 바뀌지 않습니다. `px↑` 는 64×64 맵을 nearest 로 확대한 것으로 정보 추가는 없습니다.
 
-**입력 전처리 변인 분리 (2차, MobileNetV3-S 128px 기준 0.8756 ± 0.0026):** 보간 nearest→bilinear 0.8748, 3ch 복제+ImageNet 정규화 0.8741, 1ch+ImageNet 정규화 0.8830 — 해상도 외에는 잡음 범위입니다. 해상도 곡선은 64→128→160→224px = 0.834→0.876→0.888→0.889 로 **160px 에서 포화**하며, WaferCNN 은 128px 로 올려도 0.8196 으로 개선되지 않아 이 효과가 stride-32 사전학습 백본에 특유한 구조적 현상임을 확인했습니다.
+**입력 전처리 변인 분리 (2차 → 3 seeds 로 확정):** MobileNetV3-S 128px 기준 0.8756 ± 0.0026 에 대해 보간 nearest→bilinear 0.8748, 3ch 복제+ImageNet 정규화 0.8741 은 잡음 범위이고, 1ch+ImageNet 정규화는 0.8794 ± 0.0034, 160px 는 0.8812 ± 0.0062 로 **+0.004~0.006 의 작은 이득이며 표준편차 1~2배 수준**입니다. 해상도 곡선 64→128→160→224px = 0.834→0.876→0.881→0.889 에서 **큰 이득은 64→128 구간(+0.042)** 에 있고 그 이후는 완만합니다. WaferCNN 은 128px 로 올려도 0.8196 으로 개선되지 않아 이 효과가 stride-32 사전학습 백본에 특유한 구조적 현상임을 확인했습니다. EfficientNet-B0 224px 는 3 seeds 0.9060 ± 0.0022 로 유일하게 표준편차가 작으면서 0.90 을 넘습니다.
 
 ![](analysis/figures/fig1_model_f1_bar.png)
 ![](analysis/figures/fig2_preprocess_f1_bar.png)
 
-**목표(macro F1 ≥ 0.80) 달성:** 기존 레시피 — WaferCNN · AdvancedDefectPredictor · ViT-Tiny · EfficientNet-B0 / 동일 레시피 — 사전학습 모델 전부. **목표 0.88 달성: EfficientNet-B0 224px(0.907) · 128px(0.889) · MobileNetV3-S 160px(0.888) · 224px(0.889) · 128px 40 ep(0.885) · ViT-Tiny 224px(0.887)**
+**목표(macro F1 ≥ 0.80) 달성:** 기존 레시피 — WaferCNN · AdvancedDefectPredictor · ViT-Tiny · EfficientNet-B0 / 동일 레시피 — 사전학습 모델 전부. **목표 0.88 을 3 seeds 평균으로 달성한 것은 EfficientNet-B0 224px(0.906 ± 0.002) · MobileNetV3-S 160px(0.881 ± 0.006)** 이며, 단일 seed 로는 EfficientNet-B0 128px(0.889) · MobileNetV3-S 224px(0.889) · ViT-Tiny 224px(0.887) 도 넘습니다.
 
 ### 관찰 1 — "커스텀 CNN이 사전학습 모델을 이겼다"는 레시피 차이였다
 
@@ -100,7 +101,7 @@
 
 - 특히 **Scratch(선형 결함)** 은 해상도에 민감합니다. 64px 모델은 precision 0.40~0.50 에 머물지만 128px 모델은 **0.68~0.78** 로 오르고 F1 0.55 → 0.74~0.79 가 됩니다.
 - WaferCNN 이 자기 레시피(Adam · 40 ep)에서 0.8508 을 내는 것은 사실이나, 같은 예산의 MobileNetV3-S 128px 는 0.8847, 신뢰구간이 겹치지 않습니다.
-- 교훈: 모델 비교는 **레시피·해상도·seed 를 통제**한 뒤에만 의미가 있습니다. 이 프로젝트에서 유일하게 성립하는 아키텍처 결론은 "ImageNet 백본을 쓸 때는 입력을 160px 이상으로 올려야 한다"입니다.
+- 교훈: 모델 비교는 **레시피·해상도·seed 를 통제**한 뒤에만 의미가 있습니다. 이 프로젝트에서 유일하게 성립하는 아키텍처 결론은 "ImageNet 백본을 쓸 때는 입력을 최소 128px 로 올려야 하고(+0.04), 그 이상은 +0.01 미만의 완만한 이득" 입니다. seed 42 하나로 보였던 "160px 에서 +0.013" 은 3 seeds 에서 +0.006 ± 0.006 으로 줄었습니다 — 단일 seed 결론을 그대로 쓰지 않은 이유입니다.
 
 ![](analysis/figures/fig3_per_class_f1_bar.png)
 ![](analysis/figures/fig5_val_f1_overlay.png)
@@ -152,43 +153,33 @@ WeightedRandomSampler로 소수 클래스를 과표집한 결과, **macro Recall
 
 ## 엣지 배포 — 모델 선택과 양자화 기각 근거
 
-`analysis/deployment_summary.json` · 재현: `python scripts/export_onnx.py`
+`analysis/deployment_summary_v2.json` · 재현: `python scripts/export_onnx_v2.py --targets mv3_pre160_seed42 mv3_pre128_seed42`
+(이전 배포 모델 기준 v1 기록은 `analysis/deployment_summary.json` · `scripts/export_onnx.py` 에 그대로 남겨 두었습니다.)
 
-### 왜 최고 성능 모델이 아닌 MobileNetV3를 배포했는가
+### 배포 모델: MobileNetV3-Small · 160px 입력 (동일 레시피 학습)
 
-기존 레시피 기준 최고 성능은 WaferCNN(macro F1 0.8508)이지만, **엣지 배포 대상은 MobileNetV3-Small** 을 선택했습니다.
+이전 README 는 "최고 성능 WaferCNN(0.8458) 대신 macro F1 0.11 을 포기하고 MobileNetV3(0.7369)를 배포한다"는 트레이드오프를 서술했습니다. 2026-09 재실험으로 **이 트레이드오프는 사라졌습니다.** 같은 MobileNetV3-S 를 백본 학습률을 풀고 160px 입력으로 학습하면 macro F1 0.8812 ± 0.0062 (3 seeds, 배포 체크포인트 seed 42 는 0.8883) 로, 기존 배포 모델보다 **+0.14**, WaferCNN(0.8508) 보다도 높습니다(관찰 1).
 
-기존 2-Phase 레시피의 MobileNetV3(0.7372)로는 macro F1 0.11 을 잃는 트레이드오프였으나, 동일 레시피 실험(관찰 1)에서 **같은 MobileNetV3-S 가 128px 입력으로 0.8756 ± 0.0026, 160px 입력으로 0.8883** 을 내는 것을 확인했습니다. 160px 는 224px(0.8888) 와 성능이 같고 연산은 절반이라 엣지 배포의 권장 입력입니다. 즉 **엣지 모델과 정확도를 맞바꿀 필요가 없습니다.** 아래 ONNX 검증 수치는 이전 체크포인트(0.7369) 기준이며, 128px 모델의 ONNX 변환·속도 측정은 다음 단계입니다. 배포 모델 선택의 근거는 depthwise separable convolution 기반 구조가 ARM CPU에서 연산 최적화가 검증되어 있고, onnxruntime·TFLite 등 엣지 런타임의 연산자 지원이 가장 성숙하다는 점입니다. 인라인 검사 장비의 실시간 요구를 만족하면서 유지보수 부담이 가장 낮은 선택입니다.
+배포 모델로 MobileNetV3-S 를 유지하는 근거는 그대로입니다. depthwise separable convolution 이 ARM CPU 에서 최적화가 검증되어 있고, onnxruntime·TFLite 연산자 지원이 가장 성숙하며, 1.53M 파라미터로 EfficientNet-B0(4.02M · 0.907) 대비 연산량이 약 1/8 입니다. 160px 와 128px(+ImageNet norm 0.8794 ± 0.0034) 는 통계적으로 구분되지 않으므로, 지연 요건이 빡빡하면 128px(b=1 0.56ms) 로 내려도 정확도 손실은 0.002~0.006 수준입니다.
 
-> 정확도가 최우선인 오프라인 배치 분석에는 WaferCNN을, 인라인 실시간 검사에는 MobileNetV3를 쓰는 **이원 배포 전략**이 적절합니다.
+**업샘플은 ONNX 그래프 안에 포함**되어 있어 배포 입력은 이전과 동일한 `(B, 1, 64, 64)` 입니다. 호출측 코드를 바꿀 필요가 없습니다.
 
-### 검증 결과 *(이전 체크포인트 MobileNetV3_34_0.7417 기준 · 2026-09 재측정 미실시)*
+### 검증 결과 (Test 25,943개 · CPU 4 threads · onnxruntime 1.30)
 
-| 모델 | 크기 | Accuracy | macro F1 | 추론 (batch=32) | 판정 |
-|------|-----:|---------:|---------:|----------------:|:----:|
-| PyTorch (CPU) | 5.95MB | 90.45% | 0.7369 | 17.07ms | 기준 |
-| PyTorch (GPU) | — | 90.45% | 0.7369 | 6.41ms | — |
-| **ONNX FP32** | 5.83MB | **90.45%** | **0.7369** | **7.02ms** | ✅ **채택** |
-| ONNX INT8 (동적 양자화) | 1.62MB | 2.57% | 0.0279 | 88.06ms | ❌ **기각** |
+| 모델 | 입력 | 크기 | Accuracy | macro F1 | ONNX↔PyTorch 예측 일치 | batch=1 | batch=32 | 판정 |
+|------|:----:|-----:|---------:|---------:|:---:|--------:|---------:|:----:|
+| 이전 배포 모델 (2-Phase 레시피) ONNX FP32 | 64px | 5.83MB | 90.41% | 0.7372 | 100.00% | 0.37ms | 3.5ms | 기준 |
+| MobileNetV3-S 128px ONNX FP32 | 64px→128 | 5.84MB | 96.94% | 0.8751 | 100.00% | 0.56ms | 6.5ms | 대안 |
+| **MobileNetV3-S 160px ONNX FP32** | 64px→160 | 5.84MB | **97.05%** | **0.8884** | **100.00%** | **0.70ms** | **10.4ms** | ✅ **채택** |
+| MobileNetV3-S 160px ONNX INT8 (동적 양자화) | 64px→160 | 1.64MB | — | 0.2153 | — | 5.14ms | — | ❌ **기각** |
 
-**ONNX FP32는 macro F1 손실이 정확히 0.0000** — 변환이 성능을 완전히 보존했음을 테스트셋 전체(25,943개)로 확인했습니다. CPU 추론은 2.4배 빨라졌습니다.
+- **FP32 변환 손실 0.** 세 모델 모두 PyTorch 와 ONNX 의 argmax 예측이 25,943개 전부 일치했습니다.
+- **정확도 +0.151 의 비용은 batch=1 에서 +0.33ms(×1.87), batch=32 에서 ×3.0** 입니다. 픽셀 수가 6.25배인데 지연은 2~3배만 늘어난 것은 MobileNet 의 stride-2 첫 conv 가 해상도 증가분을 빠르게 흡수하기 때문입니다.
+- 단일 웨이퍼 0.70ms 는 데스크톱 CPU 측정값입니다. Raspberry Pi 4 는 5~10배 느리므로 **실기 추정 4~7ms** 이며 실측이 아닙니다.
 
-**INT8 양자화는 기각했습니다.** 모델 크기가 72.2% 줄어드는 것은 사실이나:
+**INT8 동적 양자화는 다시 기각했습니다.** 크기는 72% 줄지만 macro F1 이 0.8884 → 0.2153 으로 붕괴하고, 이전 모델(0.0344)에서도 같았습니다. 원인은 MobileNetV3 의 hardswish·SE 블록 활성값이 per-tensor 동적 스케일에서 소수 클래스를 구분하는 미세 차이를 잃기 때문으로 추정합니다. 크기 감소가 필요하면 **static quantization(calibration) 또는 QAT** 가 다음 단계이며, 정확도 검증 없이는 채택하지 않습니다.
 
-- macro F1 **0.7369 → 0.0279** (−0.709) — 사실상 무작위 예측 수준
-- 추론 속도도 7.02ms → **88.06ms 로 12배 느려짐** (크기 감소가 속도 이득으로 이어지지 않음)
-- 원인 추정: 단일 채널 grayscale 입력은 활성값 분포의 동적 범위가 좁아, per-tensor 양자화 스케일이 소수 클래스를 구분하는 미세한 활성 차이를 뭉갬
-
-> **"모델 크기 72% 감소"를 성과로 제시하지 않는 이유입니다.** 정확도 검증 없는 경량화는 성과가 아니라 결함입니다. 개선하려면 per-channel 양자화 또는 QAT(Quantization-Aware Training)가 필요합니다.
-
-### 단일 웨이퍼 추론 (batch=1)
-
-| | 평균 | p95 |
-|---|---:|---:|
-| ONNX FP32 | **0.60ms** | 0.74ms |
-| ONNX INT8 | 3.42ms | 3.65ms |
-
-> 데스크톱 CPU 측정값입니다. 실제 Raspberry Pi 4는 5~10배 느리므로 **실기 추정 3~6ms** 수준이며, **실측이 아닌 추정치**입니다.
+> 정확도 최우선 오프라인 분석에는 EfficientNet-B0 224px(0.907), 인라인 실시간 검사에는 MobileNetV3-S 160px 를 쓰는 **이원 배포 전략**이 현재 수치로 뒷받침되는 구성입니다.
 
 ---
 
@@ -319,9 +310,9 @@ baseline: none 클래스 20개 평균 | steps: 30
 | 7 | **서빙 API 부재** | 배포는 ONNX 파일 수준까지 | FastAPI `/predict` + Docker 이미지 |
 | 8 | **테스트 코드·CI 부재** | 회귀 검증 수단 없음 | `src/` 모듈 단위 pytest + GitHub Actions |
 | 9 | **드리프트 모니터링 부재** | Airflow가 `@weekly` 전체 재학습만 수행 | PSI/KS 기반 드리프트 감지 → 조건부 재학습 트리거 |
-| 10 | **ONNX/INT8 배포 수치가 이전 체크포인트 기준** | 배포 표(0.7369)와 최신 모델(0.8756) 불일치 | 128px MobileNetV3-S 로 `scripts/export_onnx.py` 재실행 · 업샘플 포함 그래프의 속도 재측정 |
+| 10 | **INT8 양자화 두 번 연속 기각** | 동적 양자화에서 macro F1 0.22 로 붕괴 | static quantization(calibration) · QAT 시도. 그 전까지 FP32 ONNX(5.8MB) 배포 |
 | 11 | **동일 레시피 비교의 seed 수** | EfficientNet-B0 128px · ViT-Tiny · scratch 변인은 1 seed | 핵심 비교(WaferCNN vs MobileNetV3)는 3 seeds 완료. 나머지도 3 seeds 로 확장 |
-| 12 | **해상도 스윕은 seed 42 단일** | 160/224px · ViT 128/224 · EffNet 224 는 1 seed | 상위 구성(EffNet-B0 224 · MV3-S 160 · 1ch+ImageNet norm)을 3 seeds 로 확정. 첫 conv stride 1 변형은 미탐색 |
+| 12 | **일부 구성은 여전히 seed 42 단일** | MV3-S 224 · EffNet 128 · ViT 128/224 · scratch 변인 | 상위 3 구성(EffNet-B0 224 · MV3-S 160 · 128+norm)은 3 seeds 확정 완료. 나머지는 결론에 인용하지 않음. 첫 conv stride 1 변형은 미탐색 |
 
 ---
 
@@ -395,6 +386,8 @@ wafer-defect-analysis/
 │   ├── fair_compare.py             # ★ 동일 레시피 공정 비교 · 다중 seed (README C-2 근거)
 │   ├── make_performance_report.py  # 결과 JSON → docs/MODEL_PERFORMANCE.md
 │   ├── plot_results.py             # 성능 막대 · 학습 곡선 그래프 → analysis/figures/
+│   ├── export_onnx_v2.py           # ★ 160px MobileNetV3-S ONNX 변환·검증·벤치마크 (v2)
+│   ├── verify_results.py           # ★ 결과 검증 7종 → analysis/verification_report.json
 │   ├── export_onnx.py              # ONNX 변환·정확도 검증·벤치마크
 │   ├── retrain_baseline.py         # 베이스라인 재학습
 │   ├── retrain_finetune.py         # 파인튜닝 3종 재학습
@@ -425,6 +418,7 @@ wafer-defect-analysis/
 ├── reports/                        # 최적화 리포트 · ROI 분석
 ├── docs/
 │   ├── PROJECT_STRUCTURE.md        # ★ 파일 구성 · 재현 순서 · 정리 내역
+│   ├── plans/next_steps_2026-09-15.md  # 3차 계획서 (seed 확정 · 배포 재검증 · 검증)
 │   ├── MODEL_PERFORMANCE.md        # ★ 성능 재측정 보고서 (전체 표)
 │   ├── defect_mechanism_analysis.md
 │   └── plans/                      # 고도화 계획서 모음 (구 upgrade*.md · DataEngineer.md)
@@ -475,6 +469,8 @@ python scripts/fair_compare.py --models mv3_pre128_bil mv3_pre128_3ch mv3_pre128
 python scripts/fair_compare.py --summarize   # → analysis/fair_compare/summary.md
 python scripts/make_performance_report.py    # → docs/MODEL_PERFORMANCE.md
 python scripts/plot_results.py               # → analysis/figures/fig1~6
+python scripts/export_onnx_v2.py --targets mv3_pre160_seed42   # → analysis/deployment_summary_v2.json
+python scripts/verify_results.py             # → analysis/verification_report.json (7 checks)
 python scripts/export_onnx.py                # → analysis/deployment_summary.json
 ```
 
