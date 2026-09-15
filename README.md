@@ -10,7 +10,7 @@
 | 항목 | 수치 | 근거 파일 |
 |------|------|----------|
 | 분석 데이터 | WM-811K 중 레이블 **172,950개** (클래스 불균형 989.5×) | `analysis/data_summary.json` |
-| 최고 분류 성능 (동일 레시피 비교) | EfficientNet-B0 128px **macro F1 0.8894** / Acc 97.54% · MobileNetV3-S 128px **0.8756 ± 0.0026** (3 seeds) | `analysis/fair_compare/summary.json` |
+| 최고 분류 성능 (동일 레시피 비교) | EfficientNet-B0 224px **macro F1 0.9072** / Acc 97.78% · 엣지 후보 MobileNetV3-S 160px **0.8883** (1.53M) | `analysis/fair_compare/summary.json` |
 | 기존 레시피 최고 (재학습) | WaferCNN **macro F1 0.8508** / Accuracy 95.85% | `analysis/final_evaluation.json` |
 | Multi-output 모델 (재학습) | **macro F1 0.8229** / Accuracy 95.12% (분류+심각도+신뢰도) | 〃 |
 | ONNX 변환 | macro F1 **손실 0.0000** (0.7369 → 0.7369) | `analysis/deployment_summary.json` |
@@ -65,16 +65,27 @@
 
 | 모델 | 입력 | 파라미터 | seeds | Accuracy | **macro F1 (mean ± std)** | weighted F1 | macro P | macro R |
 |------|:----:|---------:|:-----:|---------:|--------------------------:|------------:|--------:|--------:|
-| **EfficientNet-B0** (ImageNet) | 128px↑ | 4.02M | 1 | **97.54%** | **0.8894** | 0.9759 | 0.876 | 0.906 |
-| **MobileNetV3-Small** (ImageNet) | 128px↑ | 1.53M | 3 | 96.91% | **0.8756 ± 0.0026** | 0.9702 | 0.853 | 0.903 |
-| ViT-Tiny (ImageNet) | 64px | 5.39M | 1 | 96.53% | 0.8633 | 0.9668 | 0.841 | 0.891 |
+| **EfficientNet-B0** (ImageNet) | **224px↑** (원본) | 4.02M | 1 | **97.78%** | **0.9072** | 0.9782 | 0.903 | 0.913 |
+| EfficientNet-B0 (ImageNet) | 128px↑ | 4.02M | 1 | 97.54% | 0.8894 | 0.9759 | 0.876 | 0.906 |
+| **MobileNetV3-Small** (ImageNet) | **160px↑** | 1.53M | 1 | 97.05% | **0.8883** | 0.9714 | 0.874 | 0.906 |
+| MobileNetV3-Small (ImageNet) | 224px↑ (원본) | 1.53M | 1 | 97.27% | 0.8888 | 0.9735 | 0.870 | 0.911 |
+| ViT-Tiny (ImageNet) | 224px↑ (196 tokens) | 5.43M | 1 | 96.92% | 0.8873 | 0.9707 | 0.860 | 0.920 |
+| ViT-Tiny (ImageNet) | 128px↑ (64 tokens) | 5.40M | 1 | 97.00% | 0.8785 | 0.9712 | 0.855 | 0.908 |
+| MobileNetV3-Small (ImageNet) | 128px↑ | 1.53M | 3 | 96.91% | 0.8756 ± 0.0026 | 0.9702 | 0.853 | 0.903 |
+| ViT-Tiny (ImageNet) | 64px (16 tokens) | 5.39M | 1 | 96.53% | 0.8633 | 0.9668 | 0.841 | 0.891 |
 | MobileNetV3-Small (ImageNet) | 64px | 1.53M | 3 | 95.52% | 0.8341 ± 0.0044 | 0.9584 | 0.789 | 0.896 |
 | WaferCNN (scratch) | 64px | 1.21M | 3 | 95.11% | 0.8311 ± 0.0088 | 0.9556 | 0.767 | 0.934 |
+| WaferCNN (scratch) | 128px↑ (대조군) | 1.21M | 1 | 95.41% | 0.8196 | 0.9587 | 0.755 | 0.929 |
 | MobileNetV3-Small (scratch) | 64px | 1.53M | 1 | 92.37% | 0.7752 | 0.9337 | 0.710 | 0.896 |
 
-40 epoch 예산 확인 (seed 42): WaferCNN **0.8367** vs MobileNetV3-S 128px **0.8847** — 예산을 늘려도 순위는 바뀌지 않습니다. 128px↑ 는 64×64 맵을 nearest 로 2배 확대한 것으로 정보 추가는 없습니다.
+40 epoch 예산 확인 (seed 42): WaferCNN **0.8367** vs MobileNetV3-S 128px **0.8847** — 예산을 늘려도 순위는 바뀌지 않습니다. `px↑` 는 64×64 맵을 nearest 로 확대한 것으로 정보 추가는 없습니다.
 
-**목표(macro F1 ≥ 0.80) 달성:** 기존 레시피 — WaferCNN · AdvancedDefectPredictor · ViT-Tiny · EfficientNet-B0 / 동일 레시피 — 사전학습 모델 전부. **목표 0.88 달성: EfficientNet-B0 128px · MobileNetV3-S 128px (40 ep)**
+**입력 전처리 변인 분리 (2차, MobileNetV3-S 128px 기준 0.8756 ± 0.0026):** 보간 nearest→bilinear 0.8748, 3ch 복제+ImageNet 정규화 0.8741, 1ch+ImageNet 정규화 0.8830 — 해상도 외에는 잡음 범위입니다. 해상도 곡선은 64→128→160→224px = 0.834→0.876→0.888→0.889 로 **160px 에서 포화**하며, WaferCNN 은 128px 로 올려도 0.8196 으로 개선되지 않아 이 효과가 stride-32 사전학습 백본에 특유한 구조적 현상임을 확인했습니다.
+
+![](analysis/figures/fig1_model_f1_bar.png)
+![](analysis/figures/fig2_preprocess_f1_bar.png)
+
+**목표(macro F1 ≥ 0.80) 달성:** 기존 레시피 — WaferCNN · AdvancedDefectPredictor · ViT-Tiny · EfficientNet-B0 / 동일 레시피 — 사전학습 모델 전부. **목표 0.88 달성: EfficientNet-B0 224px(0.907) · 128px(0.889) · MobileNetV3-S 160px(0.888) · 224px(0.889) · 128px 40 ep(0.885) · ViT-Tiny 224px(0.887)**
 
 ### 관찰 1 — "커스텀 CNN이 사전학습 모델을 이겼다"는 레시피 차이였다
 
@@ -89,7 +100,12 @@
 
 - 특히 **Scratch(선형 결함)** 은 해상도에 민감합니다. 64px 모델은 precision 0.40~0.50 에 머물지만 128px 모델은 **0.68~0.78** 로 오르고 F1 0.55 → 0.74~0.79 가 됩니다.
 - WaferCNN 이 자기 레시피(Adam · 40 ep)에서 0.8508 을 내는 것은 사실이나, 같은 예산의 MobileNetV3-S 128px 는 0.8847, 신뢰구간이 겹치지 않습니다.
-- 교훈: 모델 비교는 **레시피·해상도·seed 를 통제**한 뒤에만 의미가 있습니다. 이 프로젝트에서 유일하게 성립하는 아키텍처 결론은 "ImageNet 백본을 쓸 때는 입력을 128px 이상으로 올려야 한다"입니다.
+- 교훈: 모델 비교는 **레시피·해상도·seed 를 통제**한 뒤에만 의미가 있습니다. 이 프로젝트에서 유일하게 성립하는 아키텍처 결론은 "ImageNet 백본을 쓸 때는 입력을 160px 이상으로 올려야 한다"입니다.
+
+![](analysis/figures/fig3_per_class_f1_bar.png)
+![](analysis/figures/fig5_val_f1_overlay.png)
+
+학습 곡선(위 오른쪽)에서 해상도가 높은 모델은 첫 epoch 부터 위에서 시작해 25 epoch 내내 순서가 바뀌지 않습니다. 기존 레시피 곡선은 `analysis/figures/fig6_legacy_curves.png`, 모델별 개별 곡선은 `fig4_training_curves.png` 에 있습니다.
 
 ### 관찰 2 — Accuracy와 macro F1이 함께 움직이지 않는 이유
 
@@ -142,7 +158,7 @@ WeightedRandomSampler로 소수 클래스를 과표집한 결과, **macro Recall
 
 기존 레시피 기준 최고 성능은 WaferCNN(macro F1 0.8508)이지만, **엣지 배포 대상은 MobileNetV3-Small** 을 선택했습니다.
 
-기존 2-Phase 레시피의 MobileNetV3(0.7372)로는 macro F1 0.11 을 잃는 트레이드오프였으나, 동일 레시피 실험(관찰 1)에서 **같은 MobileNetV3-S 가 128px 입력으로 0.8756 ± 0.0026, 40 epoch 시 0.8847** 을 내는 것을 확인했습니다. 즉 **엣지 모델과 정확도를 맞바꿀 필요가 없습니다.** 아래 ONNX 검증 수치는 이전 체크포인트(0.7369) 기준이며, 128px 모델의 ONNX 변환·속도 측정은 다음 단계입니다. 배포 모델 선택의 근거는 depthwise separable convolution 기반 구조가 ARM CPU에서 연산 최적화가 검증되어 있고, onnxruntime·TFLite 등 엣지 런타임의 연산자 지원이 가장 성숙하다는 점입니다. 인라인 검사 장비의 실시간 요구를 만족하면서 유지보수 부담이 가장 낮은 선택입니다.
+기존 2-Phase 레시피의 MobileNetV3(0.7372)로는 macro F1 0.11 을 잃는 트레이드오프였으나, 동일 레시피 실험(관찰 1)에서 **같은 MobileNetV3-S 가 128px 입력으로 0.8756 ± 0.0026, 160px 입력으로 0.8883** 을 내는 것을 확인했습니다. 160px 는 224px(0.8888) 와 성능이 같고 연산은 절반이라 엣지 배포의 권장 입력입니다. 즉 **엣지 모델과 정확도를 맞바꿀 필요가 없습니다.** 아래 ONNX 검증 수치는 이전 체크포인트(0.7369) 기준이며, 128px 모델의 ONNX 변환·속도 측정은 다음 단계입니다. 배포 모델 선택의 근거는 depthwise separable convolution 기반 구조가 ARM CPU에서 연산 최적화가 검증되어 있고, onnxruntime·TFLite 등 엣지 런타임의 연산자 지원이 가장 성숙하다는 점입니다. 인라인 검사 장비의 실시간 요구를 만족하면서 유지보수 부담이 가장 낮은 선택입니다.
 
 > 정확도가 최우선인 오프라인 배치 분석에는 WaferCNN을, 인라인 실시간 검사에는 MobileNetV3를 쓰는 **이원 배포 전략**이 적절합니다.
 
@@ -305,7 +321,7 @@ baseline: none 클래스 20개 평균 | steps: 30
 | 9 | **드리프트 모니터링 부재** | Airflow가 `@weekly` 전체 재학습만 수행 | PSI/KS 기반 드리프트 감지 → 조건부 재학습 트리거 |
 | 10 | **ONNX/INT8 배포 수치가 이전 체크포인트 기준** | 배포 표(0.7369)와 최신 모델(0.8756) 불일치 | 128px MobileNetV3-S 로 `scripts/export_onnx.py` 재실행 · 업샘플 포함 그래프의 속도 재측정 |
 | 11 | **동일 레시피 비교의 seed 수** | EfficientNet-B0 128px · ViT-Tiny · scratch 변인은 1 seed | 핵심 비교(WaferCNN vs MobileNetV3)는 3 seeds 완료. 나머지도 3 seeds 로 확장 |
-| 12 | **입력 해상도 128px 이 상한이 아님** | 224px · 첫 conv stride 1 등 미탐색 | 해상도/stride 스윕 후 속도-정확도 곡선 작성 |
+| 12 | **해상도 스윕은 seed 42 단일** | 160/224px · ViT 128/224 · EffNet 224 는 1 seed | 상위 구성(EffNet-B0 224 · MV3-S 160 · 1ch+ImageNet norm)을 3 seeds 로 확정. 첫 conv stride 1 변형은 미탐색 |
 
 ---
 
@@ -378,6 +394,7 @@ wafer-defect-analysis/
 │   ├── evaluate_all.py             # ★ 전 모델 통합 재평가 + bootstrap CI (README C-1 근거)
 │   ├── fair_compare.py             # ★ 동일 레시피 공정 비교 · 다중 seed (README C-2 근거)
 │   ├── make_performance_report.py  # 결과 JSON → docs/MODEL_PERFORMANCE.md
+│   ├── plot_results.py             # 성능 막대 · 학습 곡선 그래프 → analysis/figures/
 │   ├── export_onnx.py              # ONNX 변환·정확도 검증·벤치마크
 │   ├── retrain_baseline.py         # 베이스라인 재학습
 │   ├── retrain_finetune.py         # 파인튜닝 3종 재학습
@@ -397,6 +414,7 @@ wafer-defect-analysis/
 │
 ├── analysis/                       # 성능·EDA 산출물
 │   ├── fair_compare/               # ★ 동일 레시피 비교 (runs/*.json · summary.md/json/csv)
+│   ├── figures/                    # ★ 성능 그래프 6종 (plot_results.py)
 │   ├── final_evaluation.json       # ★ 기존 레시피 통합 성능 (README 근거)
 │   ├── per_class_metrics.csv       # ★ 모델 × 클래스별 P/R/F1
 │   ├── final_confusion_matrices.png# ★ 모델별 혼동행렬
@@ -452,8 +470,11 @@ python scripts/evaluate_all.py               # → analysis/final_evaluation.jso
 # 동일 레시피 공정 비교 (README C-2) — GPU 기준 run 당 25~90분
 python scripts/fair_compare.py --models wafercnn mv3_pre64 mv3_pre128 --seeds 42 43 44
 python scripts/fair_compare.py --models mv3_scratch64 effb0_pre128 vit_pre64 --seeds 42
+# 2차: 모델별 입력 전처리 (해상도·보간·채널·정규화)
+python scripts/fair_compare.py --models mv3_pre128_bil mv3_pre128_3ch mv3_pre128_norm mv3_pre160 mv3_pre224 vit_pre128 vit_pre224 wafercnn_128 effb0_pre224 --seeds 42
 python scripts/fair_compare.py --summarize   # → analysis/fair_compare/summary.md
 python scripts/make_performance_report.py    # → docs/MODEL_PERFORMANCE.md
+python scripts/plot_results.py               # → analysis/figures/fig1~6
 python scripts/export_onnx.py                # → analysis/deployment_summary.json
 ```
 
@@ -483,6 +504,12 @@ cd dashboard && npm install && npm run dev          # http://localhost:5173
 
 | 분석 | 파일 |
 |------|------|
+| **모델별 macro F1 막대 (기존 vs 동일 레시피)** | `analysis/figures/fig1_model_f1_bar.png` |
+| **입력 전처리 변인 막대** | `analysis/figures/fig2_preprocess_f1_bar.png` |
+| **클래스별 F1 막대** | `analysis/figures/fig3_per_class_f1_bar.png` |
+| **모델별 학습 곡선 (small multiples)** | `analysis/figures/fig4_training_curves.png` |
+| **핵심 모델 학습 곡선 overlay** | `analysis/figures/fig5_val_f1_overlay.png` |
+| **기존 레시피 학습 곡선** | `analysis/figures/fig6_legacy_curves.png` |
 | **모델별 혼동행렬 (최종)** | `analysis/final_confusion_matrices.png` |
 | 클래스 분포 | `analysis/class_distribution.png` |
 | 클래스별 평균 불량 히트맵 | `analysis/avg_defect_heatmap.png` |

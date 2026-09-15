@@ -105,6 +105,35 @@ def main():
                           f'{r.test_f1_macro:.4f} | [{r.ci_lo:.4f}, {r.ci_hi:.4f}] | {r.train_min:.1f} |')
         md.append('')
 
+    # ── Part 3: 모델별 입력 전처리 결론 + 시각화
+    if fc:
+        cm = fc['models']; g = lambda k, f: cm.get(k, {}).get(f)
+        md += ['## 3. 모델별 특화 입력 전처리 실험 (2차 · `Preprocess` 모듈 · seed 42)', '',
+               'DataLoader 는 64px 증강 파이프라인을 그대로 쓰고, 모델 직전 GPU 위에서 해상도·보간·채널·정규화만 바꿨다. 학습 레시피는 1차와 동일.', '',
+               '| 변인 | 비교 | 결과 | 판정 |', '|---|---|---|---|']
+        rows = [
+            ('해상도 (MobileNetV3-S)', '64 → 128 → 160 → 224px', f"{g('mv3_pre64','f1_mean'):.4f} → {g('mv3_pre128','f1_mean'):.4f} → {g('mv3_pre160','f1_mean') or 0:.4f} → {g('mv3_pre224','f1_mean') or 0:.4f}", '**가장 큰 변인.** 160px 에서 포화 (224px 는 연산 2배에 이득 없음)'),
+            ('해상도 (EfficientNet-B0)', '128 → 224px (원본)', f"{g('effb0_pre128','f1_mean'):.4f} → {g('effb0_pre224','f1_mean') or 0:.4f}", '**전체 최고.** 마지막 epoch 모델은 0.9122'),
+            ('토큰 수 (ViT-Tiny/16)', '16 → 64 → 196 tokens', f"{g('vit_pre64','f1_mean'):.4f} → {g('vit_pre128','f1_mean') or 0:.4f} → {g('vit_pre224','f1_mean') or 0:.4f}", '단조 증가. 단 5.4M 파라미터로 MobileNetV3-S 160px(1.53M) 와 동급'),
+            ('해상도 (WaferCNN 대조군)', '64 → 128px', f"{g('wafercnn','f1_mean'):.4f} → {g('wafercnn_128','f1_mean') or 0:.4f}", '**개선 없음.** 해상도 효과는 stride-32 사전학습 백본에 특유한 구조적 현상'),
+            ('보간', 'nearest vs bilinear (128px)', f"{g('mv3_pre128','f1_mean'):.4f} vs {g('mv3_pre128_bil','f1_mean') or 0:.4f}", '차이 없음 (3값 픽셀 유지 여부 무관)'),
+            ('채널·정규화', '1ch 평균 conv vs 3ch 복제 + ImageNet norm', f"{g('mv3_pre128','f1_mean'):.4f} vs {g('mv3_pre128_3ch','f1_mean') or 0:.4f}", '차이 없음 (사전학습 conv1 원형 유지 이점 없음)'),
+            ('정규화 단독', '1ch vs 1ch + ImageNet norm', f"{g('mv3_pre128','f1_mean'):.4f} vs {g('mv3_pre128_norm','f1_mean') or 0:.4f}", '+0.007, 3-seed std 의 약 3배지만 CI 겹침 → seed 반복 필요'),
+        ]
+        md += [f'| {a} | {b} | {c} | {d} |' for a, b, c, d in rows]
+        md += ['', '**해석.** 64×64 입력에서 stride-32 백본(MobileNetV3·EfficientNet)의 마지막 feature map 은 2×2 로 붕괴하고, 이때 위치·형태 정보(Center/Loc/Edge-Loc 구분, Scratch 의 선형성)가 사라진다. '
+               '업샘플은 정보를 추가하지 않지만 백본이 공간 구조를 유지하며 처리할 수 있게 해 준다. WaferCNN 은 64px 에서 이미 4×4 를 확보하므로 같은 처치에 반응하지 않는다. '
+               '클래스별로는 Scratch F1 이 0.57 → 0.75~0.81, Loc 0.72 → 0.78~0.81, Edge-Loc 0.77 → 0.81~0.86 으로 오르고, none·Edge-Ring 은 모든 모델이 0.96 이상이라 변화가 없다.', '',
+               '**배포 관점 권장 구성.** MobileNetV3-S 160px (1.53M · macro F1 0.888) — EfficientNet-B0 224px(4.02M · 0.907) 대비 0.02 낮지만 연산량은 약 1/8. 정확도 최우선이면 EfficientNet-B0 224px.', '']
+    md += ['## 4. 시각화 (`scripts/plot_results.py` → `analysis/figures/`)', '',
+           '| 그림 | 내용 |', '|---|---|',
+           '| ![](../analysis/figures/fig1_model_f1_bar.png) | **fig1** 모델별 macro F1 — 기존 레시피(주황) vs 동일 레시피(파랑). 오차막대 = 95% CI 또는 3 seeds ± std |',
+           '| ![](../analysis/figures/fig2_preprocess_f1_bar.png) | **fig2** 모델별 입력 전처리 변인 — 해상도만 막대 길이를 바꾼다 |',
+           '| ![](../analysis/figures/fig3_per_class_f1_bar.png) | **fig3** 클래스별 F1 — 해상도 이득은 Scratch·Loc·Edge-Loc 에 집중 |',
+           '| ![](../analysis/figures/fig4_training_curves.png) | **fig4** 모델별 학습 경과 (epoch 별 val accuracy·val macro F1) |',
+           '| ![](../analysis/figures/fig5_val_f1_overlay.png) | **fig5** 핵심 모델 학습 곡선 overlay — 해상도가 높을수록 첫 epoch 부터 위에서 시작해 순서가 바뀌지 않는다 |',
+           '| ![](../analysis/figures/fig6_legacy_curves.png) | **fig6** 기존 레시피 재학습 곡선 — 2-Phase 사전학습 모델은 Phase 2 에서도 백본 lr 1e-5 탓에 느리게 오른다 |', '']
+
     out = ROOT / 'docs/MODEL_PERFORMANCE.md'
     out.write_text('\n'.join(md) + '\n', encoding='utf-8')
     print(f'저장: {out}')

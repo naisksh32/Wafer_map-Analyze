@@ -17,7 +17,8 @@ data/processed/split_indices.pkl
 data/lake/
 
 # 모델 체크포인트 (이진 대용량 파일)
-checkpoints/
+checkpoints/*
+!checkpoints/MANIFEST.json
 
 # Node.js 의존성
 dashboard/node_modules/

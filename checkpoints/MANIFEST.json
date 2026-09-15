@@ -1,0 +1,317 @@
+{
+  "description": "체크포인트 ↔ 결과 매핑. 정리 시점 2026-09-15 (1차 공정 비교 + 2차 입력 전처리 실험 포함)",
+  "legacy_recipe": {
+    "WaferCNN": {
+      "path": "checkpoints/WaferCNN_37_0.8453.pth",
+      "params_M": 1.21,
+      "test_f1_macro": 0.8508,
+      "test_accuracy": 0.9585,
+      "source": "analysis/final_evaluation.json"
+    },
+    "MobileNetV3-Small": {
+      "path": "checkpoints/MobileNetV3_34_0.7431.pth",
+      "params_M": 1.53,
+      "test_f1_macro": 0.7372,
+      "test_accuracy": 0.9041,
+      "source": "analysis/final_evaluation.json"
+    },
+    "EfficientNet-B0": {
+      "path": "checkpoints/EfficientNet-B0_30_0.8025.pth",
+      "params_M": 4.02,
+      "test_f1_macro": 0.802,
+      "test_accuracy": 0.9416,
+      "source": "analysis/final_evaluation.json"
+    },
+    "ViT-Tiny": {
+      "path": "checkpoints/ViT-Tiny_07_0.8144.pth",
+      "params_M": 5.39,
+      "test_f1_macro": 0.8106,
+      "test_accuracy": 0.9434,
+      "source": "analysis/final_evaluation.json"
+    },
+    "AdvancedDefectPredictor": {
+      "path": "checkpoints/AdvancedDefectPredictor_best_0.8340.pth",
+      "params_M": 1.13,
+      "test_f1_macro": 0.8229,
+      "test_accuracy": 0.9512,
+      "source": "analysis/final_evaluation.json"
+    }
+  },
+  "fair_compare": {
+    "effb0_pre128_seed42": {
+      "path": "checkpoints/fair/effb0_pre128_seed42.pth",
+      "model_key": "effb0_pre128",
+      "seed": 42,
+      "best_epoch": 25,
+      "preprocess": null,
+      "test_f1_macro": 0.8894489882360301,
+      "test_accuracy": 0.9754461704506032,
+      "source": "analysis/fair_compare/runs/effb0_pre128_seed42.json"
+    },
+    "effb0_pre224_seed42": {
+      "path": "checkpoints/fair/effb0_pre224_seed42.pth",
+      "model_key": "effb0_pre224",
+      "seed": 42,
+      "best_epoch": 22,
+      "preprocess": {
+        "size": 224,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.9071972532997409,
+      "test_accuracy": 0.9778360251320202,
+      "source": "analysis/fair_compare/runs/effb0_pre224_seed42.json"
+    },
+    "mv3_pre128_3ch_seed42": {
+      "path": "checkpoints/fair/mv3_pre128_3ch_seed42.pth",
+      "model_key": "mv3_pre128_3ch",
+      "seed": 42,
+      "best_epoch": 22,
+      "preprocess": {
+        "size": 128,
+        "mode": "nearest",
+        "channels": 3,
+        "imagenet_norm": true
+      },
+      "test_f1_macro": 0.8741371573332276,
+      "test_accuracy": 0.9699340862660448,
+      "source": "analysis/fair_compare/runs/mv3_pre128_3ch_seed42.json"
+    },
+    "mv3_pre128_bil_seed42": {
+      "path": "checkpoints/fair/mv3_pre128_bil_seed42.pth",
+      "model_key": "mv3_pre128_bil",
+      "seed": 42,
+      "best_epoch": 22,
+      "preprocess": {
+        "size": 128,
+        "mode": "bilinear",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.8747607306742099,
+      "test_accuracy": 0.9703966387850287,
+      "source": "analysis/fair_compare/runs/mv3_pre128_bil_seed42.json"
+    },
+    "mv3_pre128_ep40_seed42": {
+      "path": "checkpoints/fair/mv3_pre128_ep40_seed42.pth",
+      "model_key": "mv3_pre128@ep40",
+      "seed": 42,
+      "best_epoch": 39,
+      "preprocess": null,
+      "test_f1_macro": 0.884677132654303,
+      "test_accuracy": 0.9741741510233974,
+      "source": "analysis/fair_compare/runs/mv3_pre128_ep40_seed42.json"
+    },
+    "mv3_pre128_norm_seed42": {
+      "path": "checkpoints/fair/mv3_pre128_norm_seed42.pth",
+      "model_key": "mv3_pre128_norm",
+      "seed": 42,
+      "best_epoch": 22,
+      "preprocess": {
+        "size": 128,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": true
+      },
+      "test_f1_macro": 0.8829904565470533,
+      "test_accuracy": 0.9703966387850287,
+      "source": "analysis/fair_compare/runs/mv3_pre128_norm_seed42.json"
+    },
+    "mv3_pre128_seed42": {
+      "path": "checkpoints/fair/mv3_pre128_seed42.pth",
+      "model_key": "mv3_pre128",
+      "seed": 42,
+      "best_epoch": 24,
+      "preprocess": null,
+      "test_f1_macro": 0.8750382629007282,
+      "test_accuracy": 0.9694329877038123,
+      "source": "analysis/fair_compare/runs/mv3_pre128_seed42.json"
+    },
+    "mv3_pre128_seed43": {
+      "path": "checkpoints/fair/mv3_pre128_seed43.pth",
+      "model_key": "mv3_pre128",
+      "seed": 43,
+      "best_epoch": 25,
+      "preprocess": null,
+      "test_f1_macro": 0.8733199530996942,
+      "test_accuracy": 0.9679296920171144,
+      "source": "analysis/fair_compare/runs/mv3_pre128_seed43.json"
+    },
+    "mv3_pre128_seed44": {
+      "path": "checkpoints/fair/mv3_pre128_seed44.pth",
+      "model_key": "mv3_pre128",
+      "seed": 44,
+      "best_epoch": 20,
+      "preprocess": null,
+      "test_f1_macro": 0.878379924541507,
+      "test_accuracy": 0.9700497243957907,
+      "source": "analysis/fair_compare/runs/mv3_pre128_seed44.json"
+    },
+    "mv3_pre160_seed42": {
+      "path": "checkpoints/fair/mv3_pre160_seed42.pth",
+      "model_key": "mv3_pre160",
+      "seed": 42,
+      "best_epoch": 25,
+      "preprocess": {
+        "size": 160,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.8882902851730553,
+      "test_accuracy": 0.970473730871526,
+      "source": "analysis/fair_compare/runs/mv3_pre160_seed42.json"
+    },
+    "mv3_pre224_seed42": {
+      "path": "checkpoints/fair/mv3_pre224_seed42.pth",
+      "model_key": "mv3_pre224",
+      "seed": 42,
+      "best_epoch": 22,
+      "preprocess": {
+        "size": 224,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.8888200652075917,
+      "test_accuracy": 0.9726708553366997,
+      "source": "analysis/fair_compare/runs/mv3_pre224_seed42.json"
+    },
+    "mv3_pre64_seed42": {
+      "path": "checkpoints/fair/mv3_pre64_seed42.pth",
+      "model_key": "mv3_pre64",
+      "seed": 42,
+      "best_epoch": 23,
+      "preprocess": null,
+      "test_f1_macro": 0.831296696738971,
+      "test_accuracy": 0.9545927610530779,
+      "source": "analysis/fair_compare/runs/mv3_pre64_seed42.json"
+    },
+    "mv3_pre64_seed43": {
+      "path": "checkpoints/fair/mv3_pre64_seed43.pth",
+      "model_key": "mv3_pre64",
+      "seed": 43,
+      "best_epoch": 19,
+      "preprocess": null,
+      "test_f1_macro": 0.8318001539989541,
+      "test_accuracy": 0.9532436495393748,
+      "source": "analysis/fair_compare/runs/mv3_pre64_seed43.json"
+    },
+    "mv3_pre64_seed44": {
+      "path": "checkpoints/fair/mv3_pre64_seed44.pth",
+      "model_key": "mv3_pre64",
+      "seed": 44,
+      "best_epoch": 22,
+      "preprocess": null,
+      "test_f1_macro": 0.8391688087880615,
+      "test_accuracy": 0.9578691747292141,
+      "source": "analysis/fair_compare/runs/mv3_pre64_seed44.json"
+    },
+    "mv3_scratch64_seed42": {
+      "path": "checkpoints/fair/mv3_scratch64_seed42.pth",
+      "model_key": "mv3_scratch64",
+      "seed": 42,
+      "best_epoch": 25,
+      "preprocess": null,
+      "test_f1_macro": 0.7752363444412641,
+      "test_accuracy": 0.9237173804109008,
+      "source": "analysis/fair_compare/runs/mv3_scratch64_seed42.json"
+    },
+    "vit_pre128_seed42": {
+      "path": "checkpoints/fair/vit_pre128_seed42.pth",
+      "model_key": "vit_pre128",
+      "seed": 42,
+      "best_epoch": 23,
+      "preprocess": {
+        "size": 128,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.8784567713638473,
+      "test_accuracy": 0.9700111783525421,
+      "source": "analysis/fair_compare/runs/vit_pre128_seed42.json"
+    },
+    "vit_pre224_seed42": {
+      "path": "checkpoints/fair/vit_pre224_seed42.pth",
+      "model_key": "vit_pre224",
+      "seed": 42,
+      "best_epoch": 25,
+      "preprocess": {
+        "size": 224,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.8872814585719682,
+      "test_accuracy": 0.9692402574875689,
+      "source": "analysis/fair_compare/runs/vit_pre224_seed42.json"
+    },
+    "vit_pre64_seed42": {
+      "path": "checkpoints/fair/vit_pre64_seed42.pth",
+      "model_key": "vit_pre64",
+      "seed": 42,
+      "best_epoch": 24,
+      "preprocess": null,
+      "test_f1_macro": 0.8632612908625766,
+      "test_accuracy": 0.9652700150329568,
+      "source": "analysis/fair_compare/runs/vit_pre64_seed42.json"
+    },
+    "wafercnn_128_seed42": {
+      "path": "checkpoints/fair/wafercnn_128_seed42.pth",
+      "model_key": "wafercnn_128",
+      "seed": 42,
+      "best_epoch": 9,
+      "preprocess": {
+        "size": 128,
+        "mode": "nearest",
+        "channels": 1,
+        "imagenet_norm": false
+      },
+      "test_f1_macro": 0.8195935342696784,
+      "test_accuracy": 0.954130208534094,
+      "source": "analysis/fair_compare/runs/wafercnn_128_seed42.json"
+    },
+    "wafercnn_ep40_seed42": {
+      "path": "checkpoints/fair/wafercnn_ep40_seed42.pth",
+      "model_key": "wafercnn@ep40",
+      "seed": 42,
+      "best_epoch": 28,
+      "preprocess": null,
+      "test_f1_macro": 0.8366711969188556,
+      "test_accuracy": 0.9515476236364337,
+      "source": "analysis/fair_compare/runs/wafercnn_ep40_seed42.json"
+    },
+    "wafercnn_seed42": {
+      "path": "checkpoints/fair/wafercnn_seed42.pth",
+      "model_key": "wafercnn",
+      "seed": 42,
+      "best_epoch": 22,
+      "preprocess": null,
+      "test_f1_macro": 0.8224725939098482,
+      "test_accuracy": 0.9444936977219288,
+      "source": "analysis/fair_compare/runs/wafercnn_seed42.json"
+    },
+    "wafercnn_seed43": {
+      "path": "checkpoints/fair/wafercnn_seed43.pth",
+      "model_key": "wafercnn",
+      "seed": 43,
+      "best_epoch": 22,
+      "preprocess": null,
+      "test_f1_macro": 0.8306909278505742,
+      "test_accuracy": 0.9465366380141078,
+      "source": "analysis/fair_compare/runs/wafercnn_seed43.json"
+    },
+    "wafercnn_seed44": {
+      "path": "checkpoints/fair/wafercnn_seed44.pth",
+      "model_key": "wafercnn",
+      "seed": 44,
+      "best_epoch": 7,
+      "preprocess": null,
+      "test_f1_macro": 0.8400724534692374,
+      "test_accuracy": 0.96230196970281,
+      "source": "analysis/fair_compare/runs/wafercnn_seed44.json"
+    }
+  }
+}

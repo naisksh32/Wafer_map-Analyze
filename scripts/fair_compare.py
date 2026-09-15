@@ -11,13 +11,20 @@
 체크포인트 선택 기준(val macro F1)으로 학습하고, 같은 테스트셋(25,943개)에서 평가한다.
 seed 를 여러 개 돌려 평균±표준편차와 bootstrap 95% CI 를 함께 기록한다.
 
-[MobileNetV3 진단 변인]
+[1차 — MobileNetV3 진단 변인]  (완료: 2026-09-13~14)
   mv3_pre64      ImageNet 사전학습 · 64×64 그대로 (기존 입력)   → stride 32 → 최종 feature map 2×2
   mv3_pre128     ImageNet 사전학습 · 128×128 nearest 업샘플     → 최종 4×4 (WaferCNN 과 동일 해상도)
   mv3_scratch64  사전학습 없음 · 64×64                          → ImageNet 전이 효과 분리
-  mv3_scratch128 사전학습 없음 · 128×128
   wafercnn       기준 모델
   effb0_pre128 / vit_pre64  참고 (기존 파인튜닝 대상)
+
+[2차 — 모델별 특화 입력 전처리]  (Preprocess 모듈 · 변인: size / mode / channels / imagenet_norm)
+  wafercnn_128                        WaferCNN 대조군 (8×8)
+  mv3_pre128_bil                      nearest vs bilinear
+  mv3_pre128_3ch / mv3_pre128_norm    1ch 평균 conv vs 3ch 복제+ImageNet 정규화 / 1ch+정규화
+  mv3_pre160 / mv3_pre224             해상도 스윕 (5×5 / 7×7 원본)
+  effb0_pre224                        EfficientNet 원본 해상도
+  vit_pre128 / vit_pre224             ViT 토큰 수 64 / 196(원본 pos-emb)
 
 [사용]
   python scripts/fair_compare.py --models wafercnn mv3_pre64 mv3_pre128 mv3_scratch64 --seeds 42 43 44
@@ -59,60 +66,108 @@ PROTOCOL = dict(batch_size=64, lr=3e-4, weight_decay=1e-4, epochs=25, patience=0
                 select_by='val macro F1 (best) + last epoch 병기', amp='bf16 autocast')
 
 
-# ── 모델 정의 ───────────────────────────────────────────────────────
-class Upsampled(nn.Module):
-    """입력을 nearest 로 확대한 뒤 백본에 전달 (픽셀값 0/0.5/1 유지)."""
-    def __init__(self, backbone, size):
+# ── 모델별 입력 전처리 (GPU 위에서 수행) ────────────────────────────
+# DataLoader 는 항상 (B,1,64,64) · 값 {0, 0.5, 1} 을 내보내고(증강은 64px 에서),
+# 모델 직전에 그 모델 구조에 맞는 형식으로 바꾼다. 변인은 네 가지:
+#   size          : 해상도.  stride-32 백본은 64px 에서 최종 map 2×2 → 128: 4×4, 160: 5×5, 224: 7×7(ImageNet 원본)
+#                   ViT/16 은 토큰 수.  64: 16 토큰, 128: 64, 224: 196(원본 pos-emb)
+#   mode          : 보간.  nearest 는 3값 픽셀을 그대로 유지, bilinear 는 경계를 부드럽게(ImageNet 통계에 가깝게)
+#   channels      : 1 → 첫 conv 를 RGB 가중치 평균으로 1채널화 / 3 → 회색을 3채널 복제, 사전학습 conv 원형 유지
+#   imagenet_norm : ImageNet mean/std 정규화 (사전학습 시 입력 분포와 일치시킴)
+IMNET_MEAN = (0.485, 0.456, 0.406)
+IMNET_STD = (0.229, 0.224, 0.225)
+
+
+class Preprocess(nn.Module):
+    def __init__(self, backbone, size=None, mode='nearest', channels=1, imagenet_norm=False):
         super().__init__()
         self.backbone = backbone
-        self.size = size
+        self.spec = dict(size=size or 64, mode=mode if size else None, channels=channels, imagenet_norm=imagenet_norm)
+        if imagenet_norm:
+            if channels == 3:
+                mean, std = torch.tensor(IMNET_MEAN), torch.tensor(IMNET_STD)
+            else:  # 1채널: RGB 평균 통계
+                mean, std = torch.tensor([sum(IMNET_MEAN) / 3]), torch.tensor([sum(IMNET_STD) / 3])
+            self.register_buffer('mean', mean.view(1, -1, 1, 1))
+            self.register_buffer('std', std.view(1, -1, 1, 1))
 
     def forward(self, x):
-        if self.size and x.shape[-1] != self.size:
-            x = F.interpolate(x, size=(self.size, self.size), mode='nearest')
+        s = self.spec
+        if s['size'] and x.shape[-1] != s['size']:
+            kw = {} if s['mode'] == 'nearest' else {'align_corners': False}
+            x = F.interpolate(x, size=(s['size'], s['size']), mode=s['mode'], **kw)
+        if s['channels'] == 3:
+            x = x.expand(-1, 3, -1, -1)
+        if s['imagenet_norm']:
+            x = (x - self.mean) / self.std
         return self.backbone(x)
 
 
-def _mv3(pretrained):
+def _adapt_first_conv(m, path, pretrained, in_ch):
+    """torchvision 백본의 첫 conv 를 in_ch 채널로. 3채널이면 원형 유지."""
+    if in_ch == 3:
+        return
+    parent = m
+    for p in path[:-1]:
+        parent = parent[p] if isinstance(p, int) else getattr(parent, p)
+    old = parent[path[-1]]
+    new = nn.Conv2d(in_ch, old.out_channels, old.kernel_size, old.stride, old.padding, bias=False)
+    if pretrained:
+        new.weight.data = old.weight.data.mean(dim=1, keepdim=True)
+    parent[path[-1]] = new
+
+
+def _mv3(pretrained, in_ch=1):
     from torchvision.models import mobilenet_v3_small, MobileNet_V3_Small_Weights
     m = mobilenet_v3_small(weights=MobileNet_V3_Small_Weights.DEFAULT if pretrained else None)
-    old = m.features[0][0]
-    new = nn.Conv2d(1, old.out_channels, old.kernel_size, old.stride, old.padding, bias=False)
-    if pretrained:
-        new.weight.data = old.weight.data.mean(dim=1, keepdim=True)
-    m.features[0][0] = new
+    _adapt_first_conv(m, ('features', 0, 0), pretrained, in_ch)
     m.classifier[-1] = nn.Linear(m.classifier[-1].in_features, NUM_CLASSES)
     return m
 
 
-def _effb0(pretrained):
+def _effb0(pretrained, in_ch=1):
     from torchvision.models import efficientnet_b0, EfficientNet_B0_Weights
     m = efficientnet_b0(weights=EfficientNet_B0_Weights.DEFAULT if pretrained else None)
-    old = m.features[0][0]
-    new = nn.Conv2d(1, old.out_channels, old.kernel_size, old.stride, old.padding, bias=False)
-    if pretrained:
-        new.weight.data = old.weight.data.mean(dim=1, keepdim=True)
-    m.features[0][0] = new
+    _adapt_first_conv(m, ('features', 0, 0), pretrained, in_ch)
     m.classifier[-1] = nn.Linear(m.classifier[-1].in_features, NUM_CLASSES)
     return m
 
 
-def _vit(pretrained, img_size=64):
-    import timm
+def _vit(pretrained, img_size=64, in_ch=1):
+    import timm  # img_size ≠ 224 이면 timm 이 pos-emb 를 bicubic 보간
     return timm.create_model('vit_tiny_patch16_224', pretrained=pretrained,
-                             num_classes=NUM_CLASSES, in_chans=1, img_size=img_size)
+                             num_classes=NUM_CLASSES, in_chans=in_ch, img_size=img_size)
+
+
+def P(backbone, **kw):
+    return Preprocess(backbone, **kw)
 
 
 MODEL_ZOO = {
     # key            : (설명, 빌더)
+    # ── 1차 공정 비교 (완료) ─────────────────────────────────────────
     'wafercnn':       ('WaferCNN (custom, scratch, 64px)',            lambda: WaferCNN(NUM_CLASSES, 0.3)),
-    'mv3_pre64':      ('MobileNetV3-S (ImageNet, 64px)',              lambda: Upsampled(_mv3(True), None)),
-    'mv3_pre128':     ('MobileNetV3-S (ImageNet, 128px upsample)',    lambda: Upsampled(_mv3(True), 128)),
-    'mv3_scratch64':  ('MobileNetV3-S (scratch, 64px)',               lambda: Upsampled(_mv3(False), None)),
-    'mv3_scratch128': ('MobileNetV3-S (scratch, 128px upsample)',     lambda: Upsampled(_mv3(False), 128)),
-    'effb0_pre128':   ('EfficientNet-B0 (ImageNet, 128px upsample)',  lambda: Upsampled(_effb0(True), 128)),
-    'effb0_pre64':    ('EfficientNet-B0 (ImageNet, 64px)',            lambda: Upsampled(_effb0(True), None)),
+    'mv3_pre64':      ('MobileNetV3-S (ImageNet, 64px)',              lambda: P(_mv3(True))),
+    'mv3_pre128':     ('MobileNetV3-S (ImageNet, 128px upsample)',    lambda: P(_mv3(True), size=128)),
+    'mv3_scratch64':  ('MobileNetV3-S (scratch, 64px)',               lambda: P(_mv3(False))),
+    'mv3_scratch128': ('MobileNetV3-S (scratch, 128px upsample)',     lambda: P(_mv3(False), size=128)),
+    'effb0_pre128':   ('EfficientNet-B0 (ImageNet, 128px upsample)',  lambda: P(_effb0(True), size=128)),
+    'effb0_pre64':    ('EfficientNet-B0 (ImageNet, 64px)',            lambda: P(_effb0(True))),
     'vit_pre64':      ('ViT-Tiny/16 (ImageNet, 64px → 16 tokens)',    lambda: _vit(True, 64)),
+    # ── 2차: 모델별 특화 입력 전처리 ─────────────────────────────────
+    # WaferCNN 대조군 — 해상도 효과가 stride-32 구조 종속인지 확인 (WaferCNN 은 64px 에서 이미 4×4)
+    'wafercnn_128':       ('WaferCNN (scratch, 128px upsample → 8×8)',                lambda: P(WaferCNN(NUM_CLASSES, 0.3), size=128)),
+    # MobileNetV3-S — 보간 / 채널·정규화 / 해상도
+    'mv3_pre128_bil':     ('MobileNetV3-S (ImageNet, 128px bilinear)',                lambda: P(_mv3(True), size=128, mode='bilinear')),
+    'mv3_pre128_3ch':     ('MobileNetV3-S (ImageNet, 128px, 3ch + ImageNet norm)',    lambda: P(_mv3(True, 3), size=128, channels=3, imagenet_norm=True)),
+    'mv3_pre128_norm':    ('MobileNetV3-S (ImageNet, 128px, 1ch + ImageNet norm)',    lambda: P(_mv3(True), size=128, imagenet_norm=True)),
+    'mv3_pre160':         ('MobileNetV3-S (ImageNet, 160px → 5×5)',                   lambda: P(_mv3(True), size=160)),
+    'mv3_pre224':         ('MobileNetV3-S (ImageNet, 224px → 7×7, native)',           lambda: P(_mv3(True), size=224)),
+    # EfficientNet-B0 — 원본 해상도
+    'effb0_pre224':       ('EfficientNet-B0 (ImageNet, 224px native)',                lambda: P(_effb0(True), size=224)),
+    # ViT-Tiny/16 — 토큰 수
+    'vit_pre128':         ('ViT-Tiny/16 (ImageNet, 128px → 64 tokens)',               lambda: P(_vit(True, 128), size=128)),
+    'vit_pre224':         ('ViT-Tiny/16 (ImageNet, 224px → 196 tokens, native)',      lambda: P(_vit(True, 224), size=224)),
 }
 
 
@@ -264,7 +319,8 @@ def run_one(key, seed, args, data):
                         'lr': args.lr, 'weight_decay': args.weight_decay, 'batch_size': args.batch_size},
            'best_epoch': best_ep, 'epochs_run': len(history), 'train_sec': round(train_sec, 1),
            'val': val, 'test': test, 'test_last_epoch': test_last, 'history': history,
-           'checkpoint': ckpt_path.relative_to(ROOT).as_posix()}
+           'checkpoint': ckpt_path.relative_to(ROOT).as_posix(),
+           'preprocess': getattr(model, 'spec', dict(size=64, mode=None, channels=1, imagenet_norm=False))}
     out_json.write_text(json.dumps(rec, ensure_ascii=False, indent=2), encoding='utf-8')
     lo, hi = test['f1_macro_ci95']
     print(f'  -> TEST(best-val ep{best_ep}) acc {test["accuracy"]:.4f}  macroF1 {test["f1_macro"]:.4f} [{lo:.4f},{hi:.4f}]  '

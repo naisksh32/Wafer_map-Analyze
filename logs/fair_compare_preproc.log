@@ -1,0 +1,359 @@
+Device: cuda (NVIDIA GeForce RTX 4070 Laptop GPU)
+
+=== mv3_pre128_bil | MobileNetV3-S (ImageNet, 128px bilinear) | seed=42 | 1.53M params | cuda ===
+  ep  1/25 loss 0.3050  val_acc 0.9348  val_f1 0.7761 *    103s
+  ep  2/25 loss 0.1717  val_acc 0.9216  val_f1 0.7804 *    102s
+  ep  3/25 loss 0.1399  val_acc 0.9109  val_f1 0.7695      103s
+  ep  4/25 loss 0.1187  val_acc 0.9098  val_f1 0.7796       99s
+  ep  5/25 loss 0.1026  val_acc 0.9323  val_f1 0.8092 *    103s
+  ep  6/25 loss 0.0897  val_acc 0.9526  val_f1 0.8357 *    103s
+  ep  7/25 loss 0.0786  val_acc 0.9305  val_f1 0.8061      106s
+  ep  8/25 loss 0.0719  val_acc 0.9332  val_f1 0.8113       94s
+  ep  9/25 loss 0.0631  val_acc 0.9625  val_f1 0.8574 *    109s
+  ep 10/25 loss 0.0573  val_acc 0.9390  val_f1 0.8204      102s
+  ep 11/25 loss 0.0515  val_acc 0.9568  val_f1 0.8455      105s
+  ep 12/25 loss 0.0475  val_acc 0.9423  val_f1 0.8296      104s
+  ep 13/25 loss 0.0430  val_acc 0.9599  val_f1 0.8598 *    108s
+  ep 14/25 loss 0.0391  val_acc 0.9422  val_f1 0.8333      108s
+  ep 15/25 loss 0.0356  val_acc 0.9584  val_f1 0.8577      105s
+  ep 16/25 loss 0.0318  val_acc 0.9621  val_f1 0.8642 *    107s
+  ep 17/25 loss 0.0279  val_acc 0.9617  val_f1 0.8657 *    105s
+  ep 18/25 loss 0.0277  val_acc 0.9640  val_f1 0.8679 *    108s
+  ep 19/25 loss 0.0251  val_acc 0.9648  val_f1 0.8749 *    104s
+  ep 20/25 loss 0.0233  val_acc 0.9672  val_f1 0.8754 *    106s
+  ep 21/25 loss 0.0218  val_acc 0.9659  val_f1 0.8731      105s
+  ep 22/25 loss 0.0196  val_acc 0.9690  val_f1 0.8790 *    101s
+  ep 23/25 loss 0.0208  val_acc 0.9697  val_f1 0.8770       94s
+  ep 24/25 loss 0.0206  val_acc 0.9684  val_f1 0.8750       93s
+  ep 25/25 loss 0.0197  val_acc 0.9689  val_f1 0.8764      103s
+  -> TEST(best-val ep22) acc 0.9704  macroF1 0.8748 [0.8567,0.8888]  wF1 0.9712  P 0.8619 R 0.8915
+  -> TEST(last ep25)    acc 0.9695  macroF1 0.8713  wF1 0.9706  P 0.8519 R 0.8956  (43.0 min)  saved mv3_pre128_bil_seed42.json
+
+=== mv3_pre128_3ch | MobileNetV3-S (ImageNet, 128px, 3ch + ImageNet norm) | seed=42 | 1.53M params | cuda ===
+  ep  1/25 loss 0.3178  val_acc 0.9381  val_f1 0.7949 *    121s
+  ep  2/25 loss 0.1772  val_acc 0.9350  val_f1 0.8115 *    105s
+  ep  3/25 loss 0.1423  val_acc 0.9229  val_f1 0.7810      102s
+  ep  4/25 loss 0.1212  val_acc 0.9383  val_f1 0.8132 *    108s
+  ep  5/25 loss 0.1043  val_acc 0.9434  val_f1 0.8251 *    101s
+  ep  6/25 loss 0.0926  val_acc 0.9552  val_f1 0.8394 *    106s
+  ep  7/25 loss 0.0845  val_acc 0.9437  val_f1 0.8223      105s
+  ep  8/25 loss 0.0731  val_acc 0.9384  val_f1 0.8178      104s
+  ep  9/25 loss 0.0662  val_acc 0.9571  val_f1 0.8510 *    105s
+  ep 10/25 loss 0.0572  val_acc 0.9475  val_f1 0.8397      103s
+  ep 11/25 loss 0.0558  val_acc 0.9591  val_f1 0.8520 *    102s
+  ep 12/25 loss 0.0487  val_acc 0.9540  val_f1 0.8509      107s
+  ep 13/25 loss 0.0443  val_acc 0.9550  val_f1 0.8512      109s
+  ep 14/25 loss 0.0402  val_acc 0.9554  val_f1 0.8493       91s
+  ep 15/25 loss 0.0355  val_acc 0.9571  val_f1 0.8551 *     92s
+  ep 16/25 loss 0.0314  val_acc 0.9594  val_f1 0.8577 *     95s
+  ep 17/25 loss 0.0298  val_acc 0.9652  val_f1 0.8731 *     83s
+  ep 18/25 loss 0.0288  val_acc 0.9602  val_f1 0.8657      112s
+  ep 19/25 loss 0.0259  val_acc 0.9647  val_f1 0.8722       85s
+  ep 20/25 loss 0.0241  val_acc 0.9666  val_f1 0.8718       89s
+  ep 21/25 loss 0.0217  val_acc 0.9634  val_f1 0.8682       87s
+  ep 22/25 loss 0.0207  val_acc 0.9690  val_f1 0.8777 *     97s
+  ep 23/25 loss 0.0207  val_acc 0.9652  val_f1 0.8724      103s
+  ep 24/25 loss 0.0203  val_acc 0.9673  val_f1 0.8764      106s
+  ep 25/25 loss 0.0213  val_acc 0.9677  val_f1 0.8768      106s
+  -> TEST(best-val ep22) acc 0.9699  macroF1 0.8741 [0.8573,0.8873]  wF1 0.9708  P 0.8556 R 0.8972
+  -> TEST(last ep25)    acc 0.9688  macroF1 0.8721  wF1 0.9698  P 0.8521 R 0.8963  (42.1 min)  saved mv3_pre128_3ch_seed42.json
+
+=== mv3_pre128_norm | MobileNetV3-S (ImageNet, 128px, 1ch + ImageNet norm) | seed=42 | 1.53M params | cuda ===
+  ep  1/25 loss 0.3081  val_acc 0.9459  val_f1 0.8057 *    115s
+  ep  2/25 loss 0.1722  val_acc 0.9529  val_f1 0.8379 *    104s
+  ep  3/25 loss 0.1393  val_acc 0.9070  val_f1 0.7649      104s
+  ep  4/25 loss 0.1206  val_acc 0.9334  val_f1 0.8005      102s
+  ep  5/25 loss 0.1042  val_acc 0.9431  val_f1 0.8276      105s
+  ep  6/25 loss 0.0899  val_acc 0.9550  val_f1 0.8418 *    103s
+  ep  7/25 loss 0.0804  val_acc 0.9393  val_f1 0.8141      103s
+  ep  8/25 loss 0.0725  val_acc 0.9476  val_f1 0.8263      103s
+  ep  9/25 loss 0.0647  val_acc 0.9621  val_f1 0.8566 *    103s
+  ep 10/25 loss 0.0581  val_acc 0.9574  val_f1 0.8434      105s
+  ep 11/25 loss 0.0525  val_acc 0.9473  val_f1 0.8246      101s
+  ep 12/25 loss 0.0474  val_acc 0.9568  val_f1 0.8454      103s
+  ep 13/25 loss 0.0439  val_acc 0.9645  val_f1 0.8532      103s
+  ep 14/25 loss 0.0404  val_acc 0.9440  val_f1 0.8253      103s
+  ep 15/25 loss 0.0352  val_acc 0.9504  val_f1 0.8448      103s
+  ep 16/25 loss 0.0327  val_acc 0.9614  val_f1 0.8574 *    103s
+  ep 17/25 loss 0.0295  val_acc 0.9603  val_f1 0.8595 *    104s
+  ep 18/25 loss 0.0284  val_acc 0.9594  val_f1 0.8610 *    106s
+  ep 19/25 loss 0.0263  val_acc 0.9586  val_f1 0.8567      101s
+  ep 20/25 loss 0.0241  val_acc 0.9667  val_f1 0.8712 *    104s
+  ep 21/25 loss 0.0230  val_acc 0.9645  val_f1 0.8704      103s
+  ep 22/25 loss 0.0214  val_acc 0.9704  val_f1 0.8822 *    102s
+  ep 23/25 loss 0.0206  val_acc 0.9700  val_f1 0.8805      104s
+  ep 24/25 loss 0.0204  val_acc 0.9694  val_f1 0.8801      103s
+  ep 25/25 loss 0.0211  val_acc 0.9697  val_f1 0.8800       90s
+  -> TEST(best-val ep22) acc 0.9704  macroF1 0.8830 [0.8664,0.8950]  wF1 0.9713  P 0.8635 R 0.9066
+  -> TEST(last ep25)    acc 0.9692  macroF1 0.8807  wF1 0.9702  P 0.8596 R 0.9056  (43.0 min)  saved mv3_pre128_norm_seed42.json
+
+=== mv3_pre160 | MobileNetV3-S (ImageNet, 160px → 5×5) | seed=42 | 1.53M params | cuda ===
+  ep  1/25 loss 0.2888  val_acc 0.9238  val_f1 0.7715 *     82s
+  ep  2/25 loss 0.1650  val_acc 0.9103  val_f1 0.7621       81s
+  ep  3/25 loss 0.1350  val_acc 0.9118  val_f1 0.7653       81s
+  ep  4/25 loss 0.1135  val_acc 0.9129  val_f1 0.7673       86s
+  ep  5/25 loss 0.0982  val_acc 0.9285  val_f1 0.8006 *     82s
+  ep  6/25 loss 0.0859  val_acc 0.9608  val_f1 0.8435 *     81s
+  ep  7/25 loss 0.0774  val_acc 0.9175  val_f1 0.7898       86s
+  ep  8/25 loss 0.0696  val_acc 0.9279  val_f1 0.8063       84s
+  ep  9/25 loss 0.0627  val_acc 0.9662  val_f1 0.8691 *    105s
+  ep 10/25 loss 0.0537  val_acc 0.9428  val_f1 0.8220      110s
+  ep 11/25 loss 0.0514  val_acc 0.9396  val_f1 0.8260      115s
+  ep 12/25 loss 0.0466  val_acc 0.9403  val_f1 0.8271      115s
+  ep 13/25 loss 0.0427  val_acc 0.9623  val_f1 0.8630      117s
+  ep 14/25 loss 0.0388  val_acc 0.9517  val_f1 0.8491      114s
+  ep 15/25 loss 0.0343  val_acc 0.9547  val_f1 0.8573      114s
+  ep 16/25 loss 0.0301  val_acc 0.9562  val_f1 0.8613      114s
+  ep 17/25 loss 0.0287  val_acc 0.9579  val_f1 0.8653      118s
+  ep 18/25 loss 0.0273  val_acc 0.9609  val_f1 0.8743 *    112s
+  ep 19/25 loss 0.0251  val_acc 0.9639  val_f1 0.8762 *    114s
+  ep 20/25 loss 0.0227  val_acc 0.9620  val_f1 0.8702      115s
+  ep 21/25 loss 0.0210  val_acc 0.9648  val_f1 0.8765 *    114s
+  ep 22/25 loss 0.0207  val_acc 0.9695  val_f1 0.8851 *    115s
+  ep 23/25 loss 0.0202  val_acc 0.9689  val_f1 0.8867 *    112s
+  ep 24/25 loss 0.0196  val_acc 0.9690  val_f1 0.8864      115s
+  ep 25/25 loss 0.0198  val_acc 0.9692  val_f1 0.8867 *     87s
+  -> TEST(best-val ep25) acc 0.9705  macroF1 0.8883 [0.8729,0.8997]  wF1 0.9714  P 0.8742 R 0.9061
+  -> TEST(last ep25)    acc 0.9705  macroF1 0.8883  wF1 0.9714  P 0.8742 R 0.9061  (42.8 min)  saved mv3_pre160_seed42.json
+
+=== mv3_pre224 | MobileNetV3-S (ImageNet, 224px → 7×7, native) | seed=42 | 1.53M params | cuda ===
+  ep  1/25 loss 0.2762  val_acc 0.9464  val_f1 0.8222 *    134s
+  ep  2/25 loss 0.1512  val_acc 0.9504  val_f1 0.8173      126s
+  ep  3/25 loss 0.1216  val_acc 0.9413  val_f1 0.8231 *    121s
+  ep  4/25 loss 0.1041  val_acc 0.9516  val_f1 0.8456 *    124s
+  ep  5/25 loss 0.0878  val_acc 0.9501  val_f1 0.8404      126s
+  ep  6/25 loss 0.0777  val_acc 0.9530  val_f1 0.8409      113s
+  ep  7/25 loss 0.0699  val_acc 0.9450  val_f1 0.8339      111s
+  ep  8/25 loss 0.0627  val_acc 0.9456  val_f1 0.8380      162s
+  ep  9/25 loss 0.0551  val_acc 0.9668  val_f1 0.8689 *    189s
+  ep 10/25 loss 0.0492  val_acc 0.9320  val_f1 0.8079      191s
+  ep 11/25 loss 0.0463  val_acc 0.9520  val_f1 0.8405      449s
+  ep 12/25 loss 0.0417  val_acc 0.9531  val_f1 0.8512      253s
+  ep 13/25 loss 0.0362  val_acc 0.9588  val_f1 0.8684      175s
+  ep 14/25 loss 0.0340  val_acc 0.9419  val_f1 0.8356      185s
+  ep 15/25 loss 0.0301  val_acc 0.9651  val_f1 0.8832 *    170s
+  ep 16/25 loss 0.0265  val_acc 0.9634  val_f1 0.8773      155s
+  ep 17/25 loss 0.0248  val_acc 0.9654  val_f1 0.8830      113s
+  ep 18/25 loss 0.0232  val_acc 0.9685  val_f1 0.8844 *     85s
+  ep 19/25 loss 0.0215  val_acc 0.9657  val_f1 0.8824      109s
+  ep 20/25 loss 0.0199  val_acc 0.9712  val_f1 0.8953 *    116s
+  ep 21/25 loss 0.0188  val_acc 0.9655  val_f1 0.8873      110s
+  ep 22/25 loss 0.0170  val_acc 0.9731  val_f1 0.8999 *    112s
+  ep 23/25 loss 0.0168  val_acc 0.9706  val_f1 0.8965      114s
+  ep 24/25 loss 0.0164  val_acc 0.9710  val_f1 0.8956       91s
+  ep 25/25 loss 0.0167  val_acc 0.9717  val_f1 0.8979      103s
+  -> TEST(best-val ep22) acc 0.9727  macroF1 0.8888 [0.8740,0.9004]  wF1 0.9735  P 0.8702 R 0.9109
+  -> TEST(last ep25)    acc 0.9718  macroF1 0.8851  wF1 0.9728  P 0.8624 R 0.9119  (62.3 min)  saved mv3_pre224_seed42.json
+# 동일 프로토콜 공정 비교 결과 (Test 25,943개)
+
+프로토콜: AdamW lr 0.0003 · wd 0.0001 · batch 64 · CosineAnnealingLR(eta_min=1e-6) · CrossEntropyLoss (weight 없음) · WeightedRandomSampler(balanced) · 최대 25 epochs / patience 0 · 선택 기준 val macro F1 (best) + last epoch 병기
+
+| 모델 | 파라미터 | seeds | Accuracy | **macro F1 (best-val ckpt, mean±std)** | min–max | macro F1 (last epoch, mean±std) | weighted F1 | macro P | macro R |
+|---|---:|:-:|---:|---:|---:|---:|---:|---:|---:|
+| WaferCNN (custom, scratch, 64px) | 1.21M | 3 | 95.11% | **0.8311 ± 0.0088** | 0.8225–0.8401 | 0.8220 ± 0.0046 | 0.9556 | 0.7668 | 0.9338 |
+| WaferCNN (custom, scratch, 64px) [ep40] | 1.21M | 1 | 95.15% | **0.8367 ± 0.0000** | 0.8367–0.8367 | 0.8365 ± 0.0000 | 0.9563 | 0.7734 | 0.9382 |
+| MobileNetV3-S (ImageNet, 64px) | 1.53M | 3 | 95.52% | **0.8341 ± 0.0044** | 0.8313–0.8392 | 0.8314 ± 0.0019 | 0.9584 | 0.7885 | 0.8961 |
+| MobileNetV3-S (ImageNet, 128px upsample) | 1.53M | 3 | 96.91% | **0.8756 ± 0.0026** | 0.8733–0.8784 | 0.8756 ± 0.0025 | 0.9702 | 0.8529 | 0.9030 |
+| MobileNetV3-S (ImageNet, 128px upsample) [ep40] | 1.53M | 1 | 97.42% | **0.8847 ± 0.0000** | 0.8847–0.8847 | 0.8845 ± 0.0000 | 0.9744 | 0.8875 | 0.8840 |
+| MobileNetV3-S (scratch, 64px) | 1.53M | 1 | 92.37% | **0.7752 ± 0.0000** | 0.7752–0.7752 | 0.7752 ± 0.0000 | 0.9337 | 0.7097 | 0.8960 |
+| EfficientNet-B0 (ImageNet, 128px upsample) | 4.02M | 1 | 97.54% | **0.8894 ± 0.0000** | 0.8894–0.8894 | 0.8894 ± 0.0000 | 0.9759 | 0.8755 | 0.9063 |
+| ViT-Tiny/16 (ImageNet, 64px → 16 tokens) | 5.39M | 1 | 96.53% | **0.8633 ± 0.0000** | 0.8633–0.8633 | 0.8591 ± 0.0000 | 0.9668 | 0.8410 | 0.8906 |
+| MobileNetV3-S (ImageNet, 128px bilinear) | 1.53M | 1 | 97.04% | **0.8748 ± 0.0000** | 0.8748–0.8748 | 0.8713 ± 0.0000 | 0.9712 | 0.8619 | 0.8915 |
+| MobileNetV3-S (ImageNet, 128px, 3ch + ImageNet norm) | 1.53M | 1 | 96.99% | **0.8741 ± 0.0000** | 0.8741–0.8741 | 0.8721 ± 0.0000 | 0.9708 | 0.8556 | 0.8972 |
+| MobileNetV3-S (ImageNet, 128px, 1ch + ImageNet norm) | 1.53M | 1 | 97.04% | **0.8830 ± 0.0000** | 0.8830–0.8830 | 0.8807 ± 0.0000 | 0.9713 | 0.8635 | 0.9066 |
+| MobileNetV3-S (ImageNet, 160px → 5×5) | 1.53M | 1 | 97.05% | **0.8883 ± 0.0000** | 0.8883–0.8883 | 0.8883 ± 0.0000 | 0.9714 | 0.8742 | 0.9061 |
+| MobileNetV3-S (ImageNet, 224px → 7×7, native) | 1.53M | 1 | 97.27% | **0.8888 ± 0.0000** | 0.8888–0.8888 | 0.8851 ± 0.0000 | 0.9735 | 0.8702 | 0.9109 |
+
+저장: C:\Users\SSAFY\Desktop\Private\self\analysis\fair_compare\summary.md, summary.json, summary.csv, runs.csv
+Device: cuda (NVIDIA GeForce RTX 4070 Laptop GPU)
+
+=== vit_pre128 | ViT-Tiny/16 (ImageNet, 128px → 64 tokens) | seed=42 | 5.40M params | cuda ===
+  ep  1/25 loss 0.3593  val_acc 0.9032  val_f1 0.7482 *     88s
+  ep  2/25 loss 0.2200  val_acc 0.8890  val_f1 0.7132      107s
+  ep  3/25 loss 0.1885  val_acc 0.9125  val_f1 0.7688 *     86s
+  ep  4/25 loss 0.1698  val_acc 0.9206  val_f1 0.7820 *     79s
+  ep  5/25 loss 0.1540  val_acc 0.9223  val_f1 0.7906 *     87s
+  ep  6/25 loss 0.1393  val_acc 0.9412  val_f1 0.8149 *    128s
+  ep  7/25 loss 0.1276  val_acc 0.8950  val_f1 0.7626      106s
+  ep  8/25 loss 0.1152  val_acc 0.9125  val_f1 0.7631       92s
+  ep  9/25 loss 0.1029  val_acc 0.9236  val_f1 0.7885       79s
+  ep 10/25 loss 0.0963  val_acc 0.9411  val_f1 0.8201 *     80s
+  ep 11/25 loss 0.0885  val_acc 0.9372  val_f1 0.8132       81s
+  ep 12/25 loss 0.0780  val_acc 0.9422  val_f1 0.8166       79s
+  ep 13/25 loss 0.0709  val_acc 0.9425  val_f1 0.8242 *     80s
+  ep 14/25 loss 0.0644  val_acc 0.9636  val_f1 0.8564 *     79s
+  ep 15/25 loss 0.0570  val_acc 0.9408  val_f1 0.8314       76s
+  ep 16/25 loss 0.0487  val_acc 0.9546  val_f1 0.8404       77s
+  ep 17/25 loss 0.0446  val_acc 0.9561  val_f1 0.8544       77s
+  ep 18/25 loss 0.0413  val_acc 0.9549  val_f1 0.8531       75s
+  ep 19/25 loss 0.0362  val_acc 0.9608  val_f1 0.8652 *    120s
+  ep 20/25 loss 0.0325  val_acc 0.9653  val_f1 0.8717 *     78s
+  ep 21/25 loss 0.0294  val_acc 0.9606  val_f1 0.8639       89s
+  ep 22/25 loss 0.0262  val_acc 0.9665  val_f1 0.8764 *     83s
+  ep 23/25 loss 0.0262  val_acc 0.9688  val_f1 0.8792 *     78s
+  ep 24/25 loss 0.0238  val_acc 0.9679  val_f1 0.8789       79s
+  ep 25/25 loss 0.0240  val_acc 0.9678  val_f1 0.8791       87s
+  -> TEST(best-val ep23) acc 0.9700  macroF1 0.8785 [0.8634,0.8902]  wF1 0.9712  P 0.8551 R 0.9081
+  -> TEST(last ep25)    acc 0.9690  macroF1 0.8779  wF1 0.9704  P 0.8522 R 0.9096  (36.1 min)  saved vit_pre128_seed42.json
+
+=== wafercnn_128 | WaferCNN (scratch, 128px upsample → 8×8) | seed=42 | 1.21M params | cuda ===
+  ep  1/25 loss 0.8334  val_acc 0.8171  val_f1 0.6560 *    103s
+  ep  2/25 loss 0.4606  val_acc 0.8354  val_f1 0.6669 *     87s
+  ep  3/25 loss 0.3756  val_acc 0.9092  val_f1 0.7483 *     87s
+  ep  4/25 loss 0.3312  val_acc 0.9313  val_f1 0.7748 *     87s
+  ep  5/25 loss 0.3025  val_acc 0.9316  val_f1 0.7974 *     96s
+  ep  6/25 loss 0.2813  val_acc 0.9282  val_f1 0.7737       95s
+  ep  7/25 loss 0.2652  val_acc 0.9263  val_f1 0.7656      103s
+  ep  8/25 loss 0.2524  val_acc 0.9201  val_f1 0.7607      103s
+  ep  9/25 loss 0.2360  val_acc 0.9520  val_f1 0.8210 *    103s
+  ep 10/25 loss 0.2244  val_acc 0.9324  val_f1 0.7944       97s
+  ep 11/25 loss 0.2192  val_acc 0.9325  val_f1 0.7922       97s
+  ep 12/25 loss 0.2123  val_acc 0.9280  val_f1 0.7919       93s
+  ep 13/25 loss 0.2004  val_acc 0.9329  val_f1 0.7896       90s
+  ep 14/25 loss 0.1936  val_acc 0.9354  val_f1 0.7852       92s
+  ep 15/25 loss 0.1858  val_acc 0.9135  val_f1 0.7739       86s
+  ep 16/25 loss 0.1763  val_acc 0.9387  val_f1 0.8022       86s
+  ep 17/25 loss 0.1708  val_acc 0.9318  val_f1 0.8001       86s
+  ep 18/25 loss 0.1672  val_acc 0.9436  val_f1 0.8175       86s
+  ep 19/25 loss 0.1605  val_acc 0.9367  val_f1 0.8086       86s
+  ep 20/25 loss 0.1572  val_acc 0.9423  val_f1 0.8134       86s
+  ep 21/25 loss 0.1555  val_acc 0.9290  val_f1 0.7947      149s
+  ep 22/25 loss 0.1504  val_acc 0.9409  val_f1 0.8110      551s
+  ep 23/25 loss 0.1509  val_acc 0.9411  val_f1 0.8149      382s
+  ep 24/25 loss 0.1478  val_acc 0.9405  val_f1 0.8108       87s
+  ep 25/25 loss 0.1484  val_acc 0.9436  val_f1 0.8176       87s
+  -> TEST(best-val ep9) acc 0.9541  macroF1 0.8196 [0.7997,0.8347]  wF1 0.9587  P 0.7550 R 0.9289
+  -> TEST(last ep25)    acc 0.9468  macroF1 0.8260  wF1 0.9524  P 0.7524 R 0.9446  (51.7 min)  saved wafercnn_128_seed42.json
+# 동일 프로토콜 공정 비교 결과 (Test 25,943개)
+
+프로토콜: AdamW lr 0.0003 · wd 0.0001 · batch 64 · CosineAnnealingLR(eta_min=1e-6) · CrossEntropyLoss (weight 없음) · WeightedRandomSampler(balanced) · 최대 25 epochs / patience 0 · 선택 기준 val macro F1 (best) + last epoch 병기
+
+| 모델 | 파라미터 | seeds | Accuracy | **macro F1 (best-val ckpt, mean±std)** | min–max | macro F1 (last epoch, mean±std) | weighted F1 | macro P | macro R |
+|---|---:|:-:|---:|---:|---:|---:|---:|---:|---:|
+| WaferCNN (custom, scratch, 64px) | 1.21M | 3 | 95.11% | **0.8311 ± 0.0088** | 0.8225–0.8401 | 0.8220 ± 0.0046 | 0.9556 | 0.7668 | 0.9338 |
+| WaferCNN (custom, scratch, 64px) [ep40] | 1.21M | 1 | 95.15% | **0.8367 ± 0.0000** | 0.8367–0.8367 | 0.8365 ± 0.0000 | 0.9563 | 0.7734 | 0.9382 |
+| MobileNetV3-S (ImageNet, 64px) | 1.53M | 3 | 95.52% | **0.8341 ± 0.0044** | 0.8313–0.8392 | 0.8314 ± 0.0019 | 0.9584 | 0.7885 | 0.8961 |
+| MobileNetV3-S (ImageNet, 128px upsample) | 1.53M | 3 | 96.91% | **0.8756 ± 0.0026** | 0.8733–0.8784 | 0.8756 ± 0.0025 | 0.9702 | 0.8529 | 0.9030 |
+| MobileNetV3-S (ImageNet, 128px upsample) [ep40] | 1.53M | 1 | 97.42% | **0.8847 ± 0.0000** | 0.8847–0.8847 | 0.8845 ± 0.0000 | 0.9744 | 0.8875 | 0.8840 |
+| MobileNetV3-S (scratch, 64px) | 1.53M | 1 | 92.37% | **0.7752 ± 0.0000** | 0.7752–0.7752 | 0.7752 ± 0.0000 | 0.9337 | 0.7097 | 0.8960 |
+| EfficientNet-B0 (ImageNet, 128px upsample) | 4.02M | 1 | 97.54% | **0.8894 ± 0.0000** | 0.8894–0.8894 | 0.8894 ± 0.0000 | 0.9759 | 0.8755 | 0.9063 |
+| ViT-Tiny/16 (ImageNet, 64px → 16 tokens) | 5.39M | 1 | 96.53% | **0.8633 ± 0.0000** | 0.8633–0.8633 | 0.8591 ± 0.0000 | 0.9668 | 0.8410 | 0.8906 |
+| WaferCNN (scratch, 128px upsample → 8×8) | 1.21M | 1 | 95.41% | **0.8196 ± 0.0000** | 0.8196–0.8196 | 0.8260 ± 0.0000 | 0.9587 | 0.7550 | 0.9289 |
+| MobileNetV3-S (ImageNet, 128px bilinear) | 1.53M | 1 | 97.04% | **0.8748 ± 0.0000** | 0.8748–0.8748 | 0.8713 ± 0.0000 | 0.9712 | 0.8619 | 0.8915 |
+| MobileNetV3-S (ImageNet, 128px, 3ch + ImageNet norm) | 1.53M | 1 | 96.99% | **0.8741 ± 0.0000** | 0.8741–0.8741 | 0.8721 ± 0.0000 | 0.9708 | 0.8556 | 0.8972 |
+| MobileNetV3-S (ImageNet, 128px, 1ch + ImageNet norm) | 1.53M | 1 | 97.04% | **0.8830 ± 0.0000** | 0.8830–0.8830 | 0.8807 ± 0.0000 | 0.9713 | 0.8635 | 0.9066 |
+| MobileNetV3-S (ImageNet, 160px → 5×5) | 1.53M | 1 | 97.05% | **0.8883 ± 0.0000** | 0.8883–0.8883 | 0.8883 ± 0.0000 | 0.9714 | 0.8742 | 0.9061 |
+| MobileNetV3-S (ImageNet, 224px → 7×7, native) | 1.53M | 1 | 97.27% | **0.8888 ± 0.0000** | 0.8888–0.8888 | 0.8851 ± 0.0000 | 0.9735 | 0.8702 | 0.9109 |
+| ViT-Tiny/16 (ImageNet, 128px → 64 tokens) | 5.40M | 1 | 97.00% | **0.8785 ± 0.0000** | 0.8785–0.8785 | 0.8779 ± 0.0000 | 0.9712 | 0.8551 | 0.9081 |
+
+저장: C:\Users\SSAFY\Desktop\Private\self\analysis\fair_compare\summary.md, summary.json, summary.csv, runs.csv
+Device: cuda (NVIDIA GeForce RTX 4070 Laptop GPU)
+
+=== vit_pre224 | ViT-Tiny/16 (ImageNet, 224px → 196 tokens, native) | seed=42 | 5.43M params | cuda ===
+  ep  1/25 loss 0.3713  val_acc 0.9268  val_f1 0.7719 *    137s
+  ep  2/25 loss 0.2137  val_acc 0.8983  val_f1 0.7319      113s
+  ep  3/25 loss 0.1870  val_acc 0.8911  val_f1 0.7373      133s
+  ep  4/25 loss 0.1679  val_acc 0.9464  val_f1 0.8202 *    132s
+  ep  5/25 loss 0.1531  val_acc 0.9371  val_f1 0.7907      122s
+  ep  6/25 loss 0.1400  val_acc 0.9128  val_f1 0.7671      121s
+  ep  7/25 loss 0.1286  val_acc 0.9204  val_f1 0.7879      131s
+  ep  8/25 loss 0.1166  val_acc 0.8795  val_f1 0.7366      129s
+  ep  9/25 loss 0.1038  val_acc 0.8355  val_f1 0.7113      136s
+  ep 10/25 loss 0.0992  val_acc 0.9428  val_f1 0.8166      143s
+  ep 11/25 loss 0.0896  val_acc 0.9423  val_f1 0.8121      138s
+  ep 12/25 loss 0.0821  val_acc 0.9328  val_f1 0.8091      131s
+  ep 13/25 loss 0.0749  val_acc 0.9360  val_f1 0.8123      132s
+  ep 14/25 loss 0.0648  val_acc 0.9527  val_f1 0.8390 *    130s
+  ep 15/25 loss 0.0587  val_acc 0.9431  val_f1 0.8273      131s
+  ep 16/25 loss 0.0510  val_acc 0.9652  val_f1 0.8592 *    128s
+  ep 17/25 loss 0.0469  val_acc 0.9578  val_f1 0.8570      129s
+  ep 18/25 loss 0.0440  val_acc 0.9542  val_f1 0.8454      350s
+  ep 19/25 loss 0.0388  val_acc 0.9519  val_f1 0.8463      504s
+  ep 20/25 loss 0.0344  val_acc 0.9626  val_f1 0.8618 *    496s
+  ep 21/25 loss 0.0317  val_acc 0.9631  val_f1 0.8661 *    501s
+  ep 22/25 loss 0.0285  val_acc 0.9666  val_f1 0.8695 *    495s
+  ep 23/25 loss 0.0269  val_acc 0.9681  val_f1 0.8803 *    138s
+  ep 24/25 loss 0.0261  val_acc 0.9689  val_f1 0.8817 *    135s
+  ep 25/25 loss 0.0258  val_acc 0.9692  val_f1 0.8825 *    147s
+  -> TEST(best-val ep25) acc 0.9692  macroF1 0.8873 [0.8745,0.8975]  wF1 0.9707  P 0.8604 R 0.9203
+  -> TEST(last ep25)    acc 0.9692  macroF1 0.8873  wF1 0.9707  P 0.8604 R 0.9203  (83.0 min)  saved vit_pre224_seed42.json
+
+=== effb0_pre224 | EfficientNet-B0 (ImageNet, 224px native) | seed=42 | 4.02M params | cuda ===
+  ep  1/25 loss 0.2719  val_acc 0.9296  val_f1 0.7880 *    286s
+  ep  2/25 loss 0.1426  val_acc 0.9584  val_f1 0.8629 *    273s
+  ep  3/25 loss 0.1114  val_acc 0.9237  val_f1 0.8075      266s
+  ep  4/25 loss 0.0914  val_acc 0.9397  val_f1 0.8268      265s
+  ep  5/25 loss 0.0778  val_acc 0.9430  val_f1 0.8335      265s
+  ep  6/25 loss 0.0667  val_acc 0.9445  val_f1 0.8267      264s
+  ep  7/25 loss 0.0605  val_acc 0.9450  val_f1 0.8316      422s
+  ep  8/25 loss 0.0524  val_acc 0.9507  val_f1 0.8396      416s
+  ep  9/25 loss 0.0461  val_acc 0.9612  val_f1 0.8646 *    417s
+  ep 10/25 loss 0.0410  val_acc 0.9675  val_f1 0.8862 *    410s
+  ep 11/25 loss 0.0371  val_acc 0.9645  val_f1 0.8812      847s
+  ep 12/25 loss 0.0334  val_acc 0.9615  val_f1 0.8660     1642s
+  ep 13/25 loss 0.0295  val_acc 0.9671  val_f1 0.8803     1651s
+  ep 14/25 loss 0.0253  val_acc 0.9710  val_f1 0.8863 *   1669s
+  ep 15/25 loss 0.0240  val_acc 0.9641  val_f1 0.8809     1665s
+  ep 16/25 loss 0.0191  val_acc 0.9747  val_f1 0.9005 *   1663s
+  ep 17/25 loss 0.0178  val_acc 0.9699  val_f1 0.8927     1662s
+  ep 18/25 loss 0.0160  val_acc 0.9709  val_f1 0.8987     1682s
+  ep 19/25 loss 0.0153  val_acc 0.9742  val_f1 0.9011 *   1667s
+  ep 20/25 loss 0.0134  val_acc 0.9738  val_f1 0.9023 *   1674s
+  ep 21/25 loss 0.0111  val_acc 0.9741  val_f1 0.9015     1658s
+  ep 22/25 loss 0.0107  val_acc 0.9776  val_f1 0.9130 *   1661s
+  ep 23/25 loss 0.0108  val_acc 0.9769  val_f1 0.9107     1669s
+  ep 24/25 loss 0.0107  val_acc 0.9766  val_f1 0.9078     1633s
+  ep 25/25 loss 0.0102  val_acc 0.9771  val_f1 0.9099     1651s
+  -> TEST(best-val ep22) acc 0.9778  macroF1 0.9072 [0.8945,0.9178]  wF1 0.9782  P 0.9032 R 0.9125
+  -> TEST(last ep25)    acc 0.9783  macroF1 0.9122  wF1 0.9786  P 0.9104 R 0.9154  (456.3 min)  saved effb0_pre224_seed42.json
+# 동일 프로토콜 공정 비교 결과 (Test 25,943개)
+
+프로토콜: AdamW lr 0.0003 · wd 0.0001 · batch 64 · CosineAnnealingLR(eta_min=1e-6) · CrossEntropyLoss (weight 없음) · WeightedRandomSampler(balanced) · 최대 25 epochs / patience 0 · 선택 기준 val macro F1 (best) + last epoch 병기
+
+| 모델 | 파라미터 | seeds | Accuracy | **macro F1 (best-val ckpt, mean±std)** | min–max | macro F1 (last epoch, mean±std) | weighted F1 | macro P | macro R |
+|---|---:|:-:|---:|---:|---:|---:|---:|---:|---:|
+| WaferCNN (custom, scratch, 64px) | 1.21M | 3 | 95.11% | **0.8311 ± 0.0088** | 0.8225–0.8401 | 0.8220 ± 0.0046 | 0.9556 | 0.7668 | 0.9338 |
+| WaferCNN (custom, scratch, 64px) [ep40] | 1.21M | 1 | 95.15% | **0.8367 ± 0.0000** | 0.8367–0.8367 | 0.8365 ± 0.0000 | 0.9563 | 0.7734 | 0.9382 |
+| MobileNetV3-S (ImageNet, 64px) | 1.53M | 3 | 95.52% | **0.8341 ± 0.0044** | 0.8313–0.8392 | 0.8314 ± 0.0019 | 0.9584 | 0.7885 | 0.8961 |
+| MobileNetV3-S (ImageNet, 128px upsample) | 1.53M | 3 | 96.91% | **0.8756 ± 0.0026** | 0.8733–0.8784 | 0.8756 ± 0.0025 | 0.9702 | 0.8529 | 0.9030 |
+| MobileNetV3-S (ImageNet, 128px upsample) [ep40] | 1.53M | 1 | 97.42% | **0.8847 ± 0.0000** | 0.8847–0.8847 | 0.8845 ± 0.0000 | 0.9744 | 0.8875 | 0.8840 |
+| MobileNetV3-S (scratch, 64px) | 1.53M | 1 | 92.37% | **0.7752 ± 0.0000** | 0.7752–0.7752 | 0.7752 ± 0.0000 | 0.9337 | 0.7097 | 0.8960 |
+| EfficientNet-B0 (ImageNet, 128px upsample) | 4.02M | 1 | 97.54% | **0.8894 ± 0.0000** | 0.8894–0.8894 | 0.8894 ± 0.0000 | 0.9759 | 0.8755 | 0.9063 |
+| ViT-Tiny/16 (ImageNet, 64px → 16 tokens) | 5.39M | 1 | 96.53% | **0.8633 ± 0.0000** | 0.8633–0.8633 | 0.8591 ± 0.0000 | 0.9668 | 0.8410 | 0.8906 |
+| WaferCNN (scratch, 128px upsample → 8×8) | 1.21M | 1 | 95.41% | **0.8196 ± 0.0000** | 0.8196–0.8196 | 0.8260 ± 0.0000 | 0.9587 | 0.7550 | 0.9289 |
+| MobileNetV3-S (ImageNet, 128px bilinear) | 1.53M | 1 | 97.04% | **0.8748 ± 0.0000** | 0.8748–0.8748 | 0.8713 ± 0.0000 | 0.9712 | 0.8619 | 0.8915 |
+| MobileNetV3-S (ImageNet, 128px, 3ch + ImageNet norm) | 1.53M | 1 | 96.99% | **0.8741 ± 0.0000** | 0.8741–0.8741 | 0.8721 ± 0.0000 | 0.9708 | 0.8556 | 0.8972 |
+| MobileNetV3-S (ImageNet, 128px, 1ch + ImageNet norm) | 1.53M | 1 | 97.04% | **0.8830 ± 0.0000** | 0.8830–0.8830 | 0.8807 ± 0.0000 | 0.9713 | 0.8635 | 0.9066 |
+| MobileNetV3-S (ImageNet, 160px → 5×5) | 1.53M | 1 | 97.05% | **0.8883 ± 0.0000** | 0.8883–0.8883 | 0.8883 ± 0.0000 | 0.9714 | 0.8742 | 0.9061 |
+| MobileNetV3-S (ImageNet, 224px → 7×7, native) | 1.53M | 1 | 97.27% | **0.8888 ± 0.0000** | 0.8888–0.8888 | 0.8851 ± 0.0000 | 0.9735 | 0.8702 | 0.9109 |
+| EfficientNet-B0 (ImageNet, 224px native) | 4.02M | 1 | 97.78% | **0.9072 ± 0.0000** | 0.9072–0.9072 | 0.9122 ± 0.0000 | 0.9782 | 0.9032 | 0.9125 |
+| ViT-Tiny/16 (ImageNet, 128px → 64 tokens) | 5.40M | 1 | 97.00% | **0.8785 ± 0.0000** | 0.8785–0.8785 | 0.8779 ± 0.0000 | 0.9712 | 0.8551 | 0.9081 |
+| ViT-Tiny/16 (ImageNet, 224px → 196 tokens, native) | 5.43M | 1 | 96.92% | **0.8873 ± 0.0000** | 0.8873–0.8873 | 0.8873 ± 0.0000 | 0.9707 | 0.8604 | 0.9203 |
+
+저장: C:\Users\SSAFY\Desktop\Private\self\analysis\fair_compare\summary.md, summary.json, summary.csv, runs.csv
+# 동일 프로토콜 공정 비교 결과 (Test 25,943개)
+
+프로토콜: AdamW lr 0.0003 · wd 0.0001 · batch 64 · CosineAnnealingLR(eta_min=1e-6) · CrossEntropyLoss (weight 없음) · WeightedRandomSampler(balanced) · 최대 25 epochs / patience 0 · 선택 기준 val macro F1 (best) + last epoch 병기
+
+| 모델 | 파라미터 | seeds | Accuracy | **macro F1 (best-val ckpt, mean±std)** | min–max | macro F1 (last epoch, mean±std) | weighted F1 | macro P | macro R |
+|---|---:|:-:|---:|---:|---:|---:|---:|---:|---:|
+| WaferCNN (custom, scratch, 64px) | 1.21M | 3 | 95.11% | **0.8311 ± 0.0088** | 0.8225–0.8401 | 0.8220 ± 0.0046 | 0.9556 | 0.7668 | 0.9338 |
+| WaferCNN (custom, scratch, 64px) [ep40] | 1.21M | 1 | 95.15% | **0.8367 ± 0.0000** | 0.8367–0.8367 | 0.8365 ± 0.0000 | 0.9563 | 0.7734 | 0.9382 |
+| MobileNetV3-S (ImageNet, 64px) | 1.53M | 3 | 95.52% | **0.8341 ± 0.0044** | 0.8313–0.8392 | 0.8314 ± 0.0019 | 0.9584 | 0.7885 | 0.8961 |
+| MobileNetV3-S (ImageNet, 128px upsample) | 1.53M | 3 | 96.91% | **0.8756 ± 0.0026** | 0.8733–0.8784 | 0.8756 ± 0.0025 | 0.9702 | 0.8529 | 0.9030 |
+| MobileNetV3-S (ImageNet, 128px upsample) [ep40] | 1.53M | 1 | 97.42% | **0.8847 ± 0.0000** | 0.8847–0.8847 | 0.8845 ± 0.0000 | 0.9744 | 0.8875 | 0.8840 |
+| MobileNetV3-S (scratch, 64px) | 1.53M | 1 | 92.37% | **0.7752 ± 0.0000** | 0.7752–0.7752 | 0.7752 ± 0.0000 | 0.9337 | 0.7097 | 0.8960 |
+| EfficientNet-B0 (ImageNet, 128px upsample) | 4.02M | 1 | 97.54% | **0.8894 ± 0.0000** | 0.8894–0.8894 | 0.8894 ± 0.0000 | 0.9759 | 0.8755 | 0.9063 |
+| ViT-Tiny/16 (ImageNet, 64px → 16 tokens) | 5.39M | 1 | 96.53% | **0.8633 ± 0.0000** | 0.8633–0.8633 | 0.8591 ± 0.0000 | 0.9668 | 0.8410 | 0.8906 |
+| WaferCNN (scratch, 128px upsample → 8×8) | 1.21M | 1 | 95.41% | **0.8196 ± 0.0000** | 0.8196–0.8196 | 0.8260 ± 0.0000 | 0.9587 | 0.7550 | 0.9289 |
+| MobileNetV3-S (ImageNet, 128px bilinear) | 1.53M | 1 | 97.04% | **0.8748 ± 0.0000** | 0.8748–0.8748 | 0.8713 ± 0.0000 | 0.9712 | 0.8619 | 0.8915 |
+| MobileNetV3-S (ImageNet, 128px, 3ch + ImageNet norm) | 1.53M | 1 | 96.99% | **0.8741 ± 0.0000** | 0.8741–0.8741 | 0.8721 ± 0.0000 | 0.9708 | 0.8556 | 0.8972 |
+| MobileNetV3-S (ImageNet, 128px, 1ch + ImageNet norm) | 1.53M | 1 | 97.04% | **0.8830 ± 0.0000** | 0.8830–0.8830 | 0.8807 ± 0.0000 | 0.9713 | 0.8635 | 0.9066 |
+| MobileNetV3-S (ImageNet, 160px → 5×5) | 1.53M | 1 | 97.05% | **0.8883 ± 0.0000** | 0.8883–0.8883 | 0.8883 ± 0.0000 | 0.9714 | 0.8742 | 0.9061 |
+| MobileNetV3-S (ImageNet, 224px → 7×7, native) | 1.53M | 1 | 97.27% | **0.8888 ± 0.0000** | 0.8888–0.8888 | 0.8851 ± 0.0000 | 0.9735 | 0.8702 | 0.9109 |
+| EfficientNet-B0 (ImageNet, 224px native) | 4.02M | 1 | 97.78% | **0.9072 ± 0.0000** | 0.9072–0.9072 | 0.9122 ± 0.0000 | 0.9782 | 0.9032 | 0.9125 |
+| ViT-Tiny/16 (ImageNet, 128px → 64 tokens) | 5.40M | 1 | 97.00% | **0.8785 ± 0.0000** | 0.8785–0.8785 | 0.8779 ± 0.0000 | 0.9712 | 0.8551 | 0.9081 |
+| ViT-Tiny/16 (ImageNet, 224px → 196 tokens, native) | 5.43M | 1 | 96.92% | **0.8873 ± 0.0000** | 0.8873–0.8873 | 0.8873 ± 0.0000 | 0.9707 | 0.8604 | 0.9203 |
+
+저장: C:\Users\SSAFY\Desktop\Private\self\analysis\fair_compare\summary.md, summary.json, summary.csv, runs.csv
+=== STAGE D DONE ===

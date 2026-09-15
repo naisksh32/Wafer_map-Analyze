@@ -158,6 +158,14 @@ README 는 WaferCNN(1.21M, from-scratch) macro F1 **0.8458** > ViT-Tiny 0.8352 >
 
 **검증 결과 (2026-09-13~14 실행, RTX 4070 Laptop):** 기존 레시피 수치는 재현되었으나(WaferCNN 0.8508 / MobileNetV3 0.7372), 동일 레시피에서는 MobileNetV3-S 64px 0.8341 ± 0.0044 ≥ WaferCNN 0.8311 ± 0.0088 이고, 128px 업샘플 시 0.8756 ± 0.0026 (40 ep 0.8847), EfficientNet-B0 128px 0.8894 로 역전된다. 전체 표는 [`MODEL_PERFORMANCE.md`](MODEL_PERFORMANCE.md), README 의 "모델 성능 비교" 절도 이 결과로 갱신했다.
 
+### 5.-1 2차 실험 — 모델별 특화 입력 전처리 (2026-09-14~15)
+
+`scripts/fair_compare.py` 에 `Preprocess` 모듈(GPU 위 해상도·보간·채널·ImageNet 정규화)을 추가해 9개 구성을 seed 42 로 학습했다. 결과: 해상도가 유일하게 큰 변인이며(MobileNetV3-S 64→128→160→224px = 0.834→0.876→0.888→0.889, 160px 포화), 보간·채널·정규화는 잡음 범위, WaferCNN 128px 대조군은 개선 없음(0.8196). 전체 최고는 EfficientNet-B0 224px 0.9072. 그래프는 `scripts/plot_results.py` → `analysis/figures/fig1~6`, 상세는 [`MODEL_PERFORMANCE.md`](MODEL_PERFORMANCE.md) 3~4절.
+
+### 5.0 체크포인트 정리 (2026-09-14)
+
+재학습 스크립트가 val F1 개선마다 새 파일을 저장해 74개(814MB)가 쌓였던 것을 정리했다. 남긴 것은 `analysis/final_evaluation.json` 이 참조하는 기존 레시피 best 5개와 `checkpoints/fair/` 14개(154MB)이며, 경로 ↔ 결과 매핑은 `checkpoints/MANIFEST.json`(git 추적)에 있다. 삭제된 중간·Phase 1 체크포인트는 어떤 코드·문서에서도 참조되지 않음을 삭제 전에 확인했다. 앞으로의 학습 스크립트는 best 1개만 덮어쓰는 방식으로 바꿔야 한다.
+
 ### 5.1 실행 중 확인한 환경 이슈 (재현 시 참고)
 
 | 이슈 | 증상 | 조치 |
